@@ -3,8 +3,14 @@ import {
   ClerkProvider,
 } from "@clerk/nextjs";
 import "./globals.css";
+import { DotGothic16} from 'next/font/google'
 
 
+const dotGothic16 = DotGothic16({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +22,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider>
-      <html lang="ja">
+      <html lang="ja" className={dotGothic16.className}>
         <body>
           <main>{children}</main>
         </body>
