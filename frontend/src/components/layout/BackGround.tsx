@@ -68,9 +68,10 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: 'flex',
     position: 'absolute',
     width: '100%',
-    height: '100%',
+    height: '80%',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: '2rem',
   },
   bgCat: {
     position: 'absolute',
