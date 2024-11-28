@@ -8,5 +8,8 @@ front/dev: front/install
 front/install:
 	$(PNPM) --prefix $(FRONTEND_DIR) install
 
-add/ui/%:
+ui/add/%:
 	$(SHADCN) add $* --cwd $(FRONTEND_DIR)
+
+pnpm/add/%:
+	$(PNPM) --prefix $(FRONTEND_DIR) add $*
