@@ -89,6 +89,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     height: "80%",
     alignItems: "center",
     justifyContent: "center",
+    zIndex: "-1",
   },
   bgCat: {
     position: "absolute",
