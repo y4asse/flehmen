@@ -55,7 +55,7 @@ const weekGraphWindow = {
 const logWindow = {
   initSize: {
     width: 460,
-    height: 360,
+    height: 330,
   },
   initPosition: {
     x: 900,

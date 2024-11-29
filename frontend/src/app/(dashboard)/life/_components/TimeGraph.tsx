@@ -9,8 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-// ハート型のカスタムコンポーネント
-// データの型定義
+
 interface DataPoint {
   date: string;
   count: number;
@@ -49,7 +48,6 @@ const data: DataPoint[] = [
   { date: "11/30", count: 0 },
 ];
 
-// カスタムドット（ハート型）の型定義
 interface CustomDotProps {
   cx?: number; // ドットの中心 x 座標
   cy?: number; // ドットの中心 y 座標
