@@ -24,8 +24,7 @@ export const BackGround = () => {
           alt="Background Cat"
         />
       </div>
-
-      <div className="logoContainer" style={styles.logoContainer}>
+      <div className="bgItemContainer"style={styles.bgItemContainer}>
         <Image
           className="logo"
           width={100}
@@ -34,15 +33,15 @@ export const BackGround = () => {
           style={styles.logo}
           alt="Logo"
         />
-      </div>
-
-      <div style={styles.itemContainer}>
+        <div className= "items" style = {styles.items}>
         {/* homeItems 配列をマッピング */}
         {homeItems.map((item) => (
           <HomeItem key={item.name} name={item.name} href={item.href} />
         ))}
+        </div>
       </div>
     </div>
+
   );
 };
 
@@ -56,7 +55,7 @@ const HomeItem = ({ name, href }: Props) => {
   return (
     <Link href={href} style={styles.item}>
       <Image
-        src="/images/file_icon.png"
+        src="/images/file.svg"
         alt="Icon"
         style={styles.icon}
         width={100}
@@ -76,12 +75,12 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: "flex",
     flexDirection: "column",
     width: "100%",
-    minHeight: "100vh",
-    paddingTop: "4rem",
+    height: "100vh",
+    paddingTop: "4%",
     fontFamily: '"PixelMplus10"',
     color: "white",
-    position: "relative", // 背景画像のレイヤー制御のために追加
-    zIndex: "0", // 背景画像のレイヤー制御のために追加
+    position: "relative", 
+    zIndex: "0", 
   },
   bg: {
     display: "flex",
@@ -90,7 +89,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     height: "80%",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: "2rem",
   },
   bgCat: {
     position: "absolute",
@@ -98,44 +96,54 @@ const styles: { [key: string]: React.CSSProperties } = {
     margin: "4rem 6rem",
     width: "50%",
     height: "auto",
-    objectFit: "cover", // 背景画像がコンテナに合わせてカバーするように調整
-    zIndex: "-1", // 背景を後ろに配置
-    opacity: "0.3", // 背景画像を透過
+    objectFit: "cover",
+    zIndex: "-1", 
+    opacity: "0.3",
   },
-  logoContainer: {
-    margin: "0rem 2rem",
+  bgItemContainer: {
     display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    width: "25rem",
+    height: "100%",
   },
   logo: {
-    width: "auto",
-    height: "7rem",
+    width: "100%",
+    height: "auto",
     marginBottom: "2rem",
+    margin: "0 5%",
   },
-  itemContainer: {
-    //logoContainerの下に配置
-    position: "absolute",
+  items:{
     display: "flex",
-    left: "3rem",
-    top: "12rem",
     flexDirection: "column",
-    alignItems: "center", // 左寄せにする
-    padding: "0 1rem",
-    gap: "2rem",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    width: "auto",
+    height: "100%",
+    marginTop: "2rem",
+    marginLeft: "10%",
+    gap: "2vh",
   },
   item: {
+    width: "auto",
+    height: "15%",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     textDecoration: "none",
     color: "white",
+    margin: "5%s",
   },
   icon: {
-    width: "5rem",
-    height: "auto",
+    margin:"2%" ,
+    width: "auto",
+    height: "80%",
     marginBottom: "0.5rem",
   },
   itemName: {
-    fontSize: "20px",
-    textAlign: "center", // テキストを中央揃え
+    fontSize: "80%",
+    textAlign: "center", 
+    margin:"3%"
   },
 };
