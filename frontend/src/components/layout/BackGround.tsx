@@ -4,17 +4,17 @@ import Image from "next/image";
 
 // homeItems 配列を定義
 const homeItems = [
-  { name: "生活習慣", href: "/dashboard/life" },
-  { name: "おともだち", href: "/dashboard/friendship" },
-  { name: "ff", href: "/dashboard/ff" },
-  { name: "ひみつ", href: "/dashboard/secret" },
+  { name: "生活習慣", href: "/life" },
+  { name: "おともだち", href: "/friendship" },
+  { name: "ff", href: "/ff" },
+  { name: "ひみつ", href: "/secret" },
 ];
 
 // BackGroundコンポーネント
 export const BackGround = () => {
   return (
     <div style={styles.backGround}>
-      <div className="bg" style={styles.bg}>
+      <Link href={"/"} className="bg" style={styles.bg}>
         <Image
           className="bg_cat"
           width={100}
@@ -23,7 +23,7 @@ export const BackGround = () => {
           style={styles.bgCat}
           alt="Background Cat"
         />
-      </div>
+      </Link>
 
       <div className="logoContainer" style={styles.logoContainer}>
         <Image
