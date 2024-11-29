@@ -14,12 +14,12 @@ type Props = {
 
 // メインコンポーネント
 export const SukipiInfo = ({ sukipi }: Props) => {
-  // Sukipiオブジェクトから情報を作成
+  // Sukipiオブジェクトから情報もらう
   const infoItems = [
     { title: "なまえ", content: sukipi.name },
-    { title: "身長", content: sukipi.height ? `${sukipi.height} cm` : "未設定" },
-    { title: "体重", content: sukipi.weight ? `${sukipi.weight} kg` : "未設定" },
-    { title: "MBTI", content: sukipi.mbti || "未設定" },
+    { title: "身長", content: sukipi.height ? `${sukipi.height} cm` : "?まだわからない?" },
+    { title: "体重", content: sukipi.weight ? `${sukipi.weight} kg` : "?まだわからない?" },
+    { title: "MBTI", content: sukipi.mbti || "?まだわからない?" },
   ];
 
   return (
