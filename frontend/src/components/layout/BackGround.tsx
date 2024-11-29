@@ -78,7 +78,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     width: "100%",
     height: "100vh",
     paddingTop: "4%",
-    fontFamily: 'PixelMplus',
     color: "white",
     position: "relative", 
     zIndex: "0", 

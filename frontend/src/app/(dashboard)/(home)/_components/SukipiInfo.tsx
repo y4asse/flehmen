@@ -1,30 +1,27 @@
 import React from "react";
-// 情報アイテムのリスト
-const infoItems = [
-  { title: "なまえ", content: "" },
-  { title: "身長", content: "" },
-  { title: "体重", content: "" },
-  { title: "学校", content: "" },
-  { title: "クラス", content: "" },
-  { title: "ねんれい", content: "" },
-  { title: "たんじょうび", content: "" },
-  { title: "しゅみ", content: "" },
-  { title: "すきなたべもの", content: "" },
-  { title: "すきなうた", content: "" },
-  { title: "すきなほん", content: "" },
-  { title: "すきなえいが", content: "" },
-  { title: "すきなアニメ", content: "" },
-  { title: "すきなゲーム", content: "" }
-];
 
 // Propsの型定義
-type Props = { 
-  title: string;
-  content: string;
+type Sukipi = {
+  name: string;
+  weight?: number;
+  height?: number;
+  mbti?: string;
+};
+
+type Props = {
+  sukipi: Sukipi;
 };
 
 // メインコンポーネント
-export const SukipiInfo = () => {
+export const SukipiInfo = ({ sukipi }: Props) => {
+  // Sukipiオブジェクトから情報を作成
+  const infoItems = [
+    { title: "なまえ", content: sukipi.name },
+    { title: "身長", content: sukipi.height ? `${sukipi.height} cm` : "未設定" },
+    { title: "体重", content: sukipi.weight ? `${sukipi.weight} kg` : "未設定" },
+    { title: "MBTI", content: sukipi.mbti || "未設定" },
+  ];
+
   return (
     <div>
       {infoItems.map((item) => (
@@ -35,7 +32,12 @@ export const SukipiInfo = () => {
 };
 
 // 情報項目コンポーネント
-const InfoItem = ({ title, content }: Props) => {
+type InfoItemProps = {
+  title: string;
+  content: string;
+};
+
+const InfoItem = ({ title, content }: InfoItemProps) => {
   return (
     <div style={styles.infoItem}>
       <div style={styles.title}>{title}</div>
@@ -53,6 +55,12 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontWeight: "bold",
     color: "white",
     fontFamily: '"PixelMplus10"',
+  },
+  title: {
+    width: "100px",
+  },
+  content: {
+    marginLeft: "10px",
   },
 };
 

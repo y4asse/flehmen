@@ -62,10 +62,10 @@ const Page = () => {
 
   const windows = [
     {
-      ...sukipiInfoWindow,
-      title: `${sukipi.name}くんのこと`,
-      children: <SukipiInfo />,
-    },
+        ...sukipiInfoWindow,
+        title: `${sukipi.name}くんのこと`,
+        children: <SukipiInfo sukipi={sukipi} />, // sukipi を渡す
+      },
     { ...sukipiLikeAtWindow, children: <SukipiLikedAt /> },
   ];
 
