@@ -1,5 +1,6 @@
 import { Windows } from "@/components/common/Windows";
 import React from "react";
+import dayjs from "dayjs";
 import { SukipiInfo } from "./_components/SukipiInfo";
 import { SukipiLikedAt } from "./_components/SukipiLikedAt";
 
@@ -26,6 +27,10 @@ type Sukipi = {
   weight?: number;
   height?: number;
   mbti?: MBTI;
+};
+
+type SukipiLikedAt = {
+  likedAt: string;
 };
 
 const Page = () => {
@@ -55,18 +60,26 @@ const Page = () => {
 
   const sukipi: Sukipi = {
     name: "早瀬",
-    weight: 60,
+    weight: 0,
     height: 170,
-    mbti: "ENFP",
+    mbti: "INTP",
+  };
+
+  const sukipiLikedAt: SukipiLikedAt = {
+    likedAt: dayjs("2021-10-01").toISOString(), // 1月始まり
   };
 
   const windows = [
     {
       ...sukipiInfoWindow,
       title: `${sukipi.name}くんのこと`,
-      children: <SukipiInfo />,
+      children: <SukipiInfo sukipi={sukipi} />,
     },
-    { ...sukipiLikeAtWindow, children: <SukipiLikedAt /> },
+    {
+      ...sukipiLikeAtWindow,
+      title: "好きになって何日？",
+      children: <SukipiLikedAt likedAt={sukipiLikedAt.likedAt} />,
+    },
   ];
 
   return (
