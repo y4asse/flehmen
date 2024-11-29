@@ -3,6 +3,7 @@ import {
   ClerkProvider,
 } from "@clerk/nextjs";
 import "./globals.css";
+import "./styles.css";
 import { DotGothic16} from 'next/font/google'
 
 

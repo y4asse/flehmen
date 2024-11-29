@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+
 // homeItems 配列を定義
 const homeItems = [
   { name: "生活習慣", href: "/dashboard/life" },
@@ -77,7 +78,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     width: "100%",
     height: "100vh",
     paddingTop: "4%",
-    fontFamily: '"PixelMplus10"',
+    fontFamily: 'PixelMplus',
     color: "white",
     position: "relative", 
     zIndex: "0", 

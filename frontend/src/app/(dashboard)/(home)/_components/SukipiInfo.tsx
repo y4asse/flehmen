@@ -1,6 +1,4 @@
 import React from "react";
-import { title } from "process";
-
 // 情報アイテムのリスト
 const infoItems = [
   { title: "なまえ", content: "" },
