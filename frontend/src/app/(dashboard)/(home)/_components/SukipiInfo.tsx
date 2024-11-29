@@ -1,12 +1,7 @@
 import React from "react";
+import { Sukipi } from "../page";
 
-// Propsの型定義
-type Sukipi = {
-  name: string;
-  weight?: number;
-  height?: number;
-  mbti?: string;
-};
+
 
 type Props = {
   sukipi: Sukipi;
@@ -20,6 +15,11 @@ export const SukipiInfo = ({ sukipi }: Props) => {
     { title: "身長", content: sukipi.height ? `${sukipi.height} cm` : "?まだわからない?" },
     { title: "体重", content: sukipi.weight ? `${sukipi.weight} kg` : "?まだわからない?" },
     { title: "MBTI", content: sukipi.mbti || "?まだわからない?" },
+    { title: "誕生日", content: sukipi.birthday || "?まだわからない?" },
+    { title: "趣味", content: sukipi.hobby || "?まだわからない?" },
+    { title: "くつのサイズ", content: sukipi.shoeSize ? `${sukipi.shoeSize} cm` : "?まだわからない?" },
+    { title: "かぞく", content: sukipi.famiry || "?まだわからない?" },
+    { title: "最寄駅", content: sukipi.nearyStation || "?まだわからない?" },
   ];
 
   return (
@@ -54,7 +54,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontSize: "0.8em",
     fontWeight: "bold",
     color: "white",
-    fontFamily: '"PixelMplus10"',
+    
   },
   title: {
     width: "100px",

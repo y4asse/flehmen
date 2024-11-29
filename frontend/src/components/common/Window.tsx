@@ -11,6 +11,7 @@ type WindowProps = {
   handleClickWindow: () => void;
   isActive: boolean;
 };
+
 export const Window = (props: WindowProps) => {
   const {
     title,
