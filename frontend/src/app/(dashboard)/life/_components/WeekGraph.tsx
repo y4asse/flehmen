@@ -1,14 +1,7 @@
 "use client";
 import React from "react";
 
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from "recharts";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 interface DataPoint {
   name: string;
@@ -75,6 +68,7 @@ const renderCustomLabel = ({
     </text>
   );
 };
+
 export const WeekGraph = () => {
   return (
     <ResponsiveContainer width="100%" height="100%">
