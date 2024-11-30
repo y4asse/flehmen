@@ -22,11 +22,16 @@ type MBTI =
   | "ISTP"
   | "ISTJ";
 
-type Sukipi = {
+export type Sukipi = {
   name: string;
   weight?: number;
   height?: number;
   mbti?: MBTI;
+  birthday?: string;
+  hobby: string;
+  shoeSize: number;
+  famiry: string;
+  nearyStation: string;
 };
 
 type SukipiLikedAt = {
@@ -63,10 +68,15 @@ const Page = () => {
     weight: 0,
     height: 170,
     mbti: "INTP",
+    birthday: "2003-02-18",
+    hobby: "セクハラ",
+    shoeSize: 27,
+    famiry:"",
+    nearyStation: "新宿",
   };
 
   const sukipiLikedAt: SukipiLikedAt = {
-    likedAt: dayjs("2021-10-01").toISOString(), // 1月始まり
+    likedAt: dayjs("2010-04-01").toISOString(), // 1月始まり
   };
 
   const windows = [
