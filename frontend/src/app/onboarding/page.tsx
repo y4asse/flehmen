@@ -53,7 +53,7 @@ const sukipiInput = [
 
 const Page = () => {
   return (
-    <Flex className="flex-col">
+    <Flex direction={"column"}>
     <Flex className="flex-col">
         {sukipiInput.map((input) => (
           <div key={input.name}>

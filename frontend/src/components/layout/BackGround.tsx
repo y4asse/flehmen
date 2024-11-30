@@ -14,15 +14,17 @@ const homeItems = [
 // BackGroundコンポーネント
 export const BackGround = () => {
   return (
-    <div style={styles.backGround}>
-        <Image
-          className="bg_cat"
-          width={100}
-          height={100}
-          src="/images/cat_bg.svg"
-          style={styles.bgCat}
-          alt="Background Cat"
-        />
+    <div className=" bg-black  before:content-[''] before:absolute before:w-full before:h-full before:bg-[url('/images/cat_bg.svg')] before:bg-center before:bg-no-repeat before:bg-[length:40%] before:opacity-30 before:-z-10"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        height: "100vh",
+        paddingTop: "4%",
+        color: "white",
+        position: "relative", 
+        zIndex: "0", 
+      }}>
       <div className="bgItemContainer"style={styles.bgItemContainer}>
         <Image
           className="logo"
@@ -69,17 +71,7 @@ export default BackGround;
 
 // CSSスタイル
 const styles: { [key: string]: React.CSSProperties } = {
-  backGround: {
-    backgroundColor: "black",
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-    height: "100vh",
-    paddingTop: "4%",
-    color: "white",
-    position: "relative", 
-    zIndex: "0", 
-  },
+
   bg: {
     display: "flex",
     position: "absolute",
