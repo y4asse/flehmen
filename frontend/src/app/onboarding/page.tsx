@@ -1,4 +1,3 @@
-import { title } from "process";
 import React from "react";
 import { Flex } from "@/components/ui/flex";
 import { Button } from "@/components/ui/button";
@@ -48,13 +47,13 @@ const sukipiInput = [
     title: "最寄り駅",
     type: "text",
     name: "nearStation",
-  }
-]
+  },
+];
 
 const Page = () => {
   return (
     <Flex direction={"column"}>
-    <Flex className="flex-col">
+      <Flex className="flex-col">
         {sukipiInput.map((input) => (
           <div key={input.name}>
             <label htmlFor={input.name}>{input.title}</label>
@@ -66,6 +65,5 @@ const Page = () => {
     </Flex>
   );
 };
-
 
 export default Page;
