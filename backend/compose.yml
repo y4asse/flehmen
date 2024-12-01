@@ -4,7 +4,7 @@ services:
       - ./app:/app
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.api.dev
     tty: true
     ports:
       - "8080:8080"
