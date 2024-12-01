@@ -17,4 +17,4 @@ services:
     tty: true
     ports:
       - "8081:8080"
-    
+    command: ["functions-framework-python", "--target", "flehmen_batch"]

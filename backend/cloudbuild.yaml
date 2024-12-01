@@ -15,8 +15,8 @@ steps:
   - gcloud
   - functions
   - deploy
-  - FlehmenBatch
+  - flehmen_batch
   - --region=asia-northeast1
   - --source=./batch
   - --trigger-http
-  - --runtime=go123
+  - --runtime=python312
