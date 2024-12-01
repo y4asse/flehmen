@@ -8,3 +8,15 @@ steps:
   args: ['run', 'deploy', 'flehmen', '--image', 'gcr.io/flehmen-443214/flehmen-api', '--region', 'asia-northeast1']
 images:
 - gcr.io/flehmen-443214/flehmen-api
+
+steps:
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  args:
+  - gcloud
+  - functions
+  - deploy
+  - flehmen-batch
+  - --region=asia-northeast1
+  - --source=.
+  - --trigger-http
+  - --runtime=go123
