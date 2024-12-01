@@ -2,6 +2,6 @@ FROM golang:1.23
 
 WORKDIR /app
 
-COPY . .
+COPY app .
 
 CMD ["go", "run", "main.go"]

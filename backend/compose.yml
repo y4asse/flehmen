@@ -1,7 +1,7 @@
 services:
   api:
     volumes:
-      - .:/app
+      - ./app:/app
     build:
       context: .
       dockerfile: Dockerfile.dev
