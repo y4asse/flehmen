@@ -1,13 +1,13 @@
-# steps:
-# - name: 'gcr.io/cloud-builders/docker'
-#   args: ['build', '-t', 'gcr.io/flehmen-443214/flehmen-api','-f', 'Dockerfile.api.prod', '.']
-# - name: 'gcr.io/cloud-builders/docker'
-#   args: ['push', 'gcr.io/flehmen-443214/flehmen-api']
-# - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-#   entrypoint: gcloud
-#   args: ['run', 'deploy', 'flehmen', '--image', 'gcr.io/flehmen-443214/flehmen-api', '--region', 'asia-northeast1']
-# images:
-# - gcr.io/flehmen-443214/flehmen-api
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/flehmen-443214/flehmen-api','-f', 'Dockerfile.api.prod', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/flehmen-443214/flehmen-api']
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', 'flehmen', '--image', 'gcr.io/flehmen-443214/flehmen-api', '--region', 'asia-northeast1']
+images:
+- gcr.io/flehmen-443214/flehmen-api
 
 steps:
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -20,4 +20,3 @@ steps:
   - --source=./batch
   - --trigger-http
   - --runtime=go123
-  - --allow-unauthenticated # TODO: remove this in production
