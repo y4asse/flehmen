@@ -10,11 +10,10 @@ import (
 )
 
 func init() {
-	functions.HTTP("HelloHTTP", HelloHTTP)
+	functions.HTTP("FlehmenBatch", FlehmenBatch)
 }
 
-// HelloHTTP is an HTTP Cloud Function with a request parameter.
-func HelloHTTP(w http.ResponseWriter, r *http.Request) {
+func FlehmenBatch(w http.ResponseWriter, r *http.Request) {
 	var d struct {
 		Name string `json:"name"`
 	}
