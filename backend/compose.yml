@@ -8,3 +8,13 @@ services:
     tty: true
     ports:
       - "8080:8080"
+  batch:
+    volumes:
+      - ./batch:/app
+    build:
+      context: .
+      dockerfile: Dockerfile.batch.dev
+    tty: true
+    ports:
+      - "8081:8081"
+    
