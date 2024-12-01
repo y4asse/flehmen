@@ -17,6 +17,7 @@ steps:
   - deploy
   - flehmen-batch
   - --region=asia-northeast1
-  - --source=.
+  - --source=./batch
   - --trigger-http
   - --runtime=go123
+  - --allow-unauthenticated # TODO: remove this in production
