@@ -1,8 +1,10 @@
 services:
   api:
-    build: .
     volumes:
       - .:/app
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     tty: true
     ports:
       - "8080:8080"
