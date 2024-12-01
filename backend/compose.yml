@@ -16,5 +16,5 @@ services:
       dockerfile: Dockerfile.batch.dev
     tty: true
     ports:
-      - "8081:8081"
+      - "8081:8080"
     
