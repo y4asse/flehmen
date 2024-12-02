@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useRef } from "react";
 
 type LogProps = {
   busy_color_index_list: number[][];
@@ -42,6 +43,18 @@ export const Habit = (props: LogProps) => {
   );
   // 現在の曜日を取得
   const currentDayIndex = (new Date().getDay() + 6) % 7; // 0(日曜)〜6(土曜)
+  // スクロールするターゲットの参照
+  const currentRowRef = useRef<HTMLDivElement | null>(null);
+
+  // 現在の時間までスクロール
+  useEffect(() => {
+    if (currentRowRef.current) {
+      currentRowRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, []);
 
   return (
     <div
@@ -73,7 +86,11 @@ export const Habit = (props: LogProps) => {
       </div>
       {/* Data Rows */}
       {hours.map((hour, hourIndex) => (
-        <div key={hour} style={{ display: "flex" }}>
+        <div
+          key={hour}
+          style={{ display: "flex" }}
+          ref={hourIndex === currentHourIndex ? currentRowRef : null}
+        >
           {/* Hour Column */}
           <div
             style={{
