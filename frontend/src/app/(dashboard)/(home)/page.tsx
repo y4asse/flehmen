@@ -17,7 +17,8 @@ const Page = () => {
       children: <WeekGraph />,
     },
     {
-      ...logWindow,
+      ...habitWindow,
+      title: "生息時間",
       children: <Habit busy_color_index_list={busy_color_index_list} />,
     },
   ];
@@ -58,6 +59,7 @@ const busy_color_index_list = [
   [3, 4, 5, 0, 1, 2, 3],
   [4, 5, 0, 1, 2, 3, 4],
   [5, 0, 1, 2, 3, 4, 5],
+  [4, 5, 0, 1, 2, 3, 4],
 ];
 
 const timeGraphWindow = {
@@ -83,7 +85,7 @@ const weekGraphWindow = {
     z: 2,
   },
 };
-const logWindow = {
+const habitWindow = {
   initSize: {
     width: 460,
     height: 330,
