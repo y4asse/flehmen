@@ -2,19 +2,18 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-
 // homeItems 配列を定義
 const homeItems = [
-  { name: "生活習慣", href: "/life" },
-  { name: "おともだち", href: "/friendship" },
-  { name: "ff", href: "/ff" },
+  { name: "プロフィール", href: "/profile" },
+  { name: "FF", href: "/ff" },
   { name: "ひみつ", href: "/secret" },
 ];
 
 // BackGroundコンポーネント
 export const BackGround = () => {
   return (
-    <div className=" bg-black  before:content-[''] before:absolute before:w-full before:h-full before:bg-[url('/images/cat_bg.svg')] before:bg-center before:bg-no-repeat before:bg-[length:40%] before:opacity-30 before:-z-10"
+    <div
+      className=" bg-black  before:content-[''] before:absolute before:w-full before:h-full before:bg-[url('/images/cat_bg.svg')] before:bg-center before:bg-no-repeat before:bg-[length:40%] before:opacity-30 before:-z-10"
       style={{
         display: "flex",
         flexDirection: "column",
@@ -22,27 +21,29 @@ export const BackGround = () => {
         height: "100vh",
         paddingTop: "4%",
         color: "white",
-        position: "relative", 
-        zIndex: "0", 
-      }}>
-      <div className="bgItemContainer"style={styles.bgItemContainer}>
-        <Image
-          className="logo"
-          width={100}
-          height={100}
-          src="/images/logo.svg"
-          style={styles.logo}
-          alt="Logo"
-        />
-        <div className= "items" style = {styles.items}>
-        {/* homeItems 配列をマッピング */}
-        {homeItems.map((item) => (
-          <HomeItem key={item.name} name={item.name} href={item.href} />
-        ))}
+        position: "relative",
+        zIndex: "0",
+      }}
+    >
+      <div className="bgItemContainer" style={styles.bgItemContainer}>
+        <Link href="/">
+          <Image
+            className="logo"
+            width={100}
+            height={100}
+            src="/images/logo.svg"
+            style={styles.logo}
+            alt="Logo"
+          />
+        </Link>
+        <div className="items" style={styles.items}>
+          {/* homeItems 配列をマッピング */}
+          {homeItems.map((item) => (
+            <HomeItem key={item.name} name={item.name} href={item.href} />
+          ))}
         </div>
       </div>
     </div>
-
   );
 };
 
@@ -62,7 +63,7 @@ const HomeItem = ({ name, href }: Props) => {
         width={100}
         height={100}
       />
-      <div style={styles.itemName}>{name}</div>
+      <p style={styles.itemName}>{name}</p>
     </Link>
   );
 };
@@ -71,7 +72,6 @@ export default BackGround;
 
 // CSSスタイル
 const styles: { [key: string]: React.CSSProperties } = {
-
   bg: {
     display: "flex",
     position: "absolute",
@@ -88,7 +88,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     width: "50%",
     height: "auto",
     objectFit: "cover",
-    zIndex: "-1", 
+    zIndex: "-1",
     opacity: "0.3",
   },
   bgItemContainer: {
@@ -100,12 +100,12 @@ const styles: { [key: string]: React.CSSProperties } = {
     height: "100%",
   },
   logo: {
-    width: "100%",
+    width: "75%",
     height: "auto",
     marginBottom: "2rem",
     margin: "0 5%",
   },
-  items:{
+  items: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -114,7 +114,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     height: "100%",
     marginTop: "2rem",
     marginLeft: "10%",
-    gap: "2vh",
+    gap: "4vh",
   },
   item: {
     width: "auto",
@@ -127,14 +127,15 @@ const styles: { [key: string]: React.CSSProperties } = {
     margin: "5%s",
   },
   icon: {
-    margin:"2%" ,
+    margin: "2%",
     width: "auto",
     height: "80%",
     marginBottom: "0.5rem",
   },
   itemName: {
     fontSize: "80%",
-    textAlign: "center", 
-    margin:"3%"
+    textAlign: "center",
+    margin: "3%",
+    width: "max-content",
   },
 };
