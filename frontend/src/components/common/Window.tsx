@@ -118,7 +118,7 @@ export const Window = (props: WindowProps) => {
       </Flex>
 
       {/* コンテンツ部分 */}
-      <Flex className="w-full h-full overflow-y-scroll max-h-full">
+      <Flex className="w-full h-full overflow-y-scroll max-h-full overflow-x-hidden">
         {children}
       </Flex>
     </Flex>
