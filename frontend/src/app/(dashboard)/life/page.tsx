@@ -18,7 +18,7 @@ const Page = () => {
     },
     {
       ...logWindow,
-      children: <Log />,
+      children: <Log tweets={tweets} />,
     },
   ];
 
@@ -28,6 +28,49 @@ const Page = () => {
     </div>
   );
 };
+
+const tweets = [
+  {
+    id: "1",
+    text: "今日も一日がんばるぞい！",
+    createdAt: "2021-01-01T00:00:00Z",
+  },
+  {
+    id: "2",
+    text: "今日も一日がんばるぞい！",
+    createdAt: "2021-01-01T00:00:00Z",
+  },
+  {
+    id: "3",
+    text: "今日も一日がんばるぞい！",
+    createdAt: "2021-01-01T00:00:00Z",
+  },
+  {
+    id: "4",
+    text: "今日も一日がんばるぞい！",
+    createdAt: "2021-01-01T00:00:00Z",
+  },
+  {
+    id: "5",
+    text: "今日も一日がんばるぞい！",
+    createdAt: "2021-01-01T00:00:00Z",
+  },
+  {
+    id: "6",
+    text: "今日も一日がんばるぞい！",
+    createdAt: "2021-01-01T00:00:00Z",
+  },
+  {
+    id: "7",
+    text: "今日も一日がんばるぞい！",
+    createdAt: "2021-01-01T00:00:00Z",
+  },
+  {
+    id: "8",
+    text: "今日も一日がんばるぞい！",
+    createdAt: "2021-01-01T00:00:00Z",
+  },
+];
 
 const timeGraphWindow = {
   initSize: {
@@ -55,7 +98,7 @@ const weekGraphWindow = {
 const logWindow = {
   initSize: {
     width: 460,
-    height: 360,
+    height: 330,
   },
   initPosition: {
     x: 900,

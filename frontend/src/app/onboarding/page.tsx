@@ -16,6 +16,7 @@ const sukipiInput = [
   { title: "靴のサイズ", type: "number", name: "shoeSize" },
   { title: "家族", type: "text", name: "family" },
   { title: "最寄り駅", type: "text", name: "nearStation" }
+
 ];
 
 const Page = () => {
@@ -51,6 +52,7 @@ const Page = () => {
   };
 
   return (
+
     <Flex className="w-[100%] h-[100vh] bg-[#000]" style={{ color: "#E4007F" }} direction={"column"} align={"center"} justify={"center"}>
       <div className="text-[5vw] mb-[5%]">
         <Typewriter text="スキピのこと教えて？" speed={100} loop={false} />
