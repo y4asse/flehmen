@@ -9,50 +9,17 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-
-interface DataPoint {
-  date: string;
-  count: number;
-}
-
-const data: DataPoint[] = [
-  { date: "11/01", count: 2 },
-  { date: "11/02", count: 0 },
-  { date: "11/03", count: 5 },
-  { date: "11/04", count: 1 },
-  { date: "11/05", count: 4 },
-  { date: "11/06", count: 0 },
-  { date: "11/07", count: 3 },
-  { date: "11/08", count: 2 },
-  { date: "11/09", count: 0 },
-  { date: "11/10", count: 1 },
-  { date: "11/11", count: 4 },
-  { date: "11/12", count: 0 },
-  { date: "11/13", count: 3 },
-  { date: "11/14", count: 2 },
-  { date: "11/15", count: 0 },
-  { date: "11/16", count: 1 },
-  { date: "11/17", count: 4 },
-  { date: "11/18", count: 0 },
-  { date: "11/19", count: 3 },
-  { date: "11/20", count: 2 },
-  { date: "11/21", count: 0 },
-  { date: "11/22", count: 1 },
-  { date: "11/23", count: 4 },
-  { date: "11/24", count: 0 },
-  { date: "11/25", count: 3 },
-  { date: "11/26", count: 2 },
-  { date: "11/27", count: 0 },
-  { date: "11/28", count: 1 },
-  { date: "11/29", count: 4 },
-  { date: "11/30", count: 0 },
-];
+import { DateTweetCount } from "../page";
 
 interface CustomDotProps {
   cx?: number; // ドットの中心 x 座標
   cy?: number; // ドットの中心 y 座標
   stroke?: string; // 線の色
 }
+
+type Props = {
+  monthlyTweetCounts: DateTweetCount[];
+};
 
 const HeartDot: React.FC<CustomDotProps> = ({ cx, cy, stroke }) => {
   if (!cx || !cy) return null; // cx, cy が undefined の場合は何も描画しない
@@ -73,10 +40,11 @@ const HeartDot: React.FC<CustomDotProps> = ({ cx, cy, stroke }) => {
   );
 };
 
-export const TimeGraph = () => {
+export const MonthlyGraph = (props: Props) => {
+  const { monthlyTweetCounts } = props;
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <LineChart data={data}>
+      <LineChart data={monthlyTweetCounts}>
         <CartesianGrid strokeDasharray="5 5" stroke="#E4007F" />
         <XAxis dataKey="date" stroke="#E4007F" />
         <YAxis stroke="#E4007F" />

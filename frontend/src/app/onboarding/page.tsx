@@ -36,7 +36,7 @@ const sukipiInput = [
   {
     title: "靴のサイズ",
     type: "number",
-    name: "shoeSize",
+    name: "shoesSize",
   },
   {
     title: "家族",
