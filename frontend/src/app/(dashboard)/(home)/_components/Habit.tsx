@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useRef } from "react";
 
 type LogProps = {
   busy_color_index_list: number[][];
@@ -6,7 +7,7 @@ type LogProps = {
 
 export const Habit = (props: LogProps) => {
   const { busy_color_index_list } = props;
-  const days = ["げつ", "にち", "どー", "きん", "もく", "すい", "かー"];
+  const days = ["げつ", "か-", "すい", "もく", "きん", "ど", "にち"];
   const hours = [
     "00:00",
     "01:00",
@@ -35,6 +36,26 @@ export const Habit = (props: LogProps) => {
     "24:00",
   ];
   const busy_color = [0, 0.2, 0.4, 0.6, 0.8, 1];
+  // 現在時刻の時間帯を取得
+  const currentHour = new Date().getHours(); // 0〜23 の時間
+  const currentHourIndex = hours.findIndex((hour) =>
+    hour.startsWith(currentHour.toString().padStart(2, "0"))
+  );
+  // 現在の曜日を取得
+  const currentDayIndex = (new Date().getDay() + 6) % 7; // 0(日曜)〜6(土曜)
+  // スクロールするターゲットの参照
+  const currentRowRef = useRef<HTMLDivElement | null>(null);
+
+  // 現在の時間までスクロール
+  useEffect(() => {
+    if (currentRowRef.current) {
+      currentRowRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, []);
+
   return (
     <div
       style={{ display: "flex", flexDirection: "column", width: "100%" }}
@@ -56,7 +77,6 @@ export const Habit = (props: LogProps) => {
             key={day}
             style={{
               flex: 1,
-              padding: "8px",
               textAlign: "center",
             }}
           >
@@ -65,13 +85,16 @@ export const Habit = (props: LogProps) => {
         ))}
       </div>
       {/* Data Rows */}
-      {hours.map((hour) => (
-        <div key={hour} style={{ display: "flex" }}>
+      {hours.map((hour, hourIndex) => (
+        <div
+          key={hour}
+          style={{ display: "flex" }}
+          ref={hourIndex === currentHourIndex ? currentRowRef : null}
+        >
           {/* Hour Column */}
           <div
             style={{
               width: "80px",
-              padding: "8px",
               textAlign: "center",
               backgroundColor: "#000",
             }}
@@ -80,20 +103,26 @@ export const Habit = (props: LogProps) => {
             {hour}
           </div>
           {/* Data Columns */}
-          {busy_color_index_list.map((busy_color_index, i) => (
-            <div
-              key={i}
-              style={{
-                flex: 1,
-                padding: "8px",
-                textAlign: "center",
-                backgroundColor: "#E4007F",
-                opacity: busy_color[busy_color_index[i]],
-              }}
-            >
-              {busy_color[busy_color_index[i]]}
-            </div>
-          ))}
+          {days.map((_, dayIndex) => {
+            const colorIndex =
+              busy_color_index_list[hourIndex]?.[dayIndex] ?? 0; // 安全に取得
+            return (
+              <div
+                key={dayIndex}
+                style={{
+                  flex: 1,
+                  textAlign: "center",
+                  backgroundColor: "#E4007F",
+                  opacity: busy_color[colorIndex],
+                  border:
+                    hourIndex === currentHourIndex &&
+                    dayIndex === currentDayIndex
+                      ? "2px solid #fff"
+                      : "none",
+                }}
+              ></div>
+            );
+          })}
         </div>
       ))}
     </div>
