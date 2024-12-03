@@ -28,10 +28,10 @@ export type Sukipi = {
   height?: number;
   mbti?: MBTI;
   birthday?: string;
-  hobby: string;
-  shoeSize: number;
-  famiry: string;
-  nearyStation: string;
+  hobby?: string;
+  shoesSize?: number;
+  family?: string;
+  nearlyStation?: string;
 };
 
 type SukipiLikedAt = {
@@ -39,42 +39,6 @@ type SukipiLikedAt = {
 };
 
 const Page = () => {
-  const sukipiInfoWindow = {
-    initSize: {
-      width: 750,
-      height: 500,
-    },
-    initPosition: {
-      x: 650,
-      y: 50,
-      z: 2,
-    },
-  };
-
-  const sukipiLikeAtWindow = {
-    initSize: {
-      width: 500,
-      height: 400,
-    },
-    initPosition: {
-      x: 300,
-      y: 250,
-      z: 1,
-    },
-  };
-
-  const sukipi: Sukipi = {
-    name: "早瀬",
-    weight: 0,
-    height: 170,
-    mbti: "INTP",
-    birthday: "2003-02-18",
-    hobby: "セクハラ",
-    shoeSize: 27,
-    famiry: "",
-    nearyStation: "新宿",
-  };
-
   const sukipiLikedAt: SukipiLikedAt = {
     likedAt: dayjs("2010-04-01").toISOString(), // 1月始まり
   };
@@ -97,6 +61,42 @@ const Page = () => {
       <Windows windows={windows} />
     </div>
   );
+};
+
+const sukipiInfoWindow = {
+  initSize: {
+    width: 750,
+    height: 500,
+  },
+  initPosition: {
+    x: 650,
+    y: 50,
+    z: 2,
+  },
+};
+
+const sukipiLikeAtWindow = {
+  initSize: {
+    width: 500,
+    height: 400,
+  },
+  initPosition: {
+    x: 300,
+    y: 250,
+    z: 1,
+  },
+};
+
+const sukipi: Sukipi = {
+  name: "早瀬",
+  weight: 0,
+  height: 170,
+  mbti: "INTP",
+  birthday: "2003-02-18",
+  hobby: "セクハラ",
+  shoesSize: 27,
+  family: "",
+  nearlyStation: "新宿",
 };
 
 export default Page;

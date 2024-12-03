@@ -25,7 +25,6 @@ type WeeklyTweetCountKey = keyof WeeklyTweetCount;
 export const WeeklyGraph = (props: Props) => {
   const { weeklyAllTweetCounts, dataKey, nameKey } = props;
 
-  console.log(weeklyAllTweetCounts);
   const renderCustomLabel = ({
     cx,
     cy,
