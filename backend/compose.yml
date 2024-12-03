@@ -1,10 +1,44 @@
 services:
   api:
     volumes:
-      - .:/app
+      - ./app:/app
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.api.dev
     tty: true
     ports:
       - "8080:8080"
+    depends_on:
+      - db
+  batch:
+    volumes:
+      - ./batch:/app
+    build:
+      context: .
+      dockerfile: Dockerfile.batch.dev
+    tty: true
+    ports:
+      - "8081:8080"
+    command: ["functions-framework-python", "--target", "flehmen_batch"]
+    depends_on:
+      - db
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: flehmen
+      TZ: Asia/Tokyo
+    ports:
+      - 3306:3306
+    tty: true
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql:cached
+    networks:
+      - flehmen
+
+networks:
+  flehmen:
+    driver: bridge

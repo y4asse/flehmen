@@ -23,10 +23,10 @@ export const SukipiInfo = ({ sukipi }: Props) => {
     { title: "趣味", content: sukipi.hobby || "?まだわからない?" },
     {
       title: "くつのサイズ",
-      content: sukipi.shoeSize ? `${sukipi.shoeSize} cm` : "?まだわからない?",
+      content: sukipi.shoesSize ? `${sukipi.shoesSize} cm` : "?まだわからない?",
     },
-    { title: "かぞく", content: sukipi.famiry || "?まだわからない?" },
-    { title: "最寄駅", content: sukipi.nearyStation || "?まだわからない?" },
+    { title: "かぞく", content: sukipi.family || "?まだわからない?" },
+    { title: "最寄駅", content: sukipi.nearlyStation || "?まだわからない?" },
   ];
 
   return (

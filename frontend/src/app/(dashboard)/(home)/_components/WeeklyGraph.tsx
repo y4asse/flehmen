@@ -2,21 +2,7 @@
 import React from "react";
 
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
-
-interface DataPoint {
-  name: string;
-  value: number;
-}
-
-const data: DataPoint[] = [
-  { name: "げつ", value: 400 },
-  { name: "にち", value: 239 },
-  { name: "どー", value: 189 },
-  { name: "きん", value: 278 },
-  { name: "もく", value: 200 },
-  { name: "すい", value: 300 },
-  { name: "かー", value: 300 },
-];
+import { WeeklyTweetCount } from "../page";
 
 const COLORS = [
   "#E4007F",
@@ -28,58 +14,68 @@ const COLORS = [
   "#E81F8F",
 ];
 
-const renderCustomLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-  index,
-}: {
-  cx: number;
-  cy: number;
-  midAngle: number;
-  innerRadius: number;
-  outerRadius: number;
-  percent: number;
-  index: number;
-}) => {
-  // ラベルの表示位置を計算
-  const RADIAN = Math.PI / 180;
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="#fff"
-      textAnchor={x > cx ? "start" : "end"}
-      dominantBaseline="central"
-      fontSize={12}
-    >
-      {/* 改行する部分 */}
-      <tspan x={x} dy="0" fill="#000">
-        {data[index].name}
-      </tspan>
-      <tspan fill="#000" x={x} dy="15">{`${(percent * 100).toFixed(
-        0
-      )}%`}</tspan>
-    </text>
-  );
+type Props = {
+  weeklyAllTweetCounts: WeeklyTweetCount[];
+  dataKey: WeeklyTweetCountKey;
+  nameKey: WeeklyTweetCountKey;
 };
 
-export const WeekGraph = () => {
+type WeeklyTweetCountKey = keyof WeeklyTweetCount;
+
+export const WeeklyGraph = (props: Props) => {
+  const { weeklyAllTweetCounts, dataKey, nameKey } = props;
+
+  const renderCustomLabel = ({
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    percent,
+    index,
+  }: {
+    cx: number;
+    cy: number;
+    midAngle: number;
+    innerRadius: number;
+    outerRadius: number;
+    percent: number;
+    index: number;
+  }) => {
+    // ラベルの表示位置を計算
+    const RADIAN = Math.PI / 180;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="#fff"
+        textAnchor={x > cx ? "start" : "end"}
+        dominantBaseline="central"
+        fontSize={12}
+      >
+        {/* 改行する部分 */}
+        <tspan x={x} dy="0" fill="#000">
+          {weeklyAllTweetCounts[index].day}
+        </tspan>
+        <tspan fill="#000" x={x} dy="15">{`${(percent * 100).toFixed(
+          0
+        )}%`}</tspan>
+      </text>
+    );
+  };
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <PieChart>
         {/* 円グラフ */}
         <Pie
-          data={data}
-          dataKey="value" // データ値に対応
-          nameKey="name" // 名前キー
+          data={weeklyAllTweetCounts}
+          dataKey={dataKey} // データ値に対応
+          nameKey={nameKey} // 名前キー
           cx="50%" // 円のX位置
           cy="50%" // 円のY位置
           innerRadius={20} // 内側半径
@@ -87,7 +83,7 @@ export const WeekGraph = () => {
           labelLine={false} // ラベルラインを非表示
           label={renderCustomLabel} // カスタムラベルを指定
         >
-          {data.map((entry, index) => (
+          {weeklyAllTweetCounts.map((_, index) => (
             <Cell
               key={`cell-${index}`}
               fill={COLORS[index % COLORS.length]}

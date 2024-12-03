@@ -4,18 +4,52 @@ import { Flex } from "@/components/ui/flex";
 import Typewriter from "@/components/common/Typewriter";
 
 const sukipiInput = [
-  { title: "名前", type: "text", name: "name" },
-  { title: "ツイッター", type: "text", name: "twitter" },
-  { title: "Instagram", type: "text", name: "instagram" },
-  { title: "体重", type: "number", name: "weight" },
-  { title: "身長", type: "number", name: "height" },
-  { title: "MBTI", type: "text", name: "mbti" },
-  { title: "誕生日", type: "text", name: "birthday" },
-  { title: "趣味", type: "text", name: "hobby" },
-  { title: "靴のサイズ", type: "number", name: "shoeSize" },
-  { title: "家族", type: "text", name: "family" },
-  { title: "最寄り駅", type: "text", name: "nearStation" }
 
+  {
+    title: "名前",
+    type: "text",
+    name: "name",
+  },
+  {
+    title: "体重",
+    type: "number",
+    name: "weight",
+  },
+  {
+    title: "身長",
+    type: "number",
+    name: "height",
+  },
+  {
+    title: "MBTI",
+    type: "text",
+    name: "mbti",
+  },
+  {
+    title: "誕生日",
+    type: "date",
+    name: "birthday",
+  },
+  {
+    title: "趣味",
+    type: "text",
+    name: "hobby",
+  },
+  {
+    title: "靴のサイズ",
+    type: "number",
+    name: "shoesSize",
+  },
+  {
+    title: "家族",
+    type: "text",
+    name: "family",
+  },
+  {
+    title: "最寄り駅",
+    type: "text",
+    name: "nearStation",
+  },
 ];
 
 const Page = () => {
