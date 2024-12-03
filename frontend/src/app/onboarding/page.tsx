@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Flex } from "@/components/ui/flex";
-import { Button } from "@/components/ui/button";
 import Typewriter from "@/components/common/Typewriter";
 
 const sukipiInput = [

@@ -1,5 +1,5 @@
 import { Windows } from "@/components/common/Windows";
-import React, {useState}from "react";
+import React from "react";
 import { InputVoice } from "./_components/InputVoice";
 import  VoicePlay  from "./_components/VoicePlay";
 
