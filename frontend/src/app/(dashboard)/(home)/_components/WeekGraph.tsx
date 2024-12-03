@@ -61,10 +61,12 @@ const renderCustomLabel = ({
       fontSize={12}
     >
       {/* 改行する部分 */}
-      <tspan x={x} dy="0">
+      <tspan x={x} dy="0" fill="#000">
         {data[index].name}
       </tspan>
-      <tspan x={x} dy="15">{`${(percent * 100).toFixed(0)}%`}</tspan>
+      <tspan fill="#000" x={x} dy="15">{`${(percent * 100).toFixed(
+        0
+      )}%`}</tspan>
     </text>
   );
 };
@@ -86,7 +88,11 @@ export const WeekGraph = () => {
           label={renderCustomLabel} // カスタムラベルを指定
         >
           {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            <Cell
+              key={`cell-${index}`}
+              fill={COLORS[index % COLORS.length]}
+              stroke="#000000"
+            />
           ))}
         </Pie>
 

@@ -69,4 +69,7 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  main {
+    overflow: hidden;
+  }
 }
