@@ -17,9 +17,9 @@ type User struct {
 func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
-		field.Float("weight"),
-		field.Float("height"),
-		field.String("clerk_id").Optional(),
+		field.Float("weight").Optional(),
+		field.Float("height").Optional(),
+		field.String("clerk_id"),
 		field.Bool("is_male"),
 		field.Time("created_at").Default(time.Now),
 	}
@@ -29,5 +29,6 @@ func (User) Fields() []ent.Field {
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("mbti", Mbti.Type).Unique(),
+		edge.To("special_events", SpecialEvent.Type),
 	}
 }
