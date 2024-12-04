@@ -96,8 +96,8 @@ var (
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString},
-		{Name: "weight", Type: field.TypeFloat64, Nullable: true},
-		{Name: "height", Type: field.TypeFloat64, Nullable: true},
+		{Name: "weight", Type: field.TypeFloat64},
+		{Name: "height", Type: field.TypeFloat64},
 		{Name: "clerk_id", Type: field.TypeString, Unique: true},
 		{Name: "is_male", Type: field.TypeBool},
 		{Name: "created_at", Type: field.TypeTime},

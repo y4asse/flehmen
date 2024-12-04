@@ -190,16 +190,6 @@ func WeightLTE(v float64) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldWeight, v))
 }
 
-// WeightIsNil applies the IsNil predicate on the "weight" field.
-func WeightIsNil() predicate.User {
-	return predicate.User(sql.FieldIsNull(FieldWeight))
-}
-
-// WeightNotNil applies the NotNil predicate on the "weight" field.
-func WeightNotNil() predicate.User {
-	return predicate.User(sql.FieldNotNull(FieldWeight))
-}
-
 // HeightEQ applies the EQ predicate on the "height" field.
 func HeightEQ(v float64) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldHeight, v))
@@ -238,16 +228,6 @@ func HeightLT(v float64) predicate.User {
 // HeightLTE applies the LTE predicate on the "height" field.
 func HeightLTE(v float64) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldHeight, v))
-}
-
-// HeightIsNil applies the IsNil predicate on the "height" field.
-func HeightIsNil() predicate.User {
-	return predicate.User(sql.FieldIsNull(FieldHeight))
-}
-
-// HeightNotNil applies the NotNil predicate on the "height" field.
-func HeightNotNil() predicate.User {
-	return predicate.User(sql.FieldNotNull(FieldHeight))
 }
 
 // ClerkIDEQ applies the EQ predicate on the "clerk_id" field.

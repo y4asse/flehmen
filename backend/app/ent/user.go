@@ -21,9 +21,9 @@ type User struct {
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Weight holds the value of the "weight" field.
-	Weight float64 `json:"weight,omitempty"`
+	Weight *float64 `json:"weight,omitempty"`
 	// Height holds the value of the "height" field.
-	Height float64 `json:"height,omitempty"`
+	Height *float64 `json:"height,omitempty"`
 	// ClerkID holds the value of the "clerk_id" field.
 	ClerkID string `json:"clerk_id,omitempty"`
 	// IsMale holds the value of the "is_male" field.
@@ -116,13 +116,15 @@ func (u *User) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
 				return fmt.Errorf("unexpected type %T for field weight", values[i])
 			} else if value.Valid {
-				u.Weight = value.Float64
+				u.Weight = new(float64)
+				*u.Weight = value.Float64
 			}
 		case user.FieldHeight:
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
 				return fmt.Errorf("unexpected type %T for field height", values[i])
 			} else if value.Valid {
-				u.Height = value.Float64
+				u.Height = new(float64)
+				*u.Height = value.Float64
 			}
 		case user.FieldClerkID:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -198,11 +200,15 @@ func (u *User) String() string {
 	builder.WriteString("name=")
 	builder.WriteString(u.Name)
 	builder.WriteString(", ")
-	builder.WriteString("weight=")
-	builder.WriteString(fmt.Sprintf("%v", u.Weight))
+	if v := u.Weight; v != nil {
+		builder.WriteString("weight=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteString(", ")
-	builder.WriteString("height=")
-	builder.WriteString(fmt.Sprintf("%v", u.Height))
+	if v := u.Height; v != nil {
+		builder.WriteString("height=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteString(", ")
 	builder.WriteString("clerk_id=")
 	builder.WriteString(u.ClerkID)

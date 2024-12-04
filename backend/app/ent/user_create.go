@@ -34,25 +34,9 @@ func (uc *UserCreate) SetWeight(f float64) *UserCreate {
 	return uc
 }
 
-// SetNillableWeight sets the "weight" field if the given value is not nil.
-func (uc *UserCreate) SetNillableWeight(f *float64) *UserCreate {
-	if f != nil {
-		uc.SetWeight(*f)
-	}
-	return uc
-}
-
 // SetHeight sets the "height" field.
 func (uc *UserCreate) SetHeight(f float64) *UserCreate {
 	uc.mutation.SetHeight(f)
-	return uc
-}
-
-// SetNillableHeight sets the "height" field if the given value is not nil.
-func (uc *UserCreate) SetNillableHeight(f *float64) *UserCreate {
-	if f != nil {
-		uc.SetHeight(*f)
-	}
 	return uc
 }
 
@@ -162,6 +146,12 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "User.name"`)}
 	}
+	if _, ok := uc.mutation.Weight(); !ok {
+		return &ValidationError{Name: "weight", err: errors.New(`ent: missing required field "User.weight"`)}
+	}
+	if _, ok := uc.mutation.Height(); !ok {
+		return &ValidationError{Name: "height", err: errors.New(`ent: missing required field "User.height"`)}
+	}
 	if _, ok := uc.mutation.ClerkID(); !ok {
 		return &ValidationError{Name: "clerk_id", err: errors.New(`ent: missing required field "User.clerk_id"`)}
 	}
@@ -203,11 +193,11 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := uc.mutation.Weight(); ok {
 		_spec.SetField(user.FieldWeight, field.TypeFloat64, value)
-		_node.Weight = value
+		_node.Weight = &value
 	}
 	if value, ok := uc.mutation.Height(); ok {
 		_spec.SetField(user.FieldHeight, field.TypeFloat64, value)
-		_node.Height = value
+		_node.Height = &value
 	}
 	if value, ok := uc.mutation.ClerkID(); ok {
 		_spec.SetField(user.FieldClerkID, field.TypeString, value)
