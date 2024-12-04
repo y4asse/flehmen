@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useRef } from 'react';
-import { Play, Pause } from 'lucide-react';
+import { Flex } from '@/components/ui/flex';
+import { Button } from '@/components/ui/button';
 
 const AudioPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -27,8 +28,7 @@ const AudioPlayer = () => {
 
   const updateProgress = () => {
     if (audioRef.current) {
-      const progressPercent = 
-        (audioRef.current.currentTime / audioRef.current.duration) * 100;
+      const progressPercent = (audioRef.current.currentTime / audioRef.current.duration) * 100;
       setProgress(progressPercent);
     }
   };
@@ -39,30 +39,63 @@ const AudioPlayer = () => {
   };
 
   return (
-    <div className="flex items-center space-x-4 p-4 bg-gray-100 rounded-lg">
-      <button 
-        onClick={handlePlayPause} 
-        className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600"
+    <Flex className="flex flex-col items-center space-y-4 p-4 w-full">
+      <Button
+        onClick={handlePlayPause}
+        className="text-white p-4 rounded-full bg-gray-800"
+        style={{
+          width: '20%',
+          height: '20%',
+          fontSize: '1.5rem',
+          imageRendering: 'pixelated',
+        }}
       >
-        {isPlaying ? <Pause size={24} /> : <Play size={24} />}
-      </button>
-      
-      <input 
+        {isPlaying ? "❚❚" : "▷"}
+      </Button>
+
+      <input
         type="range"
         min="0"
         max="100"
         value={progress}
         onChange={handleSeek}
-        className="flex-grow"
+        className="w-3/4 appearance-none bg-gray-300 rounded-lg outline-none"
+        style={{
+          width: '70%',
+          height: '10px',
+          background: `linear-gradient(to right, #E4007F ${progress}%, #ccc ${progress}%)`, // 動的背景
+        }}
       />
-      
-      <audio 
-        ref={audioRef} 
+
+      <style jsx>{`
+        input[type='range']::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 32px;
+          height: 32px;
+          background: url('/images/hart_item.png') no-repeat center;
+          background-size: contain;
+          cursor: pointer;
+          image-rendering: pixelated;
+          transform: translateY(-50%);
+        }
+        input[type='range']::-moz-range-thumb {
+          width: 32px;
+          height: 32px;
+          background: url('/images/hart_item.png') no-repeat center;
+          background-size: contain;
+          cursor: pointer;
+          image-rendering: pixelated;
+        }
+      `}</style>
+
+      <audio
+        ref={audioRef}
         src="./voice/ayapo_voice.mp3"
         onTimeUpdate={updateProgress}
         onEnded={handleEnd}
       />
-    </div>
+    </Flex>
   );
 };
 
