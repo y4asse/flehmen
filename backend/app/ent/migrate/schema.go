@@ -98,7 +98,7 @@ var (
 		{Name: "name", Type: field.TypeString},
 		{Name: "weight", Type: field.TypeFloat64, Nullable: true},
 		{Name: "height", Type: field.TypeFloat64, Nullable: true},
-		{Name: "clerk_id", Type: field.TypeString},
+		{Name: "clerk_id", Type: field.TypeString, Unique: true},
 		{Name: "is_male", Type: field.TypeBool},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "user_mbti", Type: field.TypeInt, Nullable: true},
