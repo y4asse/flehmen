@@ -9,6 +9,9 @@ down:
 docker_db_cli:
 	${DC} exec -it db mysql -u root -p -D flehmen
 
+docker_db_clear:
+	${DC} exec db mysql -u root -p -e "DROP DATABASE flehmen; CREATE DATABASE flehmen;"
+
 docker_api_cli:
 	${DC} exec -it api bash
 
