@@ -15,3 +15,6 @@ db_status:
 	${ATLAS} migrate status \
 	--dir "file://ent/migrate/migrations" \
 	--url "mysql://root:password@localhost:3306/flehmen"
+
+ent_generate:
+	go generate ./ent
