@@ -777,22 +777,6 @@ func (c *TweetClient) GetX(ctx context.Context, id int) *Tweet {
 	return obj
 }
 
-// QuerySukipi queries the sukipi edge of a Tweet.
-func (c *TweetClient) QuerySukipi(t *Tweet) *SukipiQuery {
-	query := (&SukipiClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := t.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(tweet.Table, tweet.FieldID, id),
-			sqlgraph.To(sukipi.Table, sukipi.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, tweet.SukipiTable, tweet.SukipiColumn),
-		)
-		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // Hooks returns the client hooks.
 func (c *TweetClient) Hooks() []Hook {
 	return c.hooks.Tweet
@@ -935,6 +919,22 @@ func (c *UserClient) QueryMbti(u *User) *MbtiQuery {
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(mbti.Table, mbti.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, user.MbtiTable, user.MbtiColumn),
+		)
+		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QuerySpecialEvents queries the special_events edge of a User.
+func (c *UserClient) QuerySpecialEvents(u *User) *SpecialEventQuery {
+	query := (&SpecialEventClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := u.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(specialevent.Table, specialevent.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.SpecialEventsTable, user.SpecialEventsColumn),
 		)
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil

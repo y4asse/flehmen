@@ -28,6 +28,8 @@ const (
 	FieldCreatedAt = "created_at"
 	// EdgeMbti holds the string denoting the mbti edge name in mutations.
 	EdgeMbti = "mbti"
+	// EdgeSpecialEvents holds the string denoting the special_events edge name in mutations.
+	EdgeSpecialEvents = "special_events"
 	// Table holds the table name of the user in the database.
 	Table = "users"
 	// MbtiTable is the table that holds the mbti relation/edge.
@@ -37,6 +39,13 @@ const (
 	MbtiInverseTable = "mbtis"
 	// MbtiColumn is the table column denoting the mbti relation/edge.
 	MbtiColumn = "user_mbti"
+	// SpecialEventsTable is the table that holds the special_events relation/edge.
+	SpecialEventsTable = "special_events"
+	// SpecialEventsInverseTable is the table name for the SpecialEvent entity.
+	// It exists in this package in order to avoid circular dependency with the "specialevent" package.
+	SpecialEventsInverseTable = "special_events"
+	// SpecialEventsColumn is the table column denoting the special_events relation/edge.
+	SpecialEventsColumn = "user_special_events"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -120,10 +129,31 @@ func ByMbtiField(field string, opts ...sql.OrderTermOption) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newMbtiStep(), sql.OrderByField(field, opts...))
 	}
 }
+
+// BySpecialEventsCount orders the results by special_events count.
+func BySpecialEventsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newSpecialEventsStep(), opts...)
+	}
+}
+
+// BySpecialEvents orders the results by special_events terms.
+func BySpecialEvents(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newSpecialEventsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newMbtiStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(MbtiInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.M2O, false, MbtiTable, MbtiColumn),
+	)
+}
+func newSpecialEventsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(SpecialEventsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, SpecialEventsTable, SpecialEventsColumn),
 	)
 }

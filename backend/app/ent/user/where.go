@@ -190,6 +190,16 @@ func WeightLTE(v float64) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldWeight, v))
 }
 
+// WeightIsNil applies the IsNil predicate on the "weight" field.
+func WeightIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldWeight))
+}
+
+// WeightNotNil applies the NotNil predicate on the "weight" field.
+func WeightNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldWeight))
+}
+
 // HeightEQ applies the EQ predicate on the "height" field.
 func HeightEQ(v float64) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldHeight, v))
@@ -228,6 +238,16 @@ func HeightLT(v float64) predicate.User {
 // HeightLTE applies the LTE predicate on the "height" field.
 func HeightLTE(v float64) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldHeight, v))
+}
+
+// HeightIsNil applies the IsNil predicate on the "height" field.
+func HeightIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldHeight))
+}
+
+// HeightNotNil applies the NotNil predicate on the "height" field.
+func HeightNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldHeight))
 }
 
 // ClerkIDEQ applies the EQ predicate on the "clerk_id" field.
@@ -283,16 +303,6 @@ func ClerkIDHasPrefix(v string) predicate.User {
 // ClerkIDHasSuffix applies the HasSuffix predicate on the "clerk_id" field.
 func ClerkIDHasSuffix(v string) predicate.User {
 	return predicate.User(sql.FieldHasSuffix(FieldClerkID, v))
-}
-
-// ClerkIDIsNil applies the IsNil predicate on the "clerk_id" field.
-func ClerkIDIsNil() predicate.User {
-	return predicate.User(sql.FieldIsNull(FieldClerkID))
-}
-
-// ClerkIDNotNil applies the NotNil predicate on the "clerk_id" field.
-func ClerkIDNotNil() predicate.User {
-	return predicate.User(sql.FieldNotNull(FieldClerkID))
 }
 
 // ClerkIDEqualFold applies the EqualFold predicate on the "clerk_id" field.
@@ -370,6 +380,29 @@ func HasMbti() predicate.User {
 func HasMbtiWith(preds ...predicate.Mbti) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		step := newMbtiStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasSpecialEvents applies the HasEdge predicate on the "special_events" edge.
+func HasSpecialEvents() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, SpecialEventsTable, SpecialEventsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasSpecialEventsWith applies the HasEdge predicate on the "special_events" edge with a given conditions (other predicates).
+func HasSpecialEventsWith(preds ...predicate.SpecialEvent) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := newSpecialEventsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

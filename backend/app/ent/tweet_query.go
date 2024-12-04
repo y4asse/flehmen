@@ -5,7 +5,6 @@ package ent
 import (
 	"context"
 	"flehmen-api/ent/predicate"
-	"flehmen-api/ent/sukipi"
 	"flehmen-api/ent/tweet"
 	"fmt"
 	"math"
@@ -23,7 +22,6 @@ type TweetQuery struct {
 	order      []tweet.OrderOption
 	inters     []Interceptor
 	predicates []predicate.Tweet
-	withSukipi *SukipiQuery
 	withFKs    bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -59,28 +57,6 @@ func (tq *TweetQuery) Unique(unique bool) *TweetQuery {
 func (tq *TweetQuery) Order(o ...tweet.OrderOption) *TweetQuery {
 	tq.order = append(tq.order, o...)
 	return tq
-}
-
-// QuerySukipi chains the current query on the "sukipi" edge.
-func (tq *TweetQuery) QuerySukipi() *SukipiQuery {
-	query := (&SukipiClient{config: tq.config}).Query()
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := tq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		selector := tq.sqlQuery(ctx)
-		if err := selector.Err(); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(tweet.Table, tweet.FieldID, selector),
-			sqlgraph.To(sukipi.Table, sukipi.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, tweet.SukipiTable, tweet.SukipiColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
 }
 
 // First returns the first Tweet entity from the query.
@@ -275,22 +251,10 @@ func (tq *TweetQuery) Clone() *TweetQuery {
 		order:      append([]tweet.OrderOption{}, tq.order...),
 		inters:     append([]Interceptor{}, tq.inters...),
 		predicates: append([]predicate.Tweet{}, tq.predicates...),
-		withSukipi: tq.withSukipi.Clone(),
 		// clone intermediate query.
 		sql:  tq.sql.Clone(),
 		path: tq.path,
 	}
-}
-
-// WithSukipi tells the query-builder to eager-load the nodes that are connected to
-// the "sukipi" edge. The optional arguments are used to configure the query builder of the edge.
-func (tq *TweetQuery) WithSukipi(opts ...func(*SukipiQuery)) *TweetQuery {
-	query := (&SukipiClient{config: tq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	tq.withSukipi = query
-	return tq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -369,16 +333,10 @@ func (tq *TweetQuery) prepareQuery(ctx context.Context) error {
 
 func (tq *TweetQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Tweet, error) {
 	var (
-		nodes       = []*Tweet{}
-		withFKs     = tq.withFKs
-		_spec       = tq.querySpec()
-		loadedTypes = [1]bool{
-			tq.withSukipi != nil,
-		}
+		nodes   = []*Tweet{}
+		withFKs = tq.withFKs
+		_spec   = tq.querySpec()
 	)
-	if tq.withSukipi != nil {
-		withFKs = true
-	}
 	if withFKs {
 		_spec.Node.Columns = append(_spec.Node.Columns, tweet.ForeignKeys...)
 	}
@@ -388,7 +346,6 @@ func (tq *TweetQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Tweet,
 	_spec.Assign = func(columns []string, values []any) error {
 		node := &Tweet{config: tq.config}
 		nodes = append(nodes, node)
-		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -400,46 +357,7 @@ func (tq *TweetQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Tweet,
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := tq.withSukipi; query != nil {
-		if err := tq.loadSukipi(ctx, query, nodes, nil,
-			func(n *Tweet, e *Sukipi) { n.Edges.Sukipi = e }); err != nil {
-			return nil, err
-		}
-	}
 	return nodes, nil
-}
-
-func (tq *TweetQuery) loadSukipi(ctx context.Context, query *SukipiQuery, nodes []*Tweet, init func(*Tweet), assign func(*Tweet, *Sukipi)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*Tweet)
-	for i := range nodes {
-		if nodes[i].sukipi_tweets == nil {
-			continue
-		}
-		fk := *nodes[i].sukipi_tweets
-		if _, ok := nodeids[fk]; !ok {
-			ids = append(ids, fk)
-		}
-		nodeids[fk] = append(nodeids[fk], nodes[i])
-	}
-	if len(ids) == 0 {
-		return nil
-	}
-	query.Where(sukipi.IDIn(ids...))
-	neighbors, err := query.All(ctx)
-	if err != nil {
-		return err
-	}
-	for _, n := range neighbors {
-		nodes, ok := nodeids[n.ID]
-		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "sukipi_tweets" returned %v`, n.ID)
-		}
-		for i := range nodes {
-			assign(nodes[i], n)
-		}
-	}
-	return nil
 }
 
 func (tq *TweetQuery) sqlCount(ctx context.Context) (int, error) {

@@ -22,8 +22,9 @@ type SpecialEvent struct {
 	// Title holds the value of the "title" field.
 	Title string `json:"title,omitempty"`
 	// DetailComment holds the value of the "detail_comment" field.
-	DetailComment string `json:"detail_comment,omitempty"`
-	selectValues  sql.SelectValues
+	DetailComment       string `json:"detail_comment,omitempty"`
+	user_special_events *int
+	selectValues        sql.SelectValues
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -37,6 +38,8 @@ func (*SpecialEvent) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullString)
 		case specialevent.FieldOccuredAt:
 			values[i] = new(sql.NullTime)
+		case specialevent.ForeignKeys[0]: // user_special_events
+			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -75,6 +78,13 @@ func (se *SpecialEvent) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field detail_comment", values[i])
 			} else if value.Valid {
 				se.DetailComment = value.String
+			}
+		case specialevent.ForeignKeys[0]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field user_special_events", value)
+			} else if value.Valid {
+				se.user_special_events = new(int)
+				*se.user_special_events = int(value.Int64)
 			}
 		default:
 			se.selectValues.Set(columns[i], values[i])

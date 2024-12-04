@@ -22,6 +22,7 @@ type SpecialEventQuery struct {
 	order      []specialevent.OrderOption
 	inters     []Interceptor
 	predicates []predicate.SpecialEvent
+	withFKs    bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -332,9 +333,13 @@ func (seq *SpecialEventQuery) prepareQuery(ctx context.Context) error {
 
 func (seq *SpecialEventQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*SpecialEvent, error) {
 	var (
-		nodes = []*SpecialEvent{}
-		_spec = seq.querySpec()
+		nodes   = []*SpecialEvent{}
+		withFKs = seq.withFKs
+		_spec   = seq.querySpec()
 	)
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, specialevent.ForeignKeys...)
+	}
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*SpecialEvent).scanValues(nil, columns)
 	}

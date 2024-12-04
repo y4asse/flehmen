@@ -21,13 +21,13 @@ type Sukipi struct {
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Weight holds the value of the "weight" field.
-	Weight float64 `json:"weight,omitempty"`
+	Weight *float64 `json:"weight,omitempty"`
 	// Height holds the value of the "height" field.
-	Height float64 `json:"height,omitempty"`
+	Height *float64 `json:"height,omitempty"`
 	// XID holds the value of the "x_id" field.
-	XID string `json:"x_id,omitempty"`
+	XID *string `json:"x_id,omitempty"`
 	// InstagramID holds the value of the "instagram_id" field.
-	InstagramID string `json:"instagram_id,omitempty"`
+	InstagramID *string `json:"instagram_id,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// IsMale holds the value of the "is_male" field.
@@ -120,25 +120,29 @@ func (s *Sukipi) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
 				return fmt.Errorf("unexpected type %T for field weight", values[i])
 			} else if value.Valid {
-				s.Weight = value.Float64
+				s.Weight = new(float64)
+				*s.Weight = value.Float64
 			}
 		case sukipi.FieldHeight:
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
 				return fmt.Errorf("unexpected type %T for field height", values[i])
 			} else if value.Valid {
-				s.Height = value.Float64
+				s.Height = new(float64)
+				*s.Height = value.Float64
 			}
 		case sukipi.FieldXID:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field x_id", values[i])
 			} else if value.Valid {
-				s.XID = value.String
+				s.XID = new(string)
+				*s.XID = value.String
 			}
 		case sukipi.FieldInstagramID:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field instagram_id", values[i])
 			} else if value.Valid {
-				s.InstagramID = value.String
+				s.InstagramID = new(string)
+				*s.InstagramID = value.String
 			}
 		case sukipi.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -214,17 +218,25 @@ func (s *Sukipi) String() string {
 	builder.WriteString("name=")
 	builder.WriteString(s.Name)
 	builder.WriteString(", ")
-	builder.WriteString("weight=")
-	builder.WriteString(fmt.Sprintf("%v", s.Weight))
+	if v := s.Weight; v != nil {
+		builder.WriteString("weight=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteString(", ")
-	builder.WriteString("height=")
-	builder.WriteString(fmt.Sprintf("%v", s.Height))
+	if v := s.Height; v != nil {
+		builder.WriteString("height=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteString(", ")
-	builder.WriteString("x_id=")
-	builder.WriteString(s.XID)
+	if v := s.XID; v != nil {
+		builder.WriteString("x_id=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
-	builder.WriteString("instagram_id=")
-	builder.WriteString(s.InstagramID)
+	if v := s.InstagramID; v != nil {
+		builder.WriteString("instagram_id=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(s.CreatedAt.Format(time.ANSIC))

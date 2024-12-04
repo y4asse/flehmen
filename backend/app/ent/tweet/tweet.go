@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 const (
@@ -22,17 +21,8 @@ const (
 	FieldTweetCreatedAt = "tweet_created_at"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
-	// EdgeSukipi holds the string denoting the sukipi edge name in mutations.
-	EdgeSukipi = "sukipi"
 	// Table holds the table name of the tweet in the database.
 	Table = "tweets"
-	// SukipiTable is the table that holds the sukipi relation/edge.
-	SukipiTable = "tweets"
-	// SukipiInverseTable is the table name for the Sukipi entity.
-	// It exists in this package in order to avoid circular dependency with the "sukipi" package.
-	SukipiInverseTable = "sukipis"
-	// SukipiColumn is the table column denoting the sukipi relation/edge.
-	SukipiColumn = "sukipi_tweets"
 )
 
 // Columns holds all SQL columns for tweet fields.
@@ -96,18 +86,4 @@ func ByTweetCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByCreatedAt orders the results by the created_at field.
 func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
-}
-
-// BySukipiField orders the results by sukipi field.
-func BySukipiField(field string, opts ...sql.OrderTermOption) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newSukipiStep(), sql.OrderByField(field, opts...))
-	}
-}
-func newSukipiStep() *sqlgraph.Step {
-	return sqlgraph.NewStep(
-		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(SukipiInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2O, true, SukipiTable, SukipiColumn),
-	)
 }
