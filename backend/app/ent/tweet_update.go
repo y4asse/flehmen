@@ -6,7 +6,6 @@ import (
 	"context"
 	"errors"
 	"flehmen-api/ent/predicate"
-	"flehmen-api/ent/sukipi"
 	"flehmen-api/ent/tweet"
 	"fmt"
 	"time"
@@ -92,34 +91,9 @@ func (tu *TweetUpdate) SetNillableCreatedAt(t *time.Time) *TweetUpdate {
 	return tu
 }
 
-// SetSukipiID sets the "sukipi" edge to the Sukipi entity by ID.
-func (tu *TweetUpdate) SetSukipiID(id int) *TweetUpdate {
-	tu.mutation.SetSukipiID(id)
-	return tu
-}
-
-// SetNillableSukipiID sets the "sukipi" edge to the Sukipi entity by ID if the given value is not nil.
-func (tu *TweetUpdate) SetNillableSukipiID(id *int) *TweetUpdate {
-	if id != nil {
-		tu = tu.SetSukipiID(*id)
-	}
-	return tu
-}
-
-// SetSukipi sets the "sukipi" edge to the Sukipi entity.
-func (tu *TweetUpdate) SetSukipi(s *Sukipi) *TweetUpdate {
-	return tu.SetSukipiID(s.ID)
-}
-
 // Mutation returns the TweetMutation object of the builder.
 func (tu *TweetUpdate) Mutation() *TweetMutation {
 	return tu.mutation
-}
-
-// ClearSukipi clears the "sukipi" edge to the Sukipi entity.
-func (tu *TweetUpdate) ClearSukipi() *TweetUpdate {
-	tu.mutation.ClearSukipi()
-	return tu
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -172,35 +146,6 @@ func (tu *TweetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := tu.mutation.CreatedAt(); ok {
 		_spec.SetField(tweet.FieldCreatedAt, field.TypeTime, value)
-	}
-	if tu.mutation.SukipiCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   tweet.SukipiTable,
-			Columns: []string{tweet.SukipiColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(sukipi.FieldID, field.TypeInt),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := tu.mutation.SukipiIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   tweet.SukipiTable,
-			Columns: []string{tweet.SukipiColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(sukipi.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, tu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -285,34 +230,9 @@ func (tuo *TweetUpdateOne) SetNillableCreatedAt(t *time.Time) *TweetUpdateOne {
 	return tuo
 }
 
-// SetSukipiID sets the "sukipi" edge to the Sukipi entity by ID.
-func (tuo *TweetUpdateOne) SetSukipiID(id int) *TweetUpdateOne {
-	tuo.mutation.SetSukipiID(id)
-	return tuo
-}
-
-// SetNillableSukipiID sets the "sukipi" edge to the Sukipi entity by ID if the given value is not nil.
-func (tuo *TweetUpdateOne) SetNillableSukipiID(id *int) *TweetUpdateOne {
-	if id != nil {
-		tuo = tuo.SetSukipiID(*id)
-	}
-	return tuo
-}
-
-// SetSukipi sets the "sukipi" edge to the Sukipi entity.
-func (tuo *TweetUpdateOne) SetSukipi(s *Sukipi) *TweetUpdateOne {
-	return tuo.SetSukipiID(s.ID)
-}
-
 // Mutation returns the TweetMutation object of the builder.
 func (tuo *TweetUpdateOne) Mutation() *TweetMutation {
 	return tuo.mutation
-}
-
-// ClearSukipi clears the "sukipi" edge to the Sukipi entity.
-func (tuo *TweetUpdateOne) ClearSukipi() *TweetUpdateOne {
-	tuo.mutation.ClearSukipi()
-	return tuo
 }
 
 // Where appends a list predicates to the TweetUpdate builder.
@@ -395,35 +315,6 @@ func (tuo *TweetUpdateOne) sqlSave(ctx context.Context) (_node *Tweet, err error
 	}
 	if value, ok := tuo.mutation.CreatedAt(); ok {
 		_spec.SetField(tweet.FieldCreatedAt, field.TypeTime, value)
-	}
-	if tuo.mutation.SukipiCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   tweet.SukipiTable,
-			Columns: []string{tweet.SukipiColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(sukipi.FieldID, field.TypeInt),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := tuo.mutation.SukipiIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   tweet.SukipiTable,
-			Columns: []string{tweet.SukipiColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(sukipi.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &Tweet{config: tuo.config}
 	_spec.Assign = _node.assignValues

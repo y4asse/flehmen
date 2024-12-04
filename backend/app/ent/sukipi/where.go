@@ -295,16 +295,6 @@ func XIDHasSuffix(v string) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldHasSuffix(FieldXID, v))
 }
 
-// XIDIsNil applies the IsNil predicate on the "x_id" field.
-func XIDIsNil() predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldIsNull(FieldXID))
-}
-
-// XIDNotNil applies the NotNil predicate on the "x_id" field.
-func XIDNotNil() predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldNotNull(FieldXID))
-}
-
 // XIDEqualFold applies the EqualFold predicate on the "x_id" field.
 func XIDEqualFold(v string) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldEqualFold(FieldXID, v))
@@ -368,16 +358,6 @@ func InstagramIDHasPrefix(v string) predicate.Sukipi {
 // InstagramIDHasSuffix applies the HasSuffix predicate on the "instagram_id" field.
 func InstagramIDHasSuffix(v string) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldHasSuffix(FieldInstagramID, v))
-}
-
-// InstagramIDIsNil applies the IsNil predicate on the "instagram_id" field.
-func InstagramIDIsNil() predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldIsNull(FieldInstagramID))
-}
-
-// InstagramIDNotNil applies the NotNil predicate on the "instagram_id" field.
-func InstagramIDNotNil() predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldNotNull(FieldInstagramID))
 }
 
 // InstagramIDEqualFold applies the EqualFold predicate on the "instagram_id" field.

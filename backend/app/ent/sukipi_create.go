@@ -46,25 +46,9 @@ func (sc *SukipiCreate) SetXID(s string) *SukipiCreate {
 	return sc
 }
 
-// SetNillableXID sets the "x_id" field if the given value is not nil.
-func (sc *SukipiCreate) SetNillableXID(s *string) *SukipiCreate {
-	if s != nil {
-		sc.SetXID(*s)
-	}
-	return sc
-}
-
 // SetInstagramID sets the "instagram_id" field.
 func (sc *SukipiCreate) SetInstagramID(s string) *SukipiCreate {
 	sc.mutation.SetInstagramID(s)
-	return sc
-}
-
-// SetNillableInstagramID sets the "instagram_id" field if the given value is not nil.
-func (sc *SukipiCreate) SetNillableInstagramID(s *string) *SukipiCreate {
-	if s != nil {
-		sc.SetInstagramID(*s)
-	}
 	return sc
 }
 
@@ -188,6 +172,12 @@ func (sc *SukipiCreate) check() error {
 	if _, ok := sc.mutation.Height(); !ok {
 		return &ValidationError{Name: "height", err: errors.New(`ent: missing required field "Sukipi.height"`)}
 	}
+	if _, ok := sc.mutation.XID(); !ok {
+		return &ValidationError{Name: "x_id", err: errors.New(`ent: missing required field "Sukipi.x_id"`)}
+	}
+	if _, ok := sc.mutation.InstagramID(); !ok {
+		return &ValidationError{Name: "instagram_id", err: errors.New(`ent: missing required field "Sukipi.instagram_id"`)}
+	}
 	if _, ok := sc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Sukipi.created_at"`)}
 	}
@@ -226,19 +216,19 @@ func (sc *SukipiCreate) createSpec() (*Sukipi, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := sc.mutation.Weight(); ok {
 		_spec.SetField(sukipi.FieldWeight, field.TypeFloat64, value)
-		_node.Weight = value
+		_node.Weight = &value
 	}
 	if value, ok := sc.mutation.Height(); ok {
 		_spec.SetField(sukipi.FieldHeight, field.TypeFloat64, value)
-		_node.Height = value
+		_node.Height = &value
 	}
 	if value, ok := sc.mutation.XID(); ok {
 		_spec.SetField(sukipi.FieldXID, field.TypeString, value)
-		_node.XID = value
+		_node.XID = &value
 	}
 	if value, ok := sc.mutation.InstagramID(); ok {
 		_spec.SetField(sukipi.FieldInstagramID, field.TypeString, value)
-		_node.InstagramID = value
+		_node.InstagramID = &value
 	}
 	if value, ok := sc.mutation.CreatedAt(); ok {
 		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)

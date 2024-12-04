@@ -1028,7 +1028,7 @@ func (m *SukipiMutation) Weight() (r float64, exists bool) {
 // OldWeight returns the old "weight" field's value of the Sukipi entity.
 // If the Sukipi object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SukipiMutation) OldWeight(ctx context.Context) (v float64, err error) {
+func (m *SukipiMutation) OldWeight(ctx context.Context) (v *float64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldWeight is only allowed on UpdateOne operations")
 	}
@@ -1084,7 +1084,7 @@ func (m *SukipiMutation) Height() (r float64, exists bool) {
 // OldHeight returns the old "height" field's value of the Sukipi entity.
 // If the Sukipi object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SukipiMutation) OldHeight(ctx context.Context) (v float64, err error) {
+func (m *SukipiMutation) OldHeight(ctx context.Context) (v *float64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldHeight is only allowed on UpdateOne operations")
 	}
@@ -1139,7 +1139,7 @@ func (m *SukipiMutation) XID() (r string, exists bool) {
 // OldXID returns the old "x_id" field's value of the Sukipi entity.
 // If the Sukipi object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SukipiMutation) OldXID(ctx context.Context) (v string, err error) {
+func (m *SukipiMutation) OldXID(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldXID is only allowed on UpdateOne operations")
 	}
@@ -1153,22 +1153,9 @@ func (m *SukipiMutation) OldXID(ctx context.Context) (v string, err error) {
 	return oldValue.XID, nil
 }
 
-// ClearXID clears the value of the "x_id" field.
-func (m *SukipiMutation) ClearXID() {
-	m.x_id = nil
-	m.clearedFields[sukipi.FieldXID] = struct{}{}
-}
-
-// XIDCleared returns if the "x_id" field was cleared in this mutation.
-func (m *SukipiMutation) XIDCleared() bool {
-	_, ok := m.clearedFields[sukipi.FieldXID]
-	return ok
-}
-
 // ResetXID resets all changes to the "x_id" field.
 func (m *SukipiMutation) ResetXID() {
 	m.x_id = nil
-	delete(m.clearedFields, sukipi.FieldXID)
 }
 
 // SetInstagramID sets the "instagram_id" field.
@@ -1188,7 +1175,7 @@ func (m *SukipiMutation) InstagramID() (r string, exists bool) {
 // OldInstagramID returns the old "instagram_id" field's value of the Sukipi entity.
 // If the Sukipi object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SukipiMutation) OldInstagramID(ctx context.Context) (v string, err error) {
+func (m *SukipiMutation) OldInstagramID(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldInstagramID is only allowed on UpdateOne operations")
 	}
@@ -1202,22 +1189,9 @@ func (m *SukipiMutation) OldInstagramID(ctx context.Context) (v string, err erro
 	return oldValue.InstagramID, nil
 }
 
-// ClearInstagramID clears the value of the "instagram_id" field.
-func (m *SukipiMutation) ClearInstagramID() {
-	m.instagram_id = nil
-	m.clearedFields[sukipi.FieldInstagramID] = struct{}{}
-}
-
-// InstagramIDCleared returns if the "instagram_id" field was cleared in this mutation.
-func (m *SukipiMutation) InstagramIDCleared() bool {
-	_, ok := m.clearedFields[sukipi.FieldInstagramID]
-	return ok
-}
-
 // ResetInstagramID resets all changes to the "instagram_id" field.
 func (m *SukipiMutation) ResetInstagramID() {
 	m.instagram_id = nil
-	delete(m.clearedFields, sukipi.FieldInstagramID)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -1664,12 +1638,6 @@ func (m *SukipiMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *SukipiMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(sukipi.FieldXID) {
-		fields = append(fields, sukipi.FieldXID)
-	}
-	if m.FieldCleared(sukipi.FieldInstagramID) {
-		fields = append(fields, sukipi.FieldInstagramID)
-	}
 	if m.FieldCleared(sukipi.FieldStartAt) {
 		fields = append(fields, sukipi.FieldStartAt)
 	}
@@ -1687,12 +1655,6 @@ func (m *SukipiMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *SukipiMutation) ClearField(name string) error {
 	switch name {
-	case sukipi.FieldXID:
-		m.ClearXID()
-		return nil
-	case sukipi.FieldInstagramID:
-		m.ClearInstagramID()
-		return nil
 	case sukipi.FieldStartAt:
 		m.ClearStartAt()
 		return nil
@@ -1846,8 +1808,6 @@ type TweetMutation struct {
 	tweet_created_at *time.Time
 	created_at       *time.Time
 	clearedFields    map[string]struct{}
-	sukipi           *int
-	clearedsukipi    bool
 	done             bool
 	oldValue         func(context.Context) (*Tweet, error)
 	predicates       []predicate.Tweet
@@ -2115,45 +2075,6 @@ func (m *TweetMutation) ResetCreatedAt() {
 	m.created_at = nil
 }
 
-// SetSukipiID sets the "sukipi" edge to the Sukipi entity by id.
-func (m *TweetMutation) SetSukipiID(id int) {
-	m.sukipi = &id
-}
-
-// ClearSukipi clears the "sukipi" edge to the Sukipi entity.
-func (m *TweetMutation) ClearSukipi() {
-	m.clearedsukipi = true
-}
-
-// SukipiCleared reports if the "sukipi" edge to the Sukipi entity was cleared.
-func (m *TweetMutation) SukipiCleared() bool {
-	return m.clearedsukipi
-}
-
-// SukipiID returns the "sukipi" edge ID in the mutation.
-func (m *TweetMutation) SukipiID() (id int, exists bool) {
-	if m.sukipi != nil {
-		return *m.sukipi, true
-	}
-	return
-}
-
-// SukipiIDs returns the "sukipi" edge IDs in the mutation.
-// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// SukipiID instead. It exists only for internal usage by the builders.
-func (m *TweetMutation) SukipiIDs() (ids []int) {
-	if id := m.sukipi; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetSukipi resets all changes to the "sukipi" edge.
-func (m *TweetMutation) ResetSukipi() {
-	m.sukipi = nil
-	m.clearedsukipi = false
-}
-
 // Where appends a list predicates to the TweetMutation builder.
 func (m *TweetMutation) Where(ps ...predicate.Tweet) {
 	m.predicates = append(m.predicates, ps...)
@@ -2353,28 +2274,19 @@ func (m *TweetMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *TweetMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.sukipi != nil {
-		edges = append(edges, tweet.EdgeSukipi)
-	}
+	edges := make([]string, 0, 0)
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *TweetMutation) AddedIDs(name string) []ent.Value {
-	switch name {
-	case tweet.EdgeSukipi:
-		if id := m.sukipi; id != nil {
-			return []ent.Value{*id}
-		}
-	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *TweetMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 0)
 	return edges
 }
 
@@ -2386,65 +2298,51 @@ func (m *TweetMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *TweetMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.clearedsukipi {
-		edges = append(edges, tweet.EdgeSukipi)
-	}
+	edges := make([]string, 0, 0)
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *TweetMutation) EdgeCleared(name string) bool {
-	switch name {
-	case tweet.EdgeSukipi:
-		return m.clearedsukipi
-	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *TweetMutation) ClearEdge(name string) error {
-	switch name {
-	case tweet.EdgeSukipi:
-		m.ClearSukipi()
-		return nil
-	}
 	return fmt.Errorf("unknown Tweet unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *TweetMutation) ResetEdge(name string) error {
-	switch name {
-	case tweet.EdgeSukipi:
-		m.ResetSukipi()
-		return nil
-	}
 	return fmt.Errorf("unknown Tweet edge %s", name)
 }
 
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	name          *string
-	weight        *float64
-	addweight     *float64
-	height        *float64
-	addheight     *float64
-	clerk_id      *string
-	is_male       *bool
-	created_at    *time.Time
-	clearedFields map[string]struct{}
-	mbti          *int
-	clearedmbti   bool
-	done          bool
-	oldValue      func(context.Context) (*User, error)
-	predicates    []predicate.User
+	op                    Op
+	typ                   string
+	id                    *int
+	name                  *string
+	weight                *float64
+	addweight             *float64
+	height                *float64
+	addheight             *float64
+	clerk_id              *string
+	is_male               *bool
+	created_at            *time.Time
+	clearedFields         map[string]struct{}
+	mbti                  *int
+	clearedmbti           bool
+	special_events        map[int]struct{}
+	removedspecial_events map[int]struct{}
+	clearedspecial_events bool
+	done                  bool
+	oldValue              func(context.Context) (*User, error)
+	predicates            []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -2631,10 +2529,24 @@ func (m *UserMutation) AddedWeight() (r float64, exists bool) {
 	return *v, true
 }
 
+// ClearWeight clears the value of the "weight" field.
+func (m *UserMutation) ClearWeight() {
+	m.weight = nil
+	m.addweight = nil
+	m.clearedFields[user.FieldWeight] = struct{}{}
+}
+
+// WeightCleared returns if the "weight" field was cleared in this mutation.
+func (m *UserMutation) WeightCleared() bool {
+	_, ok := m.clearedFields[user.FieldWeight]
+	return ok
+}
+
 // ResetWeight resets all changes to the "weight" field.
 func (m *UserMutation) ResetWeight() {
 	m.weight = nil
 	m.addweight = nil
+	delete(m.clearedFields, user.FieldWeight)
 }
 
 // SetHeight sets the "height" field.
@@ -2687,10 +2599,24 @@ func (m *UserMutation) AddedHeight() (r float64, exists bool) {
 	return *v, true
 }
 
+// ClearHeight clears the value of the "height" field.
+func (m *UserMutation) ClearHeight() {
+	m.height = nil
+	m.addheight = nil
+	m.clearedFields[user.FieldHeight] = struct{}{}
+}
+
+// HeightCleared returns if the "height" field was cleared in this mutation.
+func (m *UserMutation) HeightCleared() bool {
+	_, ok := m.clearedFields[user.FieldHeight]
+	return ok
+}
+
 // ResetHeight resets all changes to the "height" field.
 func (m *UserMutation) ResetHeight() {
 	m.height = nil
 	m.addheight = nil
+	delete(m.clearedFields, user.FieldHeight)
 }
 
 // SetClerkID sets the "clerk_id" field.
@@ -2724,22 +2650,9 @@ func (m *UserMutation) OldClerkID(ctx context.Context) (v string, err error) {
 	return oldValue.ClerkID, nil
 }
 
-// ClearClerkID clears the value of the "clerk_id" field.
-func (m *UserMutation) ClearClerkID() {
-	m.clerk_id = nil
-	m.clearedFields[user.FieldClerkID] = struct{}{}
-}
-
-// ClerkIDCleared returns if the "clerk_id" field was cleared in this mutation.
-func (m *UserMutation) ClerkIDCleared() bool {
-	_, ok := m.clearedFields[user.FieldClerkID]
-	return ok
-}
-
 // ResetClerkID resets all changes to the "clerk_id" field.
 func (m *UserMutation) ResetClerkID() {
 	m.clerk_id = nil
-	delete(m.clearedFields, user.FieldClerkID)
 }
 
 // SetIsMale sets the "is_male" field.
@@ -2851,6 +2764,60 @@ func (m *UserMutation) MbtiIDs() (ids []int) {
 func (m *UserMutation) ResetMbti() {
 	m.mbti = nil
 	m.clearedmbti = false
+}
+
+// AddSpecialEventIDs adds the "special_events" edge to the SpecialEvent entity by ids.
+func (m *UserMutation) AddSpecialEventIDs(ids ...int) {
+	if m.special_events == nil {
+		m.special_events = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.special_events[ids[i]] = struct{}{}
+	}
+}
+
+// ClearSpecialEvents clears the "special_events" edge to the SpecialEvent entity.
+func (m *UserMutation) ClearSpecialEvents() {
+	m.clearedspecial_events = true
+}
+
+// SpecialEventsCleared reports if the "special_events" edge to the SpecialEvent entity was cleared.
+func (m *UserMutation) SpecialEventsCleared() bool {
+	return m.clearedspecial_events
+}
+
+// RemoveSpecialEventIDs removes the "special_events" edge to the SpecialEvent entity by IDs.
+func (m *UserMutation) RemoveSpecialEventIDs(ids ...int) {
+	if m.removedspecial_events == nil {
+		m.removedspecial_events = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.special_events, ids[i])
+		m.removedspecial_events[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedSpecialEvents returns the removed IDs of the "special_events" edge to the SpecialEvent entity.
+func (m *UserMutation) RemovedSpecialEventsIDs() (ids []int) {
+	for id := range m.removedspecial_events {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// SpecialEventsIDs returns the "special_events" edge IDs in the mutation.
+func (m *UserMutation) SpecialEventsIDs() (ids []int) {
+	for id := range m.special_events {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetSpecialEvents resets all changes to the "special_events" edge.
+func (m *UserMutation) ResetSpecialEvents() {
+	m.special_events = nil
+	m.clearedspecial_events = false
+	m.removedspecial_events = nil
 }
 
 // Where appends a list predicates to the UserMutation builder.
@@ -3055,8 +3022,11 @@ func (m *UserMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *UserMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(user.FieldClerkID) {
-		fields = append(fields, user.FieldClerkID)
+	if m.FieldCleared(user.FieldWeight) {
+		fields = append(fields, user.FieldWeight)
+	}
+	if m.FieldCleared(user.FieldHeight) {
+		fields = append(fields, user.FieldHeight)
 	}
 	return fields
 }
@@ -3072,8 +3042,11 @@ func (m *UserMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *UserMutation) ClearField(name string) error {
 	switch name {
-	case user.FieldClerkID:
-		m.ClearClerkID()
+	case user.FieldWeight:
+		m.ClearWeight()
+		return nil
+	case user.FieldHeight:
+		m.ClearHeight()
 		return nil
 	}
 	return fmt.Errorf("unknown User nullable field %s", name)
@@ -3107,9 +3080,12 @@ func (m *UserMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *UserMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.mbti != nil {
 		edges = append(edges, user.EdgeMbti)
+	}
+	if m.special_events != nil {
+		edges = append(edges, user.EdgeSpecialEvents)
 	}
 	return edges
 }
@@ -3122,27 +3098,47 @@ func (m *UserMutation) AddedIDs(name string) []ent.Value {
 		if id := m.mbti; id != nil {
 			return []ent.Value{*id}
 		}
+	case user.EdgeSpecialEvents:
+		ids := make([]ent.Value, 0, len(m.special_events))
+		for id := range m.special_events {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *UserMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
+	if m.removedspecial_events != nil {
+		edges = append(edges, user.EdgeSpecialEvents)
+	}
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *UserMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case user.EdgeSpecialEvents:
+		ids := make([]ent.Value, 0, len(m.removedspecial_events))
+		for id := range m.removedspecial_events {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *UserMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.clearedmbti {
 		edges = append(edges, user.EdgeMbti)
+	}
+	if m.clearedspecial_events {
+		edges = append(edges, user.EdgeSpecialEvents)
 	}
 	return edges
 }
@@ -3153,6 +3149,8 @@ func (m *UserMutation) EdgeCleared(name string) bool {
 	switch name {
 	case user.EdgeMbti:
 		return m.clearedmbti
+	case user.EdgeSpecialEvents:
+		return m.clearedspecial_events
 	}
 	return false
 }
@@ -3174,6 +3172,9 @@ func (m *UserMutation) ResetEdge(name string) error {
 	switch name {
 	case user.EdgeMbti:
 		m.ResetMbti()
+		return nil
+	case user.EdgeSpecialEvents:
+		m.ResetSpecialEvents()
 		return nil
 	}
 	return fmt.Errorf("unknown User edge %s", name)

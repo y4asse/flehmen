@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"flehmen-api/ent/sukipi"
 	"flehmen-api/ent/tweet"
 	"fmt"
 	"strings"
@@ -25,32 +24,9 @@ type Tweet struct {
 	// TweetCreatedAt holds the value of the "tweet_created_at" field.
 	TweetCreatedAt time.Time `json:"tweet_created_at,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the TweetQuery when eager-loading is set.
-	Edges         TweetEdges `json:"edges"`
+	CreatedAt     time.Time `json:"created_at,omitempty"`
 	sukipi_tweets *int
 	selectValues  sql.SelectValues
-}
-
-// TweetEdges holds the relations/edges for other nodes in the graph.
-type TweetEdges struct {
-	// Sukipi holds the value of the sukipi edge.
-	Sukipi *Sukipi `json:"sukipi,omitempty"`
-	// loadedTypes holds the information for reporting if a
-	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
-}
-
-// SukipiOrErr returns the Sukipi value or an error if the edge
-// was not loaded in eager-loading, or loaded but was not found.
-func (e TweetEdges) SukipiOrErr() (*Sukipi, error) {
-	if e.Sukipi != nil {
-		return e.Sukipi, nil
-	} else if e.loadedTypes[0] {
-		return nil, &NotFoundError{label: sukipi.Label}
-	}
-	return nil, &NotLoadedError{edge: "sukipi"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -129,11 +105,6 @@ func (t *Tweet) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (t *Tweet) Value(name string) (ent.Value, error) {
 	return t.selectValues.Get(name)
-}
-
-// QuerySukipi queries the "sukipi" edge of the Tweet entity.
-func (t *Tweet) QuerySukipi() *SukipiQuery {
-	return NewTweetClient(t.config).QuerySukipi(t)
 }
 
 // Update returns a builder for updating this Tweet.

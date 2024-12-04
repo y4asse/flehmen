@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"flehmen-api/ent/mbti"
+	"flehmen-api/ent/specialevent"
 	"flehmen-api/ent/user"
 	"fmt"
 	"time"
@@ -33,23 +34,31 @@ func (uc *UserCreate) SetWeight(f float64) *UserCreate {
 	return uc
 }
 
+// SetNillableWeight sets the "weight" field if the given value is not nil.
+func (uc *UserCreate) SetNillableWeight(f *float64) *UserCreate {
+	if f != nil {
+		uc.SetWeight(*f)
+	}
+	return uc
+}
+
 // SetHeight sets the "height" field.
 func (uc *UserCreate) SetHeight(f float64) *UserCreate {
 	uc.mutation.SetHeight(f)
 	return uc
 }
 
-// SetClerkID sets the "clerk_id" field.
-func (uc *UserCreate) SetClerkID(s string) *UserCreate {
-	uc.mutation.SetClerkID(s)
+// SetNillableHeight sets the "height" field if the given value is not nil.
+func (uc *UserCreate) SetNillableHeight(f *float64) *UserCreate {
+	if f != nil {
+		uc.SetHeight(*f)
+	}
 	return uc
 }
 
-// SetNillableClerkID sets the "clerk_id" field if the given value is not nil.
-func (uc *UserCreate) SetNillableClerkID(s *string) *UserCreate {
-	if s != nil {
-		uc.SetClerkID(*s)
-	}
+// SetClerkID sets the "clerk_id" field.
+func (uc *UserCreate) SetClerkID(s string) *UserCreate {
+	uc.mutation.SetClerkID(s)
 	return uc
 }
 
@@ -90,6 +99,21 @@ func (uc *UserCreate) SetNillableMbtiID(id *int) *UserCreate {
 // SetMbti sets the "mbti" edge to the Mbti entity.
 func (uc *UserCreate) SetMbti(m *Mbti) *UserCreate {
 	return uc.SetMbtiID(m.ID)
+}
+
+// AddSpecialEventIDs adds the "special_events" edge to the SpecialEvent entity by IDs.
+func (uc *UserCreate) AddSpecialEventIDs(ids ...int) *UserCreate {
+	uc.mutation.AddSpecialEventIDs(ids...)
+	return uc
+}
+
+// AddSpecialEvents adds the "special_events" edges to the SpecialEvent entity.
+func (uc *UserCreate) AddSpecialEvents(s ...*SpecialEvent) *UserCreate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return uc.AddSpecialEventIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -138,11 +162,8 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "User.name"`)}
 	}
-	if _, ok := uc.mutation.Weight(); !ok {
-		return &ValidationError{Name: "weight", err: errors.New(`ent: missing required field "User.weight"`)}
-	}
-	if _, ok := uc.mutation.Height(); !ok {
-		return &ValidationError{Name: "height", err: errors.New(`ent: missing required field "User.height"`)}
+	if _, ok := uc.mutation.ClerkID(); !ok {
+		return &ValidationError{Name: "clerk_id", err: errors.New(`ent: missing required field "User.clerk_id"`)}
 	}
 	if _, ok := uc.mutation.IsMale(); !ok {
 		return &ValidationError{Name: "is_male", err: errors.New(`ent: missing required field "User.is_male"`)}
@@ -215,6 +236,22 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_node.user_mbti = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.SpecialEventsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SpecialEventsTable,
+			Columns: []string{user.SpecialEventsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(specialevent.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

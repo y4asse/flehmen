@@ -41,9 +41,11 @@ type User struct {
 type UserEdges struct {
 	// Mbti holds the value of the mbti edge.
 	Mbti *Mbti `json:"mbti,omitempty"`
+	// SpecialEvents holds the value of the special_events edge.
+	SpecialEvents []*SpecialEvent `json:"special_events,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
 // MbtiOrErr returns the Mbti value or an error if the edge
@@ -55,6 +57,15 @@ func (e UserEdges) MbtiOrErr() (*Mbti, error) {
 		return nil, &NotFoundError{label: mbti.Label}
 	}
 	return nil, &NotLoadedError{edge: "mbti"}
+}
+
+// SpecialEventsOrErr returns the SpecialEvents value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) SpecialEventsOrErr() ([]*SpecialEvent, error) {
+	if e.loadedTypes[1] {
+		return e.SpecialEvents, nil
+	}
+	return nil, &NotLoadedError{edge: "special_events"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -154,6 +165,11 @@ func (u *User) Value(name string) (ent.Value, error) {
 // QueryMbti queries the "mbti" edge of the User entity.
 func (u *User) QueryMbti() *MbtiQuery {
 	return NewUserClient(u.config).QueryMbti(u)
+}
+
+// QuerySpecialEvents queries the "special_events" edge of the User entity.
+func (u *User) QuerySpecialEvents() *SpecialEventQuery {
+	return NewUserClient(u.config).QuerySpecialEvents(u)
 }
 
 // Update returns a builder for updating this User.

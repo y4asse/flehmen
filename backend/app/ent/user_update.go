@@ -7,6 +7,7 @@ import (
 	"errors"
 	"flehmen-api/ent/mbti"
 	"flehmen-api/ent/predicate"
+	"flehmen-api/ent/specialevent"
 	"flehmen-api/ent/user"
 	"fmt"
 	"time"
@@ -64,6 +65,12 @@ func (uu *UserUpdate) AddWeight(f float64) *UserUpdate {
 	return uu
 }
 
+// ClearWeight clears the value of the "weight" field.
+func (uu *UserUpdate) ClearWeight() *UserUpdate {
+	uu.mutation.ClearWeight()
+	return uu
+}
+
 // SetHeight sets the "height" field.
 func (uu *UserUpdate) SetHeight(f float64) *UserUpdate {
 	uu.mutation.ResetHeight()
@@ -85,6 +92,12 @@ func (uu *UserUpdate) AddHeight(f float64) *UserUpdate {
 	return uu
 }
 
+// ClearHeight clears the value of the "height" field.
+func (uu *UserUpdate) ClearHeight() *UserUpdate {
+	uu.mutation.ClearHeight()
+	return uu
+}
+
 // SetClerkID sets the "clerk_id" field.
 func (uu *UserUpdate) SetClerkID(s string) *UserUpdate {
 	uu.mutation.SetClerkID(s)
@@ -96,12 +109,6 @@ func (uu *UserUpdate) SetNillableClerkID(s *string) *UserUpdate {
 	if s != nil {
 		uu.SetClerkID(*s)
 	}
-	return uu
-}
-
-// ClearClerkID clears the value of the "clerk_id" field.
-func (uu *UserUpdate) ClearClerkID() *UserUpdate {
-	uu.mutation.ClearClerkID()
 	return uu
 }
 
@@ -152,6 +159,21 @@ func (uu *UserUpdate) SetMbti(m *Mbti) *UserUpdate {
 	return uu.SetMbtiID(m.ID)
 }
 
+// AddSpecialEventIDs adds the "special_events" edge to the SpecialEvent entity by IDs.
+func (uu *UserUpdate) AddSpecialEventIDs(ids ...int) *UserUpdate {
+	uu.mutation.AddSpecialEventIDs(ids...)
+	return uu
+}
+
+// AddSpecialEvents adds the "special_events" edges to the SpecialEvent entity.
+func (uu *UserUpdate) AddSpecialEvents(s ...*SpecialEvent) *UserUpdate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return uu.AddSpecialEventIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
@@ -161,6 +183,27 @@ func (uu *UserUpdate) Mutation() *UserMutation {
 func (uu *UserUpdate) ClearMbti() *UserUpdate {
 	uu.mutation.ClearMbti()
 	return uu
+}
+
+// ClearSpecialEvents clears all "special_events" edges to the SpecialEvent entity.
+func (uu *UserUpdate) ClearSpecialEvents() *UserUpdate {
+	uu.mutation.ClearSpecialEvents()
+	return uu
+}
+
+// RemoveSpecialEventIDs removes the "special_events" edge to SpecialEvent entities by IDs.
+func (uu *UserUpdate) RemoveSpecialEventIDs(ids ...int) *UserUpdate {
+	uu.mutation.RemoveSpecialEventIDs(ids...)
+	return uu
+}
+
+// RemoveSpecialEvents removes "special_events" edges to SpecialEvent entities.
+func (uu *UserUpdate) RemoveSpecialEvents(s ...*SpecialEvent) *UserUpdate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return uu.RemoveSpecialEventIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -208,17 +251,20 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := uu.mutation.AddedWeight(); ok {
 		_spec.AddField(user.FieldWeight, field.TypeFloat64, value)
 	}
+	if uu.mutation.WeightCleared() {
+		_spec.ClearField(user.FieldWeight, field.TypeFloat64)
+	}
 	if value, ok := uu.mutation.Height(); ok {
 		_spec.SetField(user.FieldHeight, field.TypeFloat64, value)
 	}
 	if value, ok := uu.mutation.AddedHeight(); ok {
 		_spec.AddField(user.FieldHeight, field.TypeFloat64, value)
 	}
+	if uu.mutation.HeightCleared() {
+		_spec.ClearField(user.FieldHeight, field.TypeFloat64)
+	}
 	if value, ok := uu.mutation.ClerkID(); ok {
 		_spec.SetField(user.FieldClerkID, field.TypeString, value)
-	}
-	if uu.mutation.ClerkIDCleared() {
-		_spec.ClearField(user.FieldClerkID, field.TypeString)
 	}
 	if value, ok := uu.mutation.IsMale(); ok {
 		_spec.SetField(user.FieldIsMale, field.TypeBool, value)
@@ -248,6 +294,51 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(mbti.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uu.mutation.SpecialEventsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SpecialEventsTable,
+			Columns: []string{user.SpecialEventsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(specialevent.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.RemovedSpecialEventsIDs(); len(nodes) > 0 && !uu.mutation.SpecialEventsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SpecialEventsTable,
+			Columns: []string{user.SpecialEventsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(specialevent.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.SpecialEventsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SpecialEventsTable,
+			Columns: []string{user.SpecialEventsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(specialevent.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -310,6 +401,12 @@ func (uuo *UserUpdateOne) AddWeight(f float64) *UserUpdateOne {
 	return uuo
 }
 
+// ClearWeight clears the value of the "weight" field.
+func (uuo *UserUpdateOne) ClearWeight() *UserUpdateOne {
+	uuo.mutation.ClearWeight()
+	return uuo
+}
+
 // SetHeight sets the "height" field.
 func (uuo *UserUpdateOne) SetHeight(f float64) *UserUpdateOne {
 	uuo.mutation.ResetHeight()
@@ -331,6 +428,12 @@ func (uuo *UserUpdateOne) AddHeight(f float64) *UserUpdateOne {
 	return uuo
 }
 
+// ClearHeight clears the value of the "height" field.
+func (uuo *UserUpdateOne) ClearHeight() *UserUpdateOne {
+	uuo.mutation.ClearHeight()
+	return uuo
+}
+
 // SetClerkID sets the "clerk_id" field.
 func (uuo *UserUpdateOne) SetClerkID(s string) *UserUpdateOne {
 	uuo.mutation.SetClerkID(s)
@@ -342,12 +445,6 @@ func (uuo *UserUpdateOne) SetNillableClerkID(s *string) *UserUpdateOne {
 	if s != nil {
 		uuo.SetClerkID(*s)
 	}
-	return uuo
-}
-
-// ClearClerkID clears the value of the "clerk_id" field.
-func (uuo *UserUpdateOne) ClearClerkID() *UserUpdateOne {
-	uuo.mutation.ClearClerkID()
 	return uuo
 }
 
@@ -398,6 +495,21 @@ func (uuo *UserUpdateOne) SetMbti(m *Mbti) *UserUpdateOne {
 	return uuo.SetMbtiID(m.ID)
 }
 
+// AddSpecialEventIDs adds the "special_events" edge to the SpecialEvent entity by IDs.
+func (uuo *UserUpdateOne) AddSpecialEventIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.AddSpecialEventIDs(ids...)
+	return uuo
+}
+
+// AddSpecialEvents adds the "special_events" edges to the SpecialEvent entity.
+func (uuo *UserUpdateOne) AddSpecialEvents(s ...*SpecialEvent) *UserUpdateOne {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return uuo.AddSpecialEventIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
@@ -407,6 +519,27 @@ func (uuo *UserUpdateOne) Mutation() *UserMutation {
 func (uuo *UserUpdateOne) ClearMbti() *UserUpdateOne {
 	uuo.mutation.ClearMbti()
 	return uuo
+}
+
+// ClearSpecialEvents clears all "special_events" edges to the SpecialEvent entity.
+func (uuo *UserUpdateOne) ClearSpecialEvents() *UserUpdateOne {
+	uuo.mutation.ClearSpecialEvents()
+	return uuo
+}
+
+// RemoveSpecialEventIDs removes the "special_events" edge to SpecialEvent entities by IDs.
+func (uuo *UserUpdateOne) RemoveSpecialEventIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.RemoveSpecialEventIDs(ids...)
+	return uuo
+}
+
+// RemoveSpecialEvents removes "special_events" edges to SpecialEvent entities.
+func (uuo *UserUpdateOne) RemoveSpecialEvents(s ...*SpecialEvent) *UserUpdateOne {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return uuo.RemoveSpecialEventIDs(ids...)
 }
 
 // Where appends a list predicates to the UserUpdate builder.
@@ -484,17 +617,20 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	if value, ok := uuo.mutation.AddedWeight(); ok {
 		_spec.AddField(user.FieldWeight, field.TypeFloat64, value)
 	}
+	if uuo.mutation.WeightCleared() {
+		_spec.ClearField(user.FieldWeight, field.TypeFloat64)
+	}
 	if value, ok := uuo.mutation.Height(); ok {
 		_spec.SetField(user.FieldHeight, field.TypeFloat64, value)
 	}
 	if value, ok := uuo.mutation.AddedHeight(); ok {
 		_spec.AddField(user.FieldHeight, field.TypeFloat64, value)
 	}
+	if uuo.mutation.HeightCleared() {
+		_spec.ClearField(user.FieldHeight, field.TypeFloat64)
+	}
 	if value, ok := uuo.mutation.ClerkID(); ok {
 		_spec.SetField(user.FieldClerkID, field.TypeString, value)
-	}
-	if uuo.mutation.ClerkIDCleared() {
-		_spec.ClearField(user.FieldClerkID, field.TypeString)
 	}
 	if value, ok := uuo.mutation.IsMale(); ok {
 		_spec.SetField(user.FieldIsMale, field.TypeBool, value)
@@ -524,6 +660,51 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(mbti.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uuo.mutation.SpecialEventsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SpecialEventsTable,
+			Columns: []string{user.SpecialEventsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(specialevent.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.RemovedSpecialEventsIDs(); len(nodes) > 0 && !uuo.mutation.SpecialEventsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SpecialEventsTable,
+			Columns: []string{user.SpecialEventsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(specialevent.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.SpecialEventsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SpecialEventsTable,
+			Columns: []string{user.SpecialEventsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(specialevent.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

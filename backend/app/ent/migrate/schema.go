@@ -26,12 +26,21 @@ var (
 		{Name: "occured_at", Type: field.TypeTime},
 		{Name: "title", Type: field.TypeString},
 		{Name: "detail_comment", Type: field.TypeString},
+		{Name: "user_special_events", Type: field.TypeInt, Nullable: true},
 	}
 	// SpecialEventsTable holds the schema information for the "special_events" table.
 	SpecialEventsTable = &schema.Table{
 		Name:       "special_events",
 		Columns:    SpecialEventsColumns,
 		PrimaryKey: []*schema.Column{SpecialEventsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "special_events_users_special_events",
+				Columns:    []*schema.Column{SpecialEventsColumns[4]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// SukipisColumns holds the columns for the "sukipis" table.
 	SukipisColumns = []*schema.Column{
@@ -39,8 +48,8 @@ var (
 		{Name: "name", Type: field.TypeString},
 		{Name: "weight", Type: field.TypeFloat64},
 		{Name: "height", Type: field.TypeFloat64},
-		{Name: "x_id", Type: field.TypeString, Nullable: true},
-		{Name: "instagram_id", Type: field.TypeString, Nullable: true},
+		{Name: "x_id", Type: field.TypeString},
+		{Name: "instagram_id", Type: field.TypeString},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "is_male", Type: field.TypeBool},
 		{Name: "start_at", Type: field.TypeTime, Nullable: true},
@@ -87,9 +96,9 @@ var (
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString},
-		{Name: "weight", Type: field.TypeFloat64},
-		{Name: "height", Type: field.TypeFloat64},
-		{Name: "clerk_id", Type: field.TypeString, Nullable: true},
+		{Name: "weight", Type: field.TypeFloat64, Nullable: true},
+		{Name: "height", Type: field.TypeFloat64, Nullable: true},
+		{Name: "clerk_id", Type: field.TypeString},
 		{Name: "is_male", Type: field.TypeBool},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "user_mbti", Type: field.TypeInt, Nullable: true},
@@ -119,6 +128,7 @@ var (
 )
 
 func init() {
+	SpecialEventsTable.ForeignKeys[0].RefTable = UsersTable
 	SukipisTable.ForeignKeys[0].RefTable = MbtisTable
 	TweetsTable.ForeignKeys[0].RefTable = SukipisTable
 	UsersTable.ForeignKeys[0].RefTable = MbtisTable

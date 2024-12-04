@@ -100,12 +100,6 @@ func (su *SukipiUpdate) SetNillableXID(s *string) *SukipiUpdate {
 	return su
 }
 
-// ClearXID clears the value of the "x_id" field.
-func (su *SukipiUpdate) ClearXID() *SukipiUpdate {
-	su.mutation.ClearXID()
-	return su
-}
-
 // SetInstagramID sets the "instagram_id" field.
 func (su *SukipiUpdate) SetInstagramID(s string) *SukipiUpdate {
 	su.mutation.SetInstagramID(s)
@@ -117,12 +111,6 @@ func (su *SukipiUpdate) SetNillableInstagramID(s *string) *SukipiUpdate {
 	if s != nil {
 		su.SetInstagramID(*s)
 	}
-	return su
-}
-
-// ClearInstagramID clears the value of the "instagram_id" field.
-func (su *SukipiUpdate) ClearInstagramID() *SukipiUpdate {
-	su.mutation.ClearInstagramID()
 	return su
 }
 
@@ -294,14 +282,8 @@ func (su *SukipiUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := su.mutation.XID(); ok {
 		_spec.SetField(sukipi.FieldXID, field.TypeString, value)
 	}
-	if su.mutation.XIDCleared() {
-		_spec.ClearField(sukipi.FieldXID, field.TypeString)
-	}
 	if value, ok := su.mutation.InstagramID(); ok {
 		_spec.SetField(sukipi.FieldInstagramID, field.TypeString, value)
-	}
-	if su.mutation.InstagramIDCleared() {
-		_spec.ClearField(sukipi.FieldInstagramID, field.TypeString)
 	}
 	if value, ok := su.mutation.CreatedAt(); ok {
 		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)
@@ -479,12 +461,6 @@ func (suo *SukipiUpdateOne) SetNillableXID(s *string) *SukipiUpdateOne {
 	return suo
 }
 
-// ClearXID clears the value of the "x_id" field.
-func (suo *SukipiUpdateOne) ClearXID() *SukipiUpdateOne {
-	suo.mutation.ClearXID()
-	return suo
-}
-
 // SetInstagramID sets the "instagram_id" field.
 func (suo *SukipiUpdateOne) SetInstagramID(s string) *SukipiUpdateOne {
 	suo.mutation.SetInstagramID(s)
@@ -496,12 +472,6 @@ func (suo *SukipiUpdateOne) SetNillableInstagramID(s *string) *SukipiUpdateOne {
 	if s != nil {
 		suo.SetInstagramID(*s)
 	}
-	return suo
-}
-
-// ClearInstagramID clears the value of the "instagram_id" field.
-func (suo *SukipiUpdateOne) ClearInstagramID() *SukipiUpdateOne {
-	suo.mutation.ClearInstagramID()
 	return suo
 }
 
@@ -703,14 +673,8 @@ func (suo *SukipiUpdateOne) sqlSave(ctx context.Context) (_node *Sukipi, err err
 	if value, ok := suo.mutation.XID(); ok {
 		_spec.SetField(sukipi.FieldXID, field.TypeString, value)
 	}
-	if suo.mutation.XIDCleared() {
-		_spec.ClearField(sukipi.FieldXID, field.TypeString)
-	}
 	if value, ok := suo.mutation.InstagramID(); ok {
 		_spec.SetField(sukipi.FieldInstagramID, field.TypeString, value)
-	}
-	if suo.mutation.InstagramIDCleared() {
-		_spec.ClearField(sukipi.FieldInstagramID, field.TypeString)
 	}
 	if value, ok := suo.mutation.CreatedAt(); ok {
 		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)
