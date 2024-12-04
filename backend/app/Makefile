@@ -1,11 +1,5 @@
 ATLAS = atlas
 
-db_diff:
-	${ATLAS} migrate diff migration_name \
-	--dir "file://ent/migrate/migrations" \
-	--to "ent://ent/schema" \
-	--dev-url "docker://mysql/8/ent"
-
 db_migrate:
 	${ATLAS} migrate apply \
 	--dir "file://ent/migrate/migrations" \
