@@ -1,6 +1,6 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/flehmen-443214/flehmen-api','-f', 'Dockerfile.api.prod', '.']
+  args: ['build', '-t', 'gcr.io/flehmen-443214/flehmen-api','-f', 'api.prod.Dockerfile', '.']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/flehmen-443214/flehmen-api']
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
