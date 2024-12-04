@@ -17,10 +17,10 @@ type Sukipi struct {
 func (Sukipi) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
-		field.Float("weight"),
-		field.Float("height"),
-		field.String("x_id").Optional(),
-		field.String("instagram_id").Optional(),
+		field.Float("weight").Nillable(),
+		field.Float("height").Nillable(),
+		field.String("x_id").Nillable(),
+		field.String("instagram_id").Nillable(),
 		field.Time("created_at").Default(time.Now),
 		field.Bool("is_male"),
 		field.Time("start_at").Optional(),
