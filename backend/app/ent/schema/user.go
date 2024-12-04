@@ -19,7 +19,7 @@ func (User) Fields() []ent.Field {
 		field.String("name"),
 		field.Float("weight").Optional(),
 		field.Float("height").Optional(),
-		field.String("clerk_id"),
+		field.String("clerk_id").Unique(),
 		field.Bool("is_male"),
 		field.Time("created_at").Default(time.Now),
 	}
