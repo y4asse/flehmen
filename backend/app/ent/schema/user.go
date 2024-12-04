@@ -17,8 +17,8 @@ type User struct {
 func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
-		field.Float("weight").Optional(),
-		field.Float("height").Optional(),
+		field.Float("weight").Nillable(),
+		field.Float("height").Nillable(),
 		field.String("clerk_id").Unique(),
 		field.Bool("is_male"),
 		field.Time("created_at").Default(time.Now),
