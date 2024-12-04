@@ -2497,7 +2497,7 @@ func (m *UserMutation) Weight() (r float64, exists bool) {
 // OldWeight returns the old "weight" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldWeight(ctx context.Context) (v float64, err error) {
+func (m *UserMutation) OldWeight(ctx context.Context) (v *float64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldWeight is only allowed on UpdateOne operations")
 	}
@@ -2529,24 +2529,10 @@ func (m *UserMutation) AddedWeight() (r float64, exists bool) {
 	return *v, true
 }
 
-// ClearWeight clears the value of the "weight" field.
-func (m *UserMutation) ClearWeight() {
-	m.weight = nil
-	m.addweight = nil
-	m.clearedFields[user.FieldWeight] = struct{}{}
-}
-
-// WeightCleared returns if the "weight" field was cleared in this mutation.
-func (m *UserMutation) WeightCleared() bool {
-	_, ok := m.clearedFields[user.FieldWeight]
-	return ok
-}
-
 // ResetWeight resets all changes to the "weight" field.
 func (m *UserMutation) ResetWeight() {
 	m.weight = nil
 	m.addweight = nil
-	delete(m.clearedFields, user.FieldWeight)
 }
 
 // SetHeight sets the "height" field.
@@ -2567,7 +2553,7 @@ func (m *UserMutation) Height() (r float64, exists bool) {
 // OldHeight returns the old "height" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldHeight(ctx context.Context) (v float64, err error) {
+func (m *UserMutation) OldHeight(ctx context.Context) (v *float64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldHeight is only allowed on UpdateOne operations")
 	}
@@ -2599,24 +2585,10 @@ func (m *UserMutation) AddedHeight() (r float64, exists bool) {
 	return *v, true
 }
 
-// ClearHeight clears the value of the "height" field.
-func (m *UserMutation) ClearHeight() {
-	m.height = nil
-	m.addheight = nil
-	m.clearedFields[user.FieldHeight] = struct{}{}
-}
-
-// HeightCleared returns if the "height" field was cleared in this mutation.
-func (m *UserMutation) HeightCleared() bool {
-	_, ok := m.clearedFields[user.FieldHeight]
-	return ok
-}
-
 // ResetHeight resets all changes to the "height" field.
 func (m *UserMutation) ResetHeight() {
 	m.height = nil
 	m.addheight = nil
-	delete(m.clearedFields, user.FieldHeight)
 }
 
 // SetClerkID sets the "clerk_id" field.
@@ -3021,14 +2993,7 @@ func (m *UserMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *UserMutation) ClearedFields() []string {
-	var fields []string
-	if m.FieldCleared(user.FieldWeight) {
-		fields = append(fields, user.FieldWeight)
-	}
-	if m.FieldCleared(user.FieldHeight) {
-		fields = append(fields, user.FieldHeight)
-	}
-	return fields
+	return nil
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -3041,14 +3006,6 @@ func (m *UserMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *UserMutation) ClearField(name string) error {
-	switch name {
-	case user.FieldWeight:
-		m.ClearWeight()
-		return nil
-	case user.FieldHeight:
-		m.ClearHeight()
-		return nil
-	}
 	return fmt.Errorf("unknown User nullable field %s", name)
 }
 

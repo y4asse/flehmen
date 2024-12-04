@@ -65,12 +65,6 @@ func (uu *UserUpdate) AddWeight(f float64) *UserUpdate {
 	return uu
 }
 
-// ClearWeight clears the value of the "weight" field.
-func (uu *UserUpdate) ClearWeight() *UserUpdate {
-	uu.mutation.ClearWeight()
-	return uu
-}
-
 // SetHeight sets the "height" field.
 func (uu *UserUpdate) SetHeight(f float64) *UserUpdate {
 	uu.mutation.ResetHeight()
@@ -89,12 +83,6 @@ func (uu *UserUpdate) SetNillableHeight(f *float64) *UserUpdate {
 // AddHeight adds f to the "height" field.
 func (uu *UserUpdate) AddHeight(f float64) *UserUpdate {
 	uu.mutation.AddHeight(f)
-	return uu
-}
-
-// ClearHeight clears the value of the "height" field.
-func (uu *UserUpdate) ClearHeight() *UserUpdate {
-	uu.mutation.ClearHeight()
 	return uu
 }
 
@@ -251,17 +239,11 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := uu.mutation.AddedWeight(); ok {
 		_spec.AddField(user.FieldWeight, field.TypeFloat64, value)
 	}
-	if uu.mutation.WeightCleared() {
-		_spec.ClearField(user.FieldWeight, field.TypeFloat64)
-	}
 	if value, ok := uu.mutation.Height(); ok {
 		_spec.SetField(user.FieldHeight, field.TypeFloat64, value)
 	}
 	if value, ok := uu.mutation.AddedHeight(); ok {
 		_spec.AddField(user.FieldHeight, field.TypeFloat64, value)
-	}
-	if uu.mutation.HeightCleared() {
-		_spec.ClearField(user.FieldHeight, field.TypeFloat64)
 	}
 	if value, ok := uu.mutation.ClerkID(); ok {
 		_spec.SetField(user.FieldClerkID, field.TypeString, value)
@@ -401,12 +383,6 @@ func (uuo *UserUpdateOne) AddWeight(f float64) *UserUpdateOne {
 	return uuo
 }
 
-// ClearWeight clears the value of the "weight" field.
-func (uuo *UserUpdateOne) ClearWeight() *UserUpdateOne {
-	uuo.mutation.ClearWeight()
-	return uuo
-}
-
 // SetHeight sets the "height" field.
 func (uuo *UserUpdateOne) SetHeight(f float64) *UserUpdateOne {
 	uuo.mutation.ResetHeight()
@@ -425,12 +401,6 @@ func (uuo *UserUpdateOne) SetNillableHeight(f *float64) *UserUpdateOne {
 // AddHeight adds f to the "height" field.
 func (uuo *UserUpdateOne) AddHeight(f float64) *UserUpdateOne {
 	uuo.mutation.AddHeight(f)
-	return uuo
-}
-
-// ClearHeight clears the value of the "height" field.
-func (uuo *UserUpdateOne) ClearHeight() *UserUpdateOne {
-	uuo.mutation.ClearHeight()
 	return uuo
 }
 
@@ -617,17 +587,11 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	if value, ok := uuo.mutation.AddedWeight(); ok {
 		_spec.AddField(user.FieldWeight, field.TypeFloat64, value)
 	}
-	if uuo.mutation.WeightCleared() {
-		_spec.ClearField(user.FieldWeight, field.TypeFloat64)
-	}
 	if value, ok := uuo.mutation.Height(); ok {
 		_spec.SetField(user.FieldHeight, field.TypeFloat64, value)
 	}
 	if value, ok := uuo.mutation.AddedHeight(); ok {
 		_spec.AddField(user.FieldHeight, field.TypeFloat64, value)
-	}
-	if uuo.mutation.HeightCleared() {
-		_spec.ClearField(user.FieldHeight, field.TypeFloat64)
 	}
 	if value, ok := uuo.mutation.ClerkID(); ok {
 		_spec.SetField(user.FieldClerkID, field.TypeString, value)
