@@ -10,6 +10,14 @@ services:
       - "8080:8080"
     depends_on:
       - db
+    environment:
+      - DB_NAME=flehmen
+      - DB_USER=root
+      - DB_PASSWORD=password
+      - DB_HOST=db
+      - DB_PORT=3306
+    networks:
+      - flehmen
   batch:
     volumes:
       - ./batch:/app
@@ -22,6 +30,8 @@ services:
     command: ["functions-framework-python", "--target", "flehmen_batch"]
     depends_on:
       - db
+    networks:
+      - flehmen
   db:
     build:
       context: .
