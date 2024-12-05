@@ -112,8 +112,7 @@ export const Habit = (props: LogProps) => {
                 style={{
                   flex: 1,
                   textAlign: "center",
-                  backgroundColor: "#E4007F",
-                  opacity: busy_color[colorIndex],
+                  backgroundColor: `rgba(228,1,127,${busy_color[colorIndex]})`,
                   border:
                     hourIndex === currentHourIndex &&
                     dayIndex === currentDayIndex

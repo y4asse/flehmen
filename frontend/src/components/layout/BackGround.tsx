@@ -28,7 +28,7 @@ export const BackGround = () => {
       <div className="bgItemContainer" style={styles.bgItemContainer}>
         <Link href="/">
           <Image
-            className="logo"
+            className="hover:animate-noise"
             width={100}
             height={100}
             src="/images/logo.svg"
