@@ -20,19 +20,19 @@ export type Follower = {
   icon: string;
 };
 
-export type University = {
-  id: number;
-  name: string;
-  deviationValue: number;
-  prefecture: string;
-};
+const Page = async (props: {
+  searchParams?: Promise<{
+    query?: string;
+  }>;
+}) => {
+  const searchParams = await props.searchParams;
+  const query = searchParams?.query || "";
 
-const Page = () => {
   const windows = [
     {
       ...universityWindow,
       title: "大学どこだろ",
-      children: <UniversitySearch />,
+      children: <UniversitySearch query={query} />,
     },
     {
       ...followWindow,
