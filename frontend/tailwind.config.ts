@@ -56,6 +56,15 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      animation: {
+        noise: "noise 0.2s steps(2) infinite", // ノイズのアニメーション
+      },
+      keyframes: {
+        noise: {
+          "0%, 100%": { filter: "brightness(1) opacity(1)" },
+          "50%": { filter: "brightness(1.2) opacity(0.9)" },
+        },
+      },
     },
   },
   // eslint-disable-next-line @typescript-eslint/no-require-imports

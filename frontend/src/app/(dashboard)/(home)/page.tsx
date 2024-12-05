@@ -22,6 +22,11 @@ export type WeeklyTweetCount = {
 const Page = () => {
   const windows = [
     {
+      ...habitWindow,
+      title: "生息時間",
+      children: <Habit busy_color_index_list={busy_color_index_list} />,
+    },
+    {
       ...monthlyGraphWindow,
       title: "いつひまだったの",
       children: <MonthlyGraph monthlyTweetCounts={monthlyTweetCounts} />,
@@ -36,11 +41,6 @@ const Page = () => {
           dataKey="count"
         />
       ),
-    },
-    {
-      ...habitWindow,
-      title: "生息時間",
-      children: <Habit busy_color_index_list={busy_color_index_list} />,
     },
   ];
 
