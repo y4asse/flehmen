@@ -3,6 +3,7 @@ import React from "react";
 import { MonthlyGraph } from "./_components/MonthlyGraph";
 import { WeeklyGraph } from "./_components/WeeklyGraph";
 import { Habit } from "./_components/Habit";
+// import * as $axios from "@/lib/axios";
 
 export type DateTweetCount = {
   date: string;
@@ -20,6 +21,13 @@ export type WeeklyTweetCount = {
 };
 
 const Page = () => {
+  // const result = $axios.request({
+  //   url: "/pet/findByTags",
+  //   method: "get",
+  //   params: {
+  //     tags: ["available"],
+  //   },
+  // });
   const windows = [
     {
       ...habitWindow,
