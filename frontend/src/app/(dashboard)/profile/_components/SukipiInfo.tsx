@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Sukipi } from "../page";
 import { Button } from "@/components/ui/button";
-import { info } from "console";
 
 type Props = {
   sukipi: Sukipi;
