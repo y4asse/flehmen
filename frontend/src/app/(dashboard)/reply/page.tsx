@@ -146,7 +146,7 @@ const contents = {
 const monthlRep = {
   initSize: { width: 800, height: 600 },
   initPosition: {
-    x: 700,
+    x: 800,
     y: 40,
     z: 1,
   },
