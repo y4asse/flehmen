@@ -1,3 +1,4 @@
+// formひどいので後で直す
 "use client";
 import React, { useState } from "react";
 import { Flex } from "@/components/ui/flex";
@@ -24,6 +25,13 @@ const sukipiInput: SukipiInput[] = [
     type: "text",
     name: "twitterId",
     placeholder: "",
+    required: true,
+  },
+  {
+    title: "好きになった日",
+    type: "text",
+    name: "likedAt",
+    placeholder: "YYYY-MM-DD",
     required: true,
   },
   {
@@ -121,8 +129,8 @@ const Page = () => {
   };
 
   const handleFocus = () => {
-    if (responses[0] === "" || responses[1] === "") {
-      setCheckMessage("名前とTwitterは知ってるよね");
+    if (responses[0] === "" || responses[1] === "" || responses[2] === "") {
+      setCheckMessage("名前とTwitterと好きになった日は知ってるよね");
       return;
     }
     setCheckMessage("Press Enter");
@@ -133,7 +141,7 @@ const Page = () => {
     if (currentIndex != sukipiInput.length - 1) {
       return;
     }
-    if (responses[0] === "" || responses[1] === "") {
+    if (responses[0] === "" || responses[1] === "" || responses[2] === "") {
       return;
     }
     const data = sukipiInput.reduce(
@@ -143,7 +151,7 @@ const Page = () => {
         if (value === "") {
           // 空文字列は null に変換
           acc[input.name] = null;
-        } else if (input.name === "birthday" && value) {
+        } else if (input.placeholder === "YYYY-MM-DD" && value) {
           // "birthday" は Date 型に変換
           acc[input.name] = new Date(value);
         } else if (!isNaN(Number(value)) && value.trim() !== "") {
