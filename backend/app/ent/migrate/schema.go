@@ -73,7 +73,7 @@ var (
 	TweetsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "text", Type: field.TypeString},
-		{Name: "tweet_id", Type: field.TypeInt},
+		{Name: "tweet_id", Type: field.TypeInt, Unique: true},
 		{Name: "tweet_created_at", Type: field.TypeTime},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "sukipi_tweets", Type: field.TypeInt, Nullable: true},
