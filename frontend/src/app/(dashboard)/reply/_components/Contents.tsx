@@ -10,7 +10,7 @@ const Contents = ({ repContents = [] }: Props) => {
     <div>
       {repContents.map((contents) => (
         <div className="my-4 max-w-lg" key={contents.id}>
-          <p className="text-white">□@ {contents.id}</p>
+          <a className="text-white" href={`https://twitter.com/${contents.id}`}>□@ {contents.id}</a>
           <p className="text-white">{contents.content}</p>
         </div>
       ))}

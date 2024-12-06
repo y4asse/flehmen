@@ -6,13 +6,13 @@ import Contents from "./_components/Contents";
 import { MonthlyRep } from "./_components/MonthlyRep";
 
 export type reply = {
-  id: number;
+  id: string;
   count: number;
   intimacy: number;
 };
 
 export type content = {
-  id: number;
+  id: string;
   content: string;
 };
 
@@ -49,43 +49,43 @@ const Page = () => {
 
 const replyInfo: reply[] = [
   {
-    id: 1,
+    id: "dinsei_",
     count: 9,
     intimacy: 4,
   },
   {
-    id: 2,
+    id: "kipeo22",
     count: 1,
     intimacy: 1,
   },
   {
-    id: 1,
+    id: "dinsei_",
     count: 9,
     intimacy: 4,
   },
   {
-    id: 2,
+    id: "kipeo22",
     count: 1,
     intimacy: 1,
   },
   {
-    id: 1,
+    id: "dinsei_",
     count: 9,
     intimacy: 4,
   },
   {
-    id: 2,
+    id: "kipeo22",
     count: 1,
     intimacy: 1,
   },
 ];
 
 const replyContent: content[] = [
-  { id: 1, content: "おはよう" },
-  { id: 2, content: "こんにちは" },
-  { id: 3, content: "こんばんは" },
+  { id: "dinsei_", content: "n競技プログラミングごみ" },
+  { id: "kipeo22", content: "おもろいバイトしたい" },
+  { id: "adeam02", content: "気持ちめちゃくちゃわかるで" },
   {
-    id: 4,
+    id: "7Rqebz",
     content:
       "やばい課題おわってないよ〜！誰かこの問題おしえてくれ〜😭教えてくだれらご飯奢る！",
   },
@@ -143,9 +143,9 @@ const contents = {
 };
 
 const monthlRep = {
-  initSize: { width: 800, height: 600 },
+  initSize: { width: 800, height: 400 },
   initPosition: {
-    x: 800,
+    x: 600,
     y: 40,
     z: 1,
   },
