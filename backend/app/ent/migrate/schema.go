@@ -92,6 +92,29 @@ var (
 			},
 		},
 	}
+	// UniversitiesColumns holds the columns for the "universities" table.
+	UniversitiesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "name", Type: field.TypeString},
+		{Name: "deviation_lower_value", Type: field.TypeInt},
+		{Name: "deviation_upper_value", Type: field.TypeInt},
+		{Name: "abbreviation", Type: field.TypeString},
+		{Name: "prefecture", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
+	}
+	// UniversitiesTable holds the schema information for the "universities" table.
+	UniversitiesTable = &schema.Table{
+		Name:       "universities",
+		Columns:    UniversitiesColumns,
+		PrimaryKey: []*schema.Column{UniversitiesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "university_name_abbreviation",
+				Unique:  true,
+				Columns: []*schema.Column{UniversitiesColumns[1], UniversitiesColumns[4]},
+			},
+		},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -123,6 +146,7 @@ var (
 		SpecialEventsTable,
 		SukipisTable,
 		TweetsTable,
+		UniversitiesTable,
 		UsersTable,
 	}
 )

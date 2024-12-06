@@ -10,6 +10,7 @@ import (
 	"flehmen-api/ent/specialevent"
 	"flehmen-api/ent/sukipi"
 	"flehmen-api/ent/tweet"
+	"flehmen-api/ent/university"
 	"flehmen-api/ent/user"
 	"fmt"
 	"sync"
@@ -32,6 +33,7 @@ const (
 	TypeSpecialEvent = "SpecialEvent"
 	TypeSukipi       = "Sukipi"
 	TypeTweet        = "Tweet"
+	TypeUniversity   = "University"
 	TypeUser         = "User"
 )
 
@@ -2318,6 +2320,671 @@ func (m *TweetMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *TweetMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Tweet edge %s", name)
+}
+
+// UniversityMutation represents an operation that mutates the University nodes in the graph.
+type UniversityMutation struct {
+	config
+	op                     Op
+	typ                    string
+	id                     *int
+	name                   *string
+	deviationLowerValue    *int
+	adddeviationLowerValue *int
+	deviationUpperValue    *int
+	adddeviationUpperValue *int
+	abbreviation           *string
+	prefecture             *string
+	created_at             *time.Time
+	clearedFields          map[string]struct{}
+	done                   bool
+	oldValue               func(context.Context) (*University, error)
+	predicates             []predicate.University
+}
+
+var _ ent.Mutation = (*UniversityMutation)(nil)
+
+// universityOption allows management of the mutation configuration using functional options.
+type universityOption func(*UniversityMutation)
+
+// newUniversityMutation creates new mutation for the University entity.
+func newUniversityMutation(c config, op Op, opts ...universityOption) *UniversityMutation {
+	m := &UniversityMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeUniversity,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withUniversityID sets the ID field of the mutation.
+func withUniversityID(id int) universityOption {
+	return func(m *UniversityMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *University
+		)
+		m.oldValue = func(ctx context.Context) (*University, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().University.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withUniversity sets the old University of the mutation.
+func withUniversity(node *University) universityOption {
+	return func(m *UniversityMutation) {
+		m.oldValue = func(context.Context) (*University, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m UniversityMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m UniversityMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *UniversityMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *UniversityMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().University.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetName sets the "name" field.
+func (m *UniversityMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *UniversityMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the University entity.
+// If the University object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UniversityMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *UniversityMutation) ResetName() {
+	m.name = nil
+}
+
+// SetDeviationLowerValue sets the "deviationLowerValue" field.
+func (m *UniversityMutation) SetDeviationLowerValue(i int) {
+	m.deviationLowerValue = &i
+	m.adddeviationLowerValue = nil
+}
+
+// DeviationLowerValue returns the value of the "deviationLowerValue" field in the mutation.
+func (m *UniversityMutation) DeviationLowerValue() (r int, exists bool) {
+	v := m.deviationLowerValue
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeviationLowerValue returns the old "deviationLowerValue" field's value of the University entity.
+// If the University object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UniversityMutation) OldDeviationLowerValue(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeviationLowerValue is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeviationLowerValue requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeviationLowerValue: %w", err)
+	}
+	return oldValue.DeviationLowerValue, nil
+}
+
+// AddDeviationLowerValue adds i to the "deviationLowerValue" field.
+func (m *UniversityMutation) AddDeviationLowerValue(i int) {
+	if m.adddeviationLowerValue != nil {
+		*m.adddeviationLowerValue += i
+	} else {
+		m.adddeviationLowerValue = &i
+	}
+}
+
+// AddedDeviationLowerValue returns the value that was added to the "deviationLowerValue" field in this mutation.
+func (m *UniversityMutation) AddedDeviationLowerValue() (r int, exists bool) {
+	v := m.adddeviationLowerValue
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeviationLowerValue resets all changes to the "deviationLowerValue" field.
+func (m *UniversityMutation) ResetDeviationLowerValue() {
+	m.deviationLowerValue = nil
+	m.adddeviationLowerValue = nil
+}
+
+// SetDeviationUpperValue sets the "deviationUpperValue" field.
+func (m *UniversityMutation) SetDeviationUpperValue(i int) {
+	m.deviationUpperValue = &i
+	m.adddeviationUpperValue = nil
+}
+
+// DeviationUpperValue returns the value of the "deviationUpperValue" field in the mutation.
+func (m *UniversityMutation) DeviationUpperValue() (r int, exists bool) {
+	v := m.deviationUpperValue
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeviationUpperValue returns the old "deviationUpperValue" field's value of the University entity.
+// If the University object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UniversityMutation) OldDeviationUpperValue(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeviationUpperValue is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeviationUpperValue requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeviationUpperValue: %w", err)
+	}
+	return oldValue.DeviationUpperValue, nil
+}
+
+// AddDeviationUpperValue adds i to the "deviationUpperValue" field.
+func (m *UniversityMutation) AddDeviationUpperValue(i int) {
+	if m.adddeviationUpperValue != nil {
+		*m.adddeviationUpperValue += i
+	} else {
+		m.adddeviationUpperValue = &i
+	}
+}
+
+// AddedDeviationUpperValue returns the value that was added to the "deviationUpperValue" field in this mutation.
+func (m *UniversityMutation) AddedDeviationUpperValue() (r int, exists bool) {
+	v := m.adddeviationUpperValue
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeviationUpperValue resets all changes to the "deviationUpperValue" field.
+func (m *UniversityMutation) ResetDeviationUpperValue() {
+	m.deviationUpperValue = nil
+	m.adddeviationUpperValue = nil
+}
+
+// SetAbbreviation sets the "abbreviation" field.
+func (m *UniversityMutation) SetAbbreviation(s string) {
+	m.abbreviation = &s
+}
+
+// Abbreviation returns the value of the "abbreviation" field in the mutation.
+func (m *UniversityMutation) Abbreviation() (r string, exists bool) {
+	v := m.abbreviation
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAbbreviation returns the old "abbreviation" field's value of the University entity.
+// If the University object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UniversityMutation) OldAbbreviation(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAbbreviation is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAbbreviation requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAbbreviation: %w", err)
+	}
+	return oldValue.Abbreviation, nil
+}
+
+// ResetAbbreviation resets all changes to the "abbreviation" field.
+func (m *UniversityMutation) ResetAbbreviation() {
+	m.abbreviation = nil
+}
+
+// SetPrefecture sets the "prefecture" field.
+func (m *UniversityMutation) SetPrefecture(s string) {
+	m.prefecture = &s
+}
+
+// Prefecture returns the value of the "prefecture" field in the mutation.
+func (m *UniversityMutation) Prefecture() (r string, exists bool) {
+	v := m.prefecture
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPrefecture returns the old "prefecture" field's value of the University entity.
+// If the University object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UniversityMutation) OldPrefecture(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPrefecture is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPrefecture requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPrefecture: %w", err)
+	}
+	return oldValue.Prefecture, nil
+}
+
+// ResetPrefecture resets all changes to the "prefecture" field.
+func (m *UniversityMutation) ResetPrefecture() {
+	m.prefecture = nil
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *UniversityMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *UniversityMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the University entity.
+// If the University object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UniversityMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *UniversityMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// Where appends a list predicates to the UniversityMutation builder.
+func (m *UniversityMutation) Where(ps ...predicate.University) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the UniversityMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *UniversityMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.University, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *UniversityMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *UniversityMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (University).
+func (m *UniversityMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *UniversityMutation) Fields() []string {
+	fields := make([]string, 0, 6)
+	if m.name != nil {
+		fields = append(fields, university.FieldName)
+	}
+	if m.deviationLowerValue != nil {
+		fields = append(fields, university.FieldDeviationLowerValue)
+	}
+	if m.deviationUpperValue != nil {
+		fields = append(fields, university.FieldDeviationUpperValue)
+	}
+	if m.abbreviation != nil {
+		fields = append(fields, university.FieldAbbreviation)
+	}
+	if m.prefecture != nil {
+		fields = append(fields, university.FieldPrefecture)
+	}
+	if m.created_at != nil {
+		fields = append(fields, university.FieldCreatedAt)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *UniversityMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case university.FieldName:
+		return m.Name()
+	case university.FieldDeviationLowerValue:
+		return m.DeviationLowerValue()
+	case university.FieldDeviationUpperValue:
+		return m.DeviationUpperValue()
+	case university.FieldAbbreviation:
+		return m.Abbreviation()
+	case university.FieldPrefecture:
+		return m.Prefecture()
+	case university.FieldCreatedAt:
+		return m.CreatedAt()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *UniversityMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case university.FieldName:
+		return m.OldName(ctx)
+	case university.FieldDeviationLowerValue:
+		return m.OldDeviationLowerValue(ctx)
+	case university.FieldDeviationUpperValue:
+		return m.OldDeviationUpperValue(ctx)
+	case university.FieldAbbreviation:
+		return m.OldAbbreviation(ctx)
+	case university.FieldPrefecture:
+		return m.OldPrefecture(ctx)
+	case university.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	}
+	return nil, fmt.Errorf("unknown University field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *UniversityMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case university.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case university.FieldDeviationLowerValue:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeviationLowerValue(v)
+		return nil
+	case university.FieldDeviationUpperValue:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeviationUpperValue(v)
+		return nil
+	case university.FieldAbbreviation:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAbbreviation(v)
+		return nil
+	case university.FieldPrefecture:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPrefecture(v)
+		return nil
+	case university.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown University field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *UniversityMutation) AddedFields() []string {
+	var fields []string
+	if m.adddeviationLowerValue != nil {
+		fields = append(fields, university.FieldDeviationLowerValue)
+	}
+	if m.adddeviationUpperValue != nil {
+		fields = append(fields, university.FieldDeviationUpperValue)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *UniversityMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case university.FieldDeviationLowerValue:
+		return m.AddedDeviationLowerValue()
+	case university.FieldDeviationUpperValue:
+		return m.AddedDeviationUpperValue()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *UniversityMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case university.FieldDeviationLowerValue:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeviationLowerValue(v)
+		return nil
+	case university.FieldDeviationUpperValue:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeviationUpperValue(v)
+		return nil
+	}
+	return fmt.Errorf("unknown University numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *UniversityMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *UniversityMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *UniversityMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown University nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *UniversityMutation) ResetField(name string) error {
+	switch name {
+	case university.FieldName:
+		m.ResetName()
+		return nil
+	case university.FieldDeviationLowerValue:
+		m.ResetDeviationLowerValue()
+		return nil
+	case university.FieldDeviationUpperValue:
+		m.ResetDeviationUpperValue()
+		return nil
+	case university.FieldAbbreviation:
+		m.ResetAbbreviation()
+		return nil
+	case university.FieldPrefecture:
+		m.ResetPrefecture()
+		return nil
+	case university.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	}
+	return fmt.Errorf("unknown University field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *UniversityMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *UniversityMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *UniversityMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *UniversityMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *UniversityMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *UniversityMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *UniversityMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown University unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *UniversityMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown University edge %s", name)
 }
 
 // UserMutation represents an operation that mutates the User nodes in the graph.
