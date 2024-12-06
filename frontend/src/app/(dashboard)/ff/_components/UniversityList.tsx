@@ -17,9 +17,9 @@ const UniversityList = async (props: Props) => {
   const { query } = props;
   const searchResult = universityList.filter(
     (university) =>
-      university.abbreviation.includes(query) ||
-      university.name.includes(query) ||
-      university.abbreviation.toLowerCase().includes(query)
+      university.abbreviation===query ||
+      university.name===query ||
+      university.abbreviation.toLowerCase()==query
   );
 
   return (
@@ -4113,6 +4113,14 @@ const universityList: University[] = [
     deviationUpperValue: 70,
     prefecture: "福岡県",
     abbreviation: "UKK",
+  },
+  {
+    id: 528,
+    name: "名城大学",
+    deviationLowerValue: 55,
+    deviationUpperValue: 65,
+    prefecture: "愛知県",
+    abbreviation: "MU",
   },
 ];
 export default UniversityList;
