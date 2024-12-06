@@ -2,6 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { Flex } from '@/components/ui/flex';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 const AudioPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -39,7 +40,17 @@ const AudioPlayer = () => {
   };
 
   return (
-    <Flex className="flex flex-col items-center space-y-4 p-4 w-full">
+    <Flex className="relative flex flex-col items-center space-y-4 p-4 w-full h-[400px]">
+      <div className="relative inline-block">
+        <Image
+          src="/images/mic.png"
+          alt="Mic"
+          width={100}
+          height={100}
+          className="transition-transform duration-300 hover:scale-110"
+        />
+      </div>
+
       <Button
         onClick={handlePlayPause}
         className="text-white p-4 rounded-full bg-gray-800"
@@ -63,9 +74,19 @@ const AudioPlayer = () => {
         style={{
           width: '70%',
           height: '10px',
-          background: `linear-gradient(to right, #E4007F ${progress}%, #ccc ${progress}%)`, // 動的背景
+          background: `linear-gradient(to right, #E4007F ${progress}%, #ccc ${progress}%)`,
         }}
       />
+
+      {/* ダウンロードボタン */}
+      <Button
+        className="absolute bottom-4 right-4   p-4 rounded-full "
+        onClick={() => {
+          alert('ダウンロードボタンがクリックされました');
+        }}
+      >
+        ↓ダウンロード
+      </Button>
 
       <style jsx>{`
         input[type='range']::-webkit-slider-thumb {
@@ -91,7 +112,7 @@ const AudioPlayer = () => {
 
       <audio
         ref={audioRef}
-        src="./voice/ayapo_voice.mp3"
+        src="./voice/yase_voice.mp3"
         onTimeUpdate={updateProgress}
         onEnded={handleEnd}
       />
