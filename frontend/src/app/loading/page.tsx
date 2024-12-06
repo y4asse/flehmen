@@ -1,7 +1,8 @@
 import React from "react";
+import Load from "./_components/Load";
 
 const Page = () => {
-  return <div>Page</div>;
+  return <Load />;
 };
 
 export default Page;
