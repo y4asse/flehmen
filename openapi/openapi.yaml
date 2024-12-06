@@ -1,0 +1,82 @@
+openapi: 3.0.3
+info:
+  version: "1.0.0"
+  title: "Flehmen Api Schema"
+servers:
+  - url: https://localhost:8080/api/v1
+    description: Dev server
+  - url: https://api.flehmen.com/api/v1
+    description: Prod server
+paths:
+  /user/{userId}:
+    get:
+      tags:
+        - user
+      operationId: getUserById
+      summary: Get user info.
+      description: Returns a user info.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: the user id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+  /signup:
+    post:
+      tags:
+        - user
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                email:
+                  type: string
+              required:
+                - username
+                - password
+                - email
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessSignupResponse"
+tags:
+  - name: user
+    description: User operations
+  - name: auth
+    description: Auth operations
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+        - id
+        - name
+    SuccessSignupResponse:
+      properties:
+        userId:
+          type: string
+      required: [userId]
+
