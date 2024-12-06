@@ -57,6 +57,20 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessSignupResponse"
+  /universities:
+    get:
+      tags:
+        - user
+      operationId: getUniversities
+      summary: Get universities.
+      description: Returns a list of universities.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Universities"
 tags:
   - name: user
     description: User operations
@@ -74,6 +88,23 @@ components:
       required:
         - id
         - name
+    University:
+      type: object
+      properties:
+        name:
+          type: string
+        deviation_lower_value:
+          type: number
+        deviation_upper_value:
+          type: number
+        prefecture:
+          type: string
+        abbreviation:
+          type: string
+    Universities:
+      type: array
+      items:
+        $ref: "#/components/schemas/University"
     SuccessSignupResponse:
       properties:
         userId:
