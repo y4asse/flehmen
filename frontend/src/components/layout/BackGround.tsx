@@ -6,6 +6,7 @@ import Image from "next/image";
 const homeItems = [
   { name: "プロフィール", href: "/profile" },
   { name: "FF", href: "/ff" },
+  { name: "リプ", href: "/reply" },
   { name: "ひみつ", href: "/secret" },
 ];
 
