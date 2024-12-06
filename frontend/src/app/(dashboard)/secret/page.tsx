@@ -1,6 +1,6 @@
 import { Windows } from "@/components/common/Windows";
 import React from "react";
-import { InputVoice } from "./_components/InputVoice";
+import  InputVoice  from "./_components/InputVoice";
 import  VoicePlay  from "./_components/VoicePlay";
 
 
