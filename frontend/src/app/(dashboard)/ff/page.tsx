@@ -51,10 +51,10 @@ const Page = async (props: {
 const followerList: Follower[] = [
   {
     id: "1",
-    name: "たろう",
+    name: "かりんたん",
     followed_at: "2024-12-06:09:40:21",
-    bio: "2ch",
-    icon: "https://picsum.photos/200",
+    bio: "2ch/カフェ巡り☕️",
+    icon: "/images/karin.png",
   },
   {
     id: "2",
@@ -125,17 +125,17 @@ const followList: Follow[] = [
 ];
 
 const followerWindow = {
-  initSize: { width: 550, height: 350 },
-  initPosition: { x: 200, y: 100, z: 1 },
+  initSize: { width: 600, height: 400 },
+  initPosition: { x: 200, y: 130, z: 1 },
 };
 
 const followWindow = {
-  initSize: { width: 600, height: 350 },
-  initPosition: { x: 800, y: 55, z: 2 },
+  initSize: { width: 700, height: 400 },
+  initPosition: { x: 800, y: 50, z: 2 },
 };
 
 const universityWindow = {
   initSize: { width: 500, height: 300 },
-  initPosition: { x: 780, y: 350, z: 3 },
+  initPosition: { x: 700, y: 450, z: 3 },
 };
 export default Page;
