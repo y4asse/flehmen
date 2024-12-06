@@ -63,7 +63,7 @@ export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
                 <input
                   type="text"
                   name={key}
-                  value={(formData as any)[key] || ""}
+                  value={(formData as never)[key] || ""}
                   onChange={handleInputChange}
                   style={styles.editInput}
                 />
