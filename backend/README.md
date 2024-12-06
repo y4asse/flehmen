@@ -15,3 +15,8 @@ $ make up
 ```
 $ make db_migrate
 ```
+
+以下のコマンドでデータベースのシーディングを実行します。
+```
+$ make db_seed
+```
