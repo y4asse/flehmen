@@ -30,3 +30,5 @@ export const InputVoice = ({  }) => {  // isActiveを受け取る
     </div>
   );
 };
+
+export default InputVoice;
