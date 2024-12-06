@@ -6,4 +6,6 @@ COPY app .
 
 RUN go mod tidy
 
-CMD ["go", "run", "main.go"]
+RUN go install github.com/air-verse/air@latest
+
+CMD ["air", "-c", ".air.toml"]
