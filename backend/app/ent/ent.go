@@ -9,6 +9,7 @@ import (
 	"flehmen-api/ent/specialevent"
 	"flehmen-api/ent/sukipi"
 	"flehmen-api/ent/tweet"
+	"flehmen-api/ent/university"
 	"flehmen-api/ent/user"
 	"fmt"
 	"reflect"
@@ -81,6 +82,7 @@ func checkColumn(table, column string) error {
 			specialevent.Table: specialevent.ValidColumn,
 			sukipi.Table:       sukipi.ValidColumn,
 			tweet.Table:        tweet.ValidColumn,
+			university.Table:   university.ValidColumn,
 			user.Table:         user.ValidColumn,
 		})
 	})

@@ -15,6 +15,7 @@ import (
 	"flehmen-api/ent/specialevent"
 	"flehmen-api/ent/sukipi"
 	"flehmen-api/ent/tweet"
+	"flehmen-api/ent/university"
 	"flehmen-api/ent/user"
 
 	"entgo.io/ent"
@@ -36,6 +37,8 @@ type Client struct {
 	Sukipi *SukipiClient
 	// Tweet is the client for interacting with the Tweet builders.
 	Tweet *TweetClient
+	// University is the client for interacting with the University builders.
+	University *UniversityClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 }
@@ -53,6 +56,7 @@ func (c *Client) init() {
 	c.SpecialEvent = NewSpecialEventClient(c.config)
 	c.Sukipi = NewSukipiClient(c.config)
 	c.Tweet = NewTweetClient(c.config)
+	c.University = NewUniversityClient(c.config)
 	c.User = NewUserClient(c.config)
 }
 
@@ -150,6 +154,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		SpecialEvent: NewSpecialEventClient(cfg),
 		Sukipi:       NewSukipiClient(cfg),
 		Tweet:        NewTweetClient(cfg),
+		University:   NewUniversityClient(cfg),
 		User:         NewUserClient(cfg),
 	}, nil
 }
@@ -174,6 +179,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		SpecialEvent: NewSpecialEventClient(cfg),
 		Sukipi:       NewSukipiClient(cfg),
 		Tweet:        NewTweetClient(cfg),
+		University:   NewUniversityClient(cfg),
 		User:         NewUserClient(cfg),
 	}, nil
 }
@@ -203,21 +209,21 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.Mbti.Use(hooks...)
-	c.SpecialEvent.Use(hooks...)
-	c.Sukipi.Use(hooks...)
-	c.Tweet.Use(hooks...)
-	c.User.Use(hooks...)
+	for _, n := range []interface{ Use(...Hook) }{
+		c.Mbti, c.SpecialEvent, c.Sukipi, c.Tweet, c.University, c.User,
+	} {
+		n.Use(hooks...)
+	}
 }
 
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
-	c.Mbti.Intercept(interceptors...)
-	c.SpecialEvent.Intercept(interceptors...)
-	c.Sukipi.Intercept(interceptors...)
-	c.Tweet.Intercept(interceptors...)
-	c.User.Intercept(interceptors...)
+	for _, n := range []interface{ Intercept(...Interceptor) }{
+		c.Mbti, c.SpecialEvent, c.Sukipi, c.Tweet, c.University, c.User,
+	} {
+		n.Intercept(interceptors...)
+	}
 }
 
 // Mutate implements the ent.Mutator interface.
@@ -231,6 +237,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Sukipi.mutate(ctx, m)
 	case *TweetMutation:
 		return c.Tweet.mutate(ctx, m)
+	case *UniversityMutation:
+		return c.University.mutate(ctx, m)
 	case *UserMutation:
 		return c.User.mutate(ctx, m)
 	default:
@@ -802,6 +810,139 @@ func (c *TweetClient) mutate(ctx context.Context, m *TweetMutation) (Value, erro
 	}
 }
 
+// UniversityClient is a client for the University schema.
+type UniversityClient struct {
+	config
+}
+
+// NewUniversityClient returns a client for the University from the given config.
+func NewUniversityClient(c config) *UniversityClient {
+	return &UniversityClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `university.Hooks(f(g(h())))`.
+func (c *UniversityClient) Use(hooks ...Hook) {
+	c.hooks.University = append(c.hooks.University, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `university.Intercept(f(g(h())))`.
+func (c *UniversityClient) Intercept(interceptors ...Interceptor) {
+	c.inters.University = append(c.inters.University, interceptors...)
+}
+
+// Create returns a builder for creating a University entity.
+func (c *UniversityClient) Create() *UniversityCreate {
+	mutation := newUniversityMutation(c.config, OpCreate)
+	return &UniversityCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of University entities.
+func (c *UniversityClient) CreateBulk(builders ...*UniversityCreate) *UniversityCreateBulk {
+	return &UniversityCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *UniversityClient) MapCreateBulk(slice any, setFunc func(*UniversityCreate, int)) *UniversityCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &UniversityCreateBulk{err: fmt.Errorf("calling to UniversityClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*UniversityCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &UniversityCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for University.
+func (c *UniversityClient) Update() *UniversityUpdate {
+	mutation := newUniversityMutation(c.config, OpUpdate)
+	return &UniversityUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *UniversityClient) UpdateOne(u *University) *UniversityUpdateOne {
+	mutation := newUniversityMutation(c.config, OpUpdateOne, withUniversity(u))
+	return &UniversityUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *UniversityClient) UpdateOneID(id int) *UniversityUpdateOne {
+	mutation := newUniversityMutation(c.config, OpUpdateOne, withUniversityID(id))
+	return &UniversityUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for University.
+func (c *UniversityClient) Delete() *UniversityDelete {
+	mutation := newUniversityMutation(c.config, OpDelete)
+	return &UniversityDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *UniversityClient) DeleteOne(u *University) *UniversityDeleteOne {
+	return c.DeleteOneID(u.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *UniversityClient) DeleteOneID(id int) *UniversityDeleteOne {
+	builder := c.Delete().Where(university.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &UniversityDeleteOne{builder}
+}
+
+// Query returns a query builder for University.
+func (c *UniversityClient) Query() *UniversityQuery {
+	return &UniversityQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeUniversity},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a University entity by its id.
+func (c *UniversityClient) Get(ctx context.Context, id int) (*University, error) {
+	return c.Query().Where(university.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *UniversityClient) GetX(ctx context.Context, id int) *University {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *UniversityClient) Hooks() []Hook {
+	return c.hooks.University
+}
+
+// Interceptors returns the client interceptors.
+func (c *UniversityClient) Interceptors() []Interceptor {
+	return c.inters.University
+}
+
+func (c *UniversityClient) mutate(ctx context.Context, m *UniversityMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&UniversityCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&UniversityUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&UniversityUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&UniversityDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown University mutation op: %q", m.Op())
+	}
+}
+
 // UserClient is a client for the User schema.
 type UserClient struct {
 	config
@@ -970,9 +1111,9 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Mbti, SpecialEvent, Sukipi, Tweet, User []ent.Hook
+		Mbti, SpecialEvent, Sukipi, Tweet, University, User []ent.Hook
 	}
 	inters struct {
-		Mbti, SpecialEvent, Sukipi, Tweet, User []ent.Interceptor
+		Mbti, SpecialEvent, Sukipi, Tweet, University, User []ent.Interceptor
 	}
 )

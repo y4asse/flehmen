@@ -27,5 +27,8 @@ db_migrate:
 db_status:
 	make -C app db_status
 
+db_seed:
+	${DC} exec api make db_seed
+
 deploy:
 	gcloud builds submit --region=asia-east1

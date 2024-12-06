@@ -1,0 +1,4066 @@
+[
+    {
+        "id": 1,
+        "name": "愛知文教大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "愛知県",
+        "abbreviation": "ABU"
+    },
+    {
+        "id": 2,
+        "name": "旭川市立大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "北海道",
+        "abbreviation": "ACU"
+    },
+    {
+        "id": 3,
+        "name": "青山学院大学",
+        "deviationLowerValue": 57,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "AGU"
+    },
+    {
+        "id": 4,
+        "name": "愛知学院大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 60,
+        "prefecture": "愛知県",
+        "abbreviation": "AGU"
+    },
+    {
+        "id": 5,
+        "name": "愛知学泉大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "愛知県",
+        "abbreviation": "AGU"
+    },
+    {
+        "id": 6,
+        "name": "愛国学園大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "千葉県",
+        "abbreviation": "AGU"
+    },
+    {
+        "id": 7,
+        "name": "愛知工業大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "愛知県",
+        "abbreviation": "AIT"
+    },
+    {
+        "id": 8,
+        "name": "国際教養大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 70,
+        "prefecture": "秋田県",
+        "abbreviation": "AIU"
+    },
+    {
+        "id": 9,
+        "name": "旭川医科大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "北海道",
+        "abbreviation": "AMU"
+    },
+    {
+        "id": 10,
+        "name": "愛知医科大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "愛知県",
+        "abbreviation": "AMU"
+    },
+    {
+        "id": 11,
+        "name": "青森公立大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "青森県",
+        "abbreviation": "APU"
+    },
+    {
+        "id": 12,
+        "name": "秋田県立大学",
+        "deviationLowerValue": 52,
+        "deviationUpperValue": 62,
+        "prefecture": "秋田県",
+        "abbreviation": "APU"
+    },
+    {
+        "id": 13,
+        "name": "愛知県立大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "愛知県",
+        "abbreviation": "APU"
+    },
+    {
+        "id": 14,
+        "name": "立命館アジア太平洋大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "大分県",
+        "abbreviation": "APU"
+    },
+    {
+        "id": 15,
+        "name": "航空保安大学校",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "不明",
+        "abbreviation": "ASC"
+    },
+    {
+        "id": 16,
+        "name": "愛知淑徳大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "愛知県",
+        "abbreviation": "ASU"
+    },
+    {
+        "id": 17,
+        "name": "愛知産業大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "愛知県",
+        "abbreviation": "ASU"
+    },
+    {
+        "id": 18,
+        "name": "青森大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "青森県",
+        "abbreviation": "AU"
+    },
+    {
+        "id": 19,
+        "name": "秋田大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "秋田県",
+        "abbreviation": "AU"
+    },
+    {
+        "id": 20,
+        "name": "跡見学園女子大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "東京都",
+        "abbreviation": "AU"
+    },
+    {
+        "id": 21,
+        "name": "亜細亜大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "AU"
+    },
+    {
+        "id": 22,
+        "name": "麻布大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "神奈川県",
+        "abbreviation": "AU"
+    },
+    {
+        "id": 23,
+        "name": "朝日大学",
+        "deviationLowerValue": 48,
+        "deviationUpperValue": 58,
+        "prefecture": "岐阜県",
+        "abbreviation": "AU"
+    },
+    {
+        "id": 24,
+        "name": "愛知大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "愛知県",
+        "abbreviation": "AU"
+    },
+    {
+        "id": 25,
+        "name": "秋田公立美術大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "秋田県",
+        "abbreviation": "AUA"
+    },
+    {
+        "id": 26,
+        "name": "愛知県立芸術大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "愛知県",
+        "abbreviation": "AUA"
+    },
+    {
+        "id": 27,
+        "name": "愛知教育大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "愛知県",
+        "abbreviation": "AUE"
+    },
+    {
+        "id": 28,
+        "name": "文京学院大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "東京都",
+        "abbreviation": "BGU"
+    },
+    {
+        "id": 29,
+        "name": "梅光学院大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "山口県",
+        "abbreviation": "BGU"
+    },
+    {
+        "id": 30,
+        "name": "びわこ学院大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "滋賀県",
+        "abbreviation": "BGU"
+    },
+    {
+        "id": 31,
+        "name": "文化学園大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "BGU"
+    },
+    {
+        "id": 32,
+        "name": "文教大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "埼玉県",
+        "abbreviation": "BU"
+    },
+    {
+        "id": 33,
+        "name": "佛教大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "京都府",
+        "abbreviation": "BU"
+    },
+    {
+        "id": 34,
+        "name": "別府大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "大分県",
+        "abbreviation": "BU"
+    },
+    {
+        "id": 35,
+        "name": "西武文理大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "埼玉県",
+        "abbreviation": "BUH"
+    },
+    {
+        "id": 36,
+        "name": "梅花女子大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "大阪府",
+        "abbreviation": "BWU"
+    },
+    {
+        "id": 37,
+        "name": "航空大学校",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "宮崎県",
+        "abbreviation": "CAC"
+    },
+    {
+        "id": 38,
+        "name": "中央学院大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "千葉県",
+        "abbreviation": "CGU"
+    },
+    {
+        "id": 39,
+        "name": "中部学院大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "岐阜県",
+        "abbreviation": "CGU"
+    },
+    {
+        "id": 40,
+        "name": "中京学院大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "岐阜県",
+        "abbreviation": "CGU"
+    },
+    {
+        "id": 41,
+        "name": "千葉科学大学",
+        "deviationLowerValue": 47,
+        "deviationUpperValue": 57,
+        "prefecture": "千葉県",
+        "abbreviation": "CIS"
+    },
+    {
+        "id": 42,
+        "name": "公立千歳科学技術大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "北海道",
+        "abbreviation": "CIST"
+    },
+    {
+        "id": 43,
+        "name": "千葉工業大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 65,
+        "prefecture": "千葉県",
+        "abbreviation": "CIT"
+    },
+    {
+        "id": 44,
+        "name": "筑紫女学園大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "福岡県",
+        "abbreviation": "CJU"
+    },
+    {
+        "id": 45,
+        "name": "千葉経済大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "千葉県",
+        "abbreviation": "CKU"
+    },
+    {
+        "id": 46,
+        "name": "千葉大学",
+        "deviationLowerValue": 62,
+        "deviationUpperValue": 72,
+        "prefecture": "千葉県",
+        "abbreviation": "CU"
+    },
+    {
+        "id": 47,
+        "name": "中京大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "愛知県",
+        "abbreviation": "CU"
+    },
+    {
+        "id": 48,
+        "name": "中央大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "CU"
+    },
+    {
+        "id": 49,
+        "name": "中部大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "愛知県",
+        "abbreviation": "CU"
+    },
+    {
+        "id": 50,
+        "name": "サイバー大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "福岡県",
+        "abbreviation": "CU"
+    },
+    {
+        "id": 51,
+        "name": "千葉商科大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "千葉県",
+        "abbreviation": "CUC"
+    },
+    {
+        "id": 52,
+        "name": "中京女子大学",
+        "deviationLowerValue": 48,
+        "deviationUpperValue": 58,
+        "prefecture": "愛知県",
+        "abbreviation": "CWU"
+    },
+    {
+        "id": 53,
+        "name": "大東文化大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "DBU"
+    },
+    {
+        "id": 54,
+        "name": "田園調布学園大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "神奈川県",
+        "abbreviation": "DCU"
+    },
+    {
+        "id": 55,
+        "name": "大同大学",
+        "deviationLowerValue": 47,
+        "deviationUpperValue": 57,
+        "prefecture": "愛知県",
+        "abbreviation": "DIT"
+    },
+    {
+        "id": 56,
+        "name": "獨協医科大学",
+        "deviationLowerValue": 62,
+        "deviationUpperValue": 72,
+        "prefecture": "栃木県",
+        "abbreviation": "DMU"
+    },
+    {
+        "id": 57,
+        "name": "獨協大学",
+        "deviationLowerValue": 52,
+        "deviationUpperValue": 62,
+        "prefecture": "埼玉県",
+        "abbreviation": "DU"
+    },
+    {
+        "id": 58,
+        "name": "同志社大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "京都府",
+        "abbreviation": "DU"
+    },
+    {
+        "id": 59,
+        "name": "星槎道都大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "北海道",
+        "abbreviation": "DU"
+    },
+    {
+        "id": 60,
+        "name": "同志社女子大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "京都府",
+        "abbreviation": "DWCLA"
+    },
+    {
+        "id": 61,
+        "name": "江戸川大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "千葉県",
+        "abbreviation": "EU"
+    },
+    {
+        "id": 62,
+        "name": "愛媛大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "愛媛県",
+        "abbreviation": "EU"
+    },
+    {
+        "id": 63,
+        "name": "エリザベト音楽大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "広島県",
+        "abbreviation": "EUM"
+    },
+    {
+        "id": 64,
+        "name": "福山市立大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "広島県",
+        "abbreviation": "FCU"
+    },
+    {
+        "id": 65,
+        "name": "藤田医科大学",
+        "deviationLowerValue": 62,
+        "deviationUpperValue": 72,
+        "prefecture": "愛知県",
+        "abbreviation": "FHU"
+    },
+    {
+        "id": 66,
+        "name": "福山平成大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "広島県",
+        "abbreviation": "FHU"
+    },
+    {
+        "id": 67,
+        "name": "福岡工業大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "福岡県",
+        "abbreviation": "FIT"
+    },
+    {
+        "id": 68,
+        "name": "福岡女学院看護大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "福岡県",
+        "abbreviation": "FJGNU"
+    },
+    {
+        "id": 69,
+        "name": "福岡女学院大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "福岡県",
+        "abbreviation": "FJGU"
+    },
+    {
+        "id": 70,
+        "name": "福島県立医科大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "福島県",
+        "abbreviation": "FMU"
+    },
+    {
+        "id": 71,
+        "name": "福井県立大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "福井県",
+        "abbreviation": "FPU"
+    },
+    {
+        "id": 72,
+        "name": "富士大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "岩手県",
+        "abbreviation": "FU"
+    },
+    {
+        "id": 73,
+        "name": "福島大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "福島県",
+        "abbreviation": "FU"
+    },
+    {
+        "id": 74,
+        "name": "フェリス女学院大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "神奈川県",
+        "abbreviation": "FU"
+    },
+    {
+        "id": 75,
+        "name": "福山大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "広島県",
+        "abbreviation": "FU"
+    },
+    {
+        "id": 76,
+        "name": "福岡大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "福岡県",
+        "abbreviation": "FU"
+    },
+    {
+        "id": 77,
+        "name": "公立はこだて未来大学",
+        "deviationLowerValue": 52,
+        "deviationUpperValue": 62,
+        "prefecture": "北海道",
+        "abbreviation": "FUN"
+    },
+    {
+        "id": 78,
+        "name": "福井工業大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "福井県",
+        "abbreviation": "FUT"
+    },
+    {
+        "id": 79,
+        "name": "藤女子大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "北海道",
+        "abbreviation": "FWU"
+    },
+    {
+        "id": 80,
+        "name": "福岡女子大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "福岡県",
+        "abbreviation": "FWU"
+    },
+    {
+        "id": 81,
+        "name": "群馬県立県民健康科学大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "群馬県",
+        "abbreviation": "GCHS"
+    },
+    {
+        "id": 82,
+        "name": "岐阜県立看護大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "岐阜県",
+        "abbreviation": "GCN"
+    },
+    {
+        "id": 83,
+        "name": "岐阜協立大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "岐阜県",
+        "abbreviation": "GKU"
+    },
+    {
+        "id": 84,
+        "name": "群馬パース大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "群馬県",
+        "abbreviation": "GPU"
+    },
+    {
+        "id": 85,
+        "name": "岐阜薬科大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "岐阜県",
+        "abbreviation": "GPU"
+    },
+    {
+        "id": 86,
+        "name": "群馬県立女子大学",
+        "deviationLowerValue": 52,
+        "deviationUpperValue": 62,
+        "prefecture": "群馬県",
+        "abbreviation": "GPWU"
+    },
+    {
+        "id": 87,
+        "name": "政策研究大学院大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "GRIPS"
+    },
+    {
+        "id": 88,
+        "name": "岐阜聖徳学園大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "岐阜県",
+        "abbreviation": "GSGU"
+    },
+    {
+        "id": 89,
+        "name": "群馬大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "群馬県",
+        "abbreviation": "GU"
+    },
+    {
+        "id": 90,
+        "name": "岐阜大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "岐阜県",
+        "abbreviation": "GU"
+    },
+    {
+        "id": 91,
+        "name": "学習院大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "GU"
+    },
+    {
+        "id": 92,
+        "name": "群馬社会福祉大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "群馬県",
+        "abbreviation": "GUSW"
+    },
+    {
+        "id": 93,
+        "name": "学習院女子大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "GWC"
+    },
+    {
+        "id": 94,
+        "name": "岐阜女子大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "岐阜県",
+        "abbreviation": "GWU"
+    },
+    {
+        "id": 95,
+        "name": "広島文化学園大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "広島県",
+        "abbreviation": "HBGU"
+    },
+    {
+        "id": 96,
+        "name": "北海道文教大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "北海道",
+        "abbreviation": "HBU"
+    },
+    {
+        "id": 97,
+        "name": "広島文教大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "広島県",
+        "abbreviation": "HBU"
+    },
+    {
+        "id": 98,
+        "name": "平成音楽大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "熊本県",
+        "abbreviation": "HCM"
+    },
+    {
+        "id": 99,
+        "name": "広島市立大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "広島県",
+        "abbreviation": "HCU"
+    },
+    {
+        "id": 100,
+        "name": "北星学園大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "北海道",
+        "abbreviation": "HGU"
+    },
+    {
+        "id": 101,
+        "name": "北海学園大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "北海道",
+        "abbreviation": "HGU"
+    },
+    {
+        "id": 102,
+        "name": "浜松学院大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "静岡県",
+        "abbreviation": "HGU"
+    },
+    {
+        "id": 103,
+        "name": "八戸学院大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "青森県",
+        "abbreviation": "HGU"
+    },
+    {
+        "id": 104,
+        "name": "八戸工業大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "青森県",
+        "abbreviation": "HIT"
+    },
+    {
+        "id": 105,
+        "name": "広島工業大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "広島県",
+        "abbreviation": "HIT"
+    },
+    {
+        "id": 106,
+        "name": "北海道情報大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "北海道",
+        "abbreviation": "HIU"
+    },
+    {
+        "id": 107,
+        "name": "平成国際大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "埼玉県",
+        "abbreviation": "HIU"
+    },
+    {
+        "id": 108,
+        "name": "広島国際大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "広島県",
+        "abbreviation": "HIU"
+    },
+    {
+        "id": 109,
+        "name": "羽衣国際大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "大阪府",
+        "abbreviation": "HIUS"
+    },
+    {
+        "id": 110,
+        "name": "広島女学院大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "広島県",
+        "abbreviation": "HJU"
+    },
+    {
+        "id": 111,
+        "name": "広島国際学院大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "広島県",
+        "abbreviation": "HKGU"
+    },
+    {
+        "id": 112,
+        "name": "広島修道大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "広島県",
+        "abbreviation": "HSU"
+    },
+    {
+        "id": 113,
+        "name": "北海道大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "北海道",
+        "abbreviation": "HU"
+    },
+    {
+        "id": 114,
+        "name": "弘前大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "青森県",
+        "abbreviation": "HU"
+    },
+    {
+        "id": 115,
+        "name": "北翔大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "北海道",
+        "abbreviation": "HU"
+    },
+    {
+        "id": 116,
+        "name": "北洋大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "北海道",
+        "abbreviation": "HU"
+    },
+    {
+        "id": 117,
+        "name": "函館大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "北海道",
+        "abbreviation": "HU"
+    },
+    {
+        "id": 118,
+        "name": "一橋大学",
+        "deviationLowerValue": 70,
+        "deviationUpperValue": 80,
+        "prefecture": "東京都",
+        "abbreviation": "HU"
+    },
+    {
+        "id": 119,
+        "name": "浜松大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "静岡県",
+        "abbreviation": "HU"
+    },
+    {
+        "id": 120,
+        "name": "広島大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "広島県",
+        "abbreviation": "HU"
+    },
+    {
+        "id": 121,
+        "name": "白鷗大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "栃木県",
+        "abbreviation": "HU"
+    },
+    {
+        "id": 122,
+        "name": "法政大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "HU"
+    },
+    {
+        "id": 123,
+        "name": "広島経済大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "広島県",
+        "abbreviation": "HUE"
+    },
+    {
+        "id": 124,
+        "name": "北海道教育大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "北海道",
+        "abbreviation": "HUE"
+    },
+    {
+        "id": 125,
+        "name": "浜松医科大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "静岡県",
+        "abbreviation": "HUSM"
+    },
+    {
+        "id": 126,
+        "name": "情報科学芸術大学院大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "岐阜県",
+        "abbreviation": "IAMAS"
+    },
+    {
+        "id": 127,
+        "name": "国際武道大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "千葉県",
+        "abbreviation": "IBU"
+    },
+    {
+        "id": 128,
+        "name": "四天王寺国際仏教大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "大阪府",
+        "abbreviation": "IBU"
+    },
+    {
+        "id": 129,
+        "name": "茨城キリスト教大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "茨城県",
+        "abbreviation": "IC"
+    },
+    {
+        "id": 130,
+        "name": "国際仏教学大学院大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "ICABS"
+    },
+    {
+        "id": 131,
+        "name": "国際基督教大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "ICU"
+    },
+    {
+        "id": 132,
+        "name": "岩手医科大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "岩手県",
+        "abbreviation": "IMU"
+    },
+    {
+        "id": 133,
+        "name": "いわき明星大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "福島県",
+        "abbreviation": "IMU"
+    },
+    {
+        "id": 134,
+        "name": "ものつくり大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "埼玉県",
+        "abbreviation": "IOT"
+    },
+    {
+        "id": 135,
+        "name": "岩手県立大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "岩手県",
+        "abbreviation": "IPU"
+    },
+    {
+        "id": 136,
+        "name": "茨城県立医療大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "茨城県",
+        "abbreviation": "IPU"
+    },
+    {
+        "id": 137,
+        "name": "環太平洋大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "岡山県",
+        "abbreviation": "IPU"
+    },
+    {
+        "id": 138,
+        "name": "東京科学大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "IST"
+    },
+    {
+        "id": 139,
+        "name": "筑波大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "茨城県",
+        "abbreviation": "ITF"
+    },
+    {
+        "id": 140,
+        "name": "北陸先端科学技術大学院大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "石川県",
+        "abbreviation": "JAIST"
+    },
+    {
+        "id": 141,
+        "name": "桜美林大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "JFO"
+    },
+    {
+        "id": 142,
+        "name": "日本医療大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "北海道",
+        "abbreviation": "JHU"
+    },
+    {
+        "id": 143,
+        "name": "城西国際大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "千葉県",
+        "abbreviation": "JIU"
+    },
+    {
+        "id": 144,
+        "name": "自治医科大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "栃木県",
+        "abbreviation": "JMU"
+    },
+    {
+        "id": 145,
+        "name": "日本赤十字看護大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "JRCCN"
+    },
+    {
+        "id": 146,
+        "name": "日本赤十字北海道看護大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "北海道",
+        "abbreviation": "JRCHCN"
+    },
+    {
+        "id": 147,
+        "name": "日本赤十字広島看護大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "広島県",
+        "abbreviation": "JRCHCN"
+    },
+    {
+        "id": 148,
+        "name": "日本赤十字九州国際看護大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "福岡県",
+        "abbreviation": "JRCKICN"
+    },
+    {
+        "id": 149,
+        "name": "日本赤十字豊田看護大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "愛知県",
+        "abbreviation": "JRCTCN"
+    },
+    {
+        "id": 150,
+        "name": "上武大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "群馬県",
+        "abbreviation": "JU"
+    },
+    {
+        "id": 151,
+        "name": "城西大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "埼玉県",
+        "abbreviation": "JU"
+    },
+    {
+        "id": 152,
+        "name": "十文字学園女子大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "埼玉県",
+        "abbreviation": "JU"
+    },
+    {
+        "id": 153,
+        "name": "順天堂大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "JU"
+    },
+    {
+        "id": 154,
+        "name": "女子美術大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "JUAD"
+    },
+    {
+        "id": 155,
+        "name": "東京慈恵会医科大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "JUSM"
+    },
+    {
+        "id": 156,
+        "name": "日本女子体育大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "東京都",
+        "abbreviation": "JWCPE"
+    },
+    {
+        "id": 157,
+        "name": "日本女子大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "JWU"
+    },
+    {
+        "id": 158,
+        "name": "実践女子大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "JWU"
+    },
+    {
+        "id": 159,
+        "name": "十文字学園女子大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "埼玉県",
+        "abbreviation": "JWU"
+    },
+    {
+        "id": 160,
+        "name": "神奈川工科大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "神奈川県",
+        "abbreviation": "KAIT"
+    },
+    {
+        "id": 161,
+        "name": "京都文教大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "京都府",
+        "abbreviation": "KBU"
+    },
+    {
+        "id": 162,
+        "name": "神戸女学院大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "兵庫県",
+        "abbreviation": "KC"
+    },
+    {
+        "id": 163,
+        "name": "金沢美術工芸大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "石川県",
+        "abbreviation": "KCA"
+    },
+    {
+        "id": 164,
+        "name": "国立音楽大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "KCM"
+    },
+    {
+        "id": 165,
+        "name": "京都市立芸術大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "京都府",
+        "abbreviation": "KCUA"
+    },
+    {
+        "id": 166,
+        "name": "神戸市外国語大学",
+        "deviationLowerValue": 62,
+        "deviationUpperValue": 72,
+        "prefecture": "兵庫県",
+        "abbreviation": "KCUFS"
+    },
+    {
+        "id": 167,
+        "name": "近畿大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "大阪府",
+        "abbreviation": "KDU"
+    },
+    {
+        "id": 168,
+        "name": "神奈川歯科大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "神奈川県",
+        "abbreviation": "KDU"
+    },
+    {
+        "id": 169,
+        "name": "九州歯科大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "福岡県",
+        "abbreviation": "KDU"
+    },
+    {
+        "id": 170,
+        "name": "神戸芸術工科大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "兵庫県",
+        "abbreviation": "KDU"
+    },
+    {
+        "id": 171,
+        "name": "関東学院大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "神奈川県",
+        "abbreviation": "KGU"
+    },
+    {
+        "id": 172,
+        "name": "國學院大學",
+        "deviationLowerValue": 57,
+        "deviationUpperValue": 67,
+        "prefecture": "東京都",
+        "abbreviation": "KGU"
+    },
+    {
+        "id": 173,
+        "name": "関東学園大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "群馬県",
+        "abbreviation": "KGU"
+    },
+    {
+        "id": 174,
+        "name": "金城学院大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "愛知県",
+        "abbreviation": "KGU"
+    },
+    {
+        "id": 175,
+        "name": "関西学院大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "兵庫県",
+        "abbreviation": "KGU"
+    },
+    {
+        "id": 176,
+        "name": "神戸学院大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "兵庫県",
+        "abbreviation": "KGU"
+    },
+    {
+        "id": 177,
+        "name": "金沢学院大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "石川県",
+        "abbreviation": "KGU"
+    },
+    {
+        "id": 178,
+        "name": "関西外国語大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "大阪府",
+        "abbreviation": "KGU"
+    },
+    {
+        "id": 179,
+        "name": "熊本学園大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "熊本県",
+        "abbreviation": "KGU"
+    },
+    {
+        "id": 180,
+        "name": "九州工業大学",
+        "deviationLowerValue": 62,
+        "deviationUpperValue": 72,
+        "prefecture": "福岡県",
+        "abbreviation": "Kyutech"
+    },
+    {
+        "id": 200,
+        "name": "前橋工科大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "群馬県",
+        "abbreviation": "Maebit"
+    },
+    {
+        "id": 201,
+        "name": "武蔵野音楽大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "MAM"
+    },
+    {
+        "id": 202,
+        "name": "武蔵野美術大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "MAU"
+    },
+    {
+        "id": 203,
+        "name": "三重中京大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "三重県",
+        "abbreviation": "MCU"
+    },
+    {
+        "id": 204,
+        "name": "松本歯科大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "長野県",
+        "abbreviation": "MDU"
+    },
+    {
+        "id": 205,
+        "name": "明治学院大学",
+        "deviationLowerValue": 57,
+        "deviationUpperValue": 67,
+        "prefecture": "東京都",
+        "abbreviation": "MG"
+    },
+    {
+        "id": 206,
+        "name": "宮城学院女子大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "宮城県",
+        "abbreviation": "MG"
+    },
+    {
+        "id": 207,
+        "name": "武蔵野学院大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "埼玉県",
+        "abbreviation": "MGU"
+    },
+    {
+        "id": 208,
+        "name": "武蔵野美術大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "MGU"
+    },
+    {
+        "id": 209,
+        "name": "室蘭工業大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "北海道",
+        "abbreviation": "MIT"
+    },
+    {
+        "id": 210,
+        "name": "前橋工科大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "群馬県",
+        "abbreviation": "MIT"
+    },
+    {
+        "id": 211,
+        "name": "共愛学園前橋国際大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "群馬県",
+        "abbreviation": "MKGC"
+    },
+    {
+        "id": 212,
+        "name": "宮崎公立大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "宮崎県",
+        "abbreviation": "MMU"
+    },
+    {
+        "id": 213,
+        "name": "明治薬科大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "MPU"
+    },
+    {
+        "id": 214,
+        "name": "宮崎産業経営大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "宮崎県",
+        "abbreviation": "MSU"
+    },
+    {
+        "id": 215,
+        "name": "松山東雲女子大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "愛媛県",
+        "abbreviation": "MSWU"
+    },
+    {
+        "id": 216,
+        "name": "明海大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "千葉県",
+        "abbreviation": "MU"
+    },
+    {
+        "id": 217,
+        "name": "明治大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "MU"
+    },
+    {
+        "id": 218,
+        "name": "目白大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "東京都",
+        "abbreviation": "MU"
+    },
+    {
+        "id": 219,
+        "name": "武蔵大学",
+        "deviationLowerValue": 57,
+        "deviationUpperValue": 67,
+        "prefecture": "東京都",
+        "abbreviation": "MU"
+    },
+    {
+        "id": 220,
+        "name": "松山大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "愛媛県",
+        "abbreviation": "MU"
+    },
+    {
+        "id": 221,
+        "name": "武庫川女子大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "兵庫県",
+        "abbreviation": "MWU"
+    },
+    {
+        "id": 222,
+        "name": "美作大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "岡山県",
+        "abbreviation": "MWU"
+    },
+    {
+        "id": 223,
+        "name": "宮城大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "宮城県",
+        "abbreviation": "MYU"
+    },
+    {
+        "id": 224,
+        "name": "新潟食料農業大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "新潟県",
+        "abbreviation": "NAFU"
+    },
+    {
+        "id": 225,
+        "name": "奈良先端科学技術大学院大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "奈良県",
+        "abbreviation": "NAIST"
+    },
+    {
+        "id": 226,
+        "name": "ノースアジア大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "秋田県",
+        "abbreviation": "NAU"
+    },
+    {
+        "id": 227,
+        "name": "日本文理大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "大分県",
+        "abbreviation": "NBU"
+    },
+    {
+        "id": 228,
+        "name": "名古屋音楽大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "愛知県",
+        "abbreviation": "NCM"
+    },
+    {
+        "id": 229,
+        "name": "国立看護大学校",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "NCN"
+    },
+    {
+        "id": 230,
+        "name": "名古屋市立大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "愛知県",
+        "abbreviation": "NCU"
+    },
+    {
+        "id": 231,
+        "name": "防衛大学校",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "神奈川県",
+        "abbreviation": "NDA"
+    },
+    {
+        "id": 232,
+        "name": "防衛医科大学校",
+        "deviationLowerValue": 70,
+        "deviationUpperValue": 80,
+        "prefecture": "埼玉県",
+        "abbreviation": "NDMC"
+    },
+    {
+        "id": 233,
+        "name": "ノートルダム清心女子大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "岡山県",
+        "abbreviation": "NDSU"
+    },
+    {
+        "id": 234,
+        "name": "日本歯科大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "NDU"
+    },
+    {
+        "id": 235,
+        "name": "日本福祉大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "愛知県",
+        "abbreviation": "NFU"
+    },
+    {
+        "id": 236,
+        "name": "日本橋学館大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "東京都",
+        "abbreviation": "NGU"
+    },
+    {
+        "id": 237,
+        "name": "名古屋学院大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "愛知県",
+        "abbreviation": "NGU"
+    },
+    {
+        "id": 238,
+        "name": "中村学園大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "福岡県",
+        "abbreviation": "NGU"
+    },
+    {
+        "id": 239,
+        "name": "長崎総合科学大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "長崎県",
+        "abbreviation": "NiAS"
+    },
+    {
+        "id": 240,
+        "name": "長岡造形大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "新潟県",
+        "abbreviation": "NID"
+    },
+    {
+        "id": 241,
+        "name": "日本医療科学大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "埼玉県",
+        "abbreviation": "NIMS"
+    },
+    {
+        "id": 242,
+        "name": "新潟工科大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "新潟県",
+        "abbreviation": "NIIT"
+    },
+    {
+        "id": 243,
+        "name": "名古屋工業大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "愛知県",
+        "abbreviation": "NIT"
+    },
+    {
+        "id": 244,
+        "name": "日本工業大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "埼玉県",
+        "abbreviation": "NIT"
+    },
+    {
+        "id": 245,
+        "name": "西日本工業大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "福岡県",
+        "abbreviation": "NIT"
+    },
+    {
+        "id": 246,
+        "name": "名古屋工業大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "愛知県",
+        "abbreviation": "NITech"
+    },
+    {
+        "id": 247,
+        "name": "長崎国際大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "長崎県",
+        "abbreviation": "NIU"
+    },
+    {
+        "id": 248,
+        "name": "新見公立大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "岡山県",
+        "abbreviation": "NiU"
+    },
+    {
+        "id": 249,
+        "name": "名古屋経済大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "愛知県",
+        "abbreviation": "NKU"
+    },
+    {
+        "id": 250,
+        "name": "日本医科大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "NMS"
+    },
+    {
+        "id": 251,
+        "name": "奈良県立医科大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "奈良県",
+        "abbreviation": "NMU"
+    },
+    {
+        "id": 252,
+        "name": "日本薬科大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "埼玉県",
+        "abbreviation": "NPU"
+    },
+    {
+        "id": 253,
+        "name": "奈良県立大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "奈良県",
+        "abbreviation": "NPU"
+    },
+    {
+        "id": 254,
+        "name": "名古屋柳城女子大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "愛知県",
+        "abbreviation": "NRWU"
+    },
+    {
+        "id": 255,
+        "name": "日本体育大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "NSSU"
+    },
+    {
+        "id": 256,
+        "name": "新潟青陵大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "新潟県",
+        "abbreviation": "NSU"
+    },
+    {
+        "id": 257,
+        "name": "新潟産業大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "新潟県",
+        "abbreviation": "NSU"
+    },
+    {
+        "id": 258,
+        "name": "奈良産業大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "奈良県",
+        "abbreviation": "NSU"
+    },
+    {
+        "id": 259,
+        "name": "名古屋大学",
+        "deviationLowerValue": 70,
+        "deviationUpperValue": 80,
+        "prefecture": "愛知県",
+        "abbreviation": "NU"
+    },
+    {
+        "id": 260,
+        "name": "二松學舍大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "NU"
+    },
+    {
+        "id": 261,
+        "name": "日本大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "NU"
+    },
+    {
+        "id": 262,
+        "name": "新潟大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "新潟県",
+        "abbreviation": "NU"
+    },
+    {
+        "id": 263,
+        "name": "長野大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "長野県",
+        "abbreviation": "NU"
+    },
+    {
+        "id": 264,
+        "name": "長崎大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "長崎県",
+        "abbreviation": "NU"
+    },
+    {
+        "id": 265,
+        "name": "長崎県立大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "長崎県",
+        "abbreviation": "NU"
+    },
+    {
+        "id": 266,
+        "name": "長野県立大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "長野県",
+        "abbreviation": "NU"
+    },
+    {
+        "id": 267,
+        "name": "奈良学園大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "奈良県",
+        "abbreviation": "NU"
+    },
+    {
+        "id": 268,
+        "name": "名古屋芸術大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "愛知県",
+        "abbreviation": "NUA"
+    },
+    {
+        "id": 269,
+        "name": "名古屋学芸大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "愛知県",
+        "abbreviation": "NUAS"
+    },
+    {
+        "id": 270,
+        "name": "名古屋商科大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "愛知県",
+        "abbreviation": "NUCB"
+    },
+    {
+        "id": 271,
+        "name": "奈良教育大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "奈良県",
+        "abbreviation": "NUE"
+    },
+    {
+        "id": 272,
+        "name": "鳴門教育大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "徳島県",
+        "abbreviation": "NUE"
+    },
+    {
+        "id": 273,
+        "name": "名古屋外国語大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "愛知県",
+        "abbreviation": "NUFS"
+    },
+    {
+        "id": 274,
+        "name": "新潟国際情報大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "新潟県",
+        "abbreviation": "NUIS"
+    },
+    {
+        "id": 275,
+        "name": "新潟医療福祉大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "新潟県",
+        "abbreviation": "NUHW"
+    },
+    {
+        "id": 276,
+        "name": "新潟経営大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "新潟県",
+        "abbreviation": "NUM"
+    },
+    {
+        "id": 277,
+        "name": "長岡技術科学大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "新潟県",
+        "abbreviation": "NUT"
+    },
+    {
+        "id": 278,
+        "name": "日本獣医生命科学大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "NVLU"
+    },
+    {
+        "id": 279,
+        "name": "奈良女子大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "奈良県",
+        "abbreviation": "NWU"
+    },
+    {
+        "id": 280,
+        "name": "長崎ウエスレヤン大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "長崎県",
+        "abbreviation": "NWU"
+    },
+    {
+        "id": 281,
+        "name": "名古屋女子大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "愛知県",
+        "abbreviation": "NWU"
+    },
+    {
+        "id": 282,
+        "name": "名古屋造形大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "愛知県",
+        "abbreviation": "NZU"
+    },
+    {
+        "id": 283,
+        "name": "大阪青山大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "大阪府",
+        "abbreviation": "OAU"
+    },
+    {
+        "id": 284,
+        "name": "大阪音楽大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "大阪府",
+        "abbreviation": "OCM"
+    },
+    {
+        "id": 285,
+        "name": "大阪市立大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "大阪府",
+        "abbreviation": "OCU"
+    },
+    {
+        "id": 286,
+        "name": "尾道市立大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "広島県",
+        "abbreviation": "OCU"
+    },
+    {
+        "id": 287,
+        "name": "大阪歯科大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "大阪府",
+        "abbreviation": "ODU"
+    },
+    {
+        "id": 288,
+        "name": "大阪電気通信大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "大阪府",
+        "abbreviation": "OECU"
+    },
+    {
+        "id": 289,
+        "name": "大阪学院大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "大阪府",
+        "abbreviation": "OGU"
+    },
+    {
+        "id": 290,
+        "name": "追手門学院大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "大阪府",
+        "abbreviation": "OGU"
+    },
+    {
+        "id": 291,
+        "name": "沖縄科学技術大学院大学",
+        "deviationLowerValue": 70,
+        "deviationUpperValue": 80,
+        "prefecture": "沖縄県",
+        "abbreviation": "OIST"
+    },
+    {
+        "id": 292,
+        "name": "大阪工業大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "大阪府",
+        "abbreviation": "OIT"
+    },
+    {
+        "id": 293,
+        "name": "大阪国際大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "大阪府",
+        "abbreviation": "OIU"
+    },
+    {
+        "id": 294,
+        "name": "大阪女学院大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "大阪府",
+        "abbreviation": "OJU"
+    },
+    {
+        "id": 295,
+        "name": "大阪教育大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "大阪府",
+        "abbreviation": "OKU"
+    },
+    {
+        "id": 296,
+        "name": "大阪公立大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "大阪府",
+        "abbreviation": "OMU"
+    },
+    {
+        "id": 297,
+        "name": "大阪医科薬科大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "大阪府",
+        "abbreviation": "OMPU"
+    },
+    {
+        "id": 298,
+        "name": "大阪府立大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "大阪府",
+        "abbreviation": "OPU"
+    },
+    {
+        "id": 299,
+        "name": "岡山県立大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "岡山県",
+        "abbreviation": "OPU"
+    },
+    {
+        "id": 300,
+        "name": "沖縄県立看護大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "沖縄県",
+        "abbreviation": "OPCN"
+    },
+    {
+        "id": 301,
+        "name": "沖縄県立芸術大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "沖縄県",
+        "abbreviation": "OPUA"
+    },
+    {
+        "id": 302,
+        "name": "大阪成蹊大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "大阪府",
+        "abbreviation": "OSU"
+    },
+    {
+        "id": 303,
+        "name": "大阪産業大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "大阪府",
+        "abbreviation": "OSU"
+    },
+    {
+        "id": 304,
+        "name": "岡山商科大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "岡山県",
+        "abbreviation": "OSU"
+    },
+    {
+        "id": 305,
+        "name": "大阪樟蔭女子大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "大阪府",
+        "abbreviation": "OSWU"
+    },
+    {
+        "id": 306,
+        "name": "お茶の水女子大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "OU"
+    },
+    {
+        "id": 307,
+        "name": "桜美林大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "OU"
+    },
+    {
+        "id": 308,
+        "name": "桜花学園大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "愛知県",
+        "abbreviation": "OU"
+    },
+    {
+        "id": 309,
+        "name": "大阪大学",
+        "deviationLowerValue": 70,
+        "deviationUpperValue": 80,
+        "prefecture": "大阪府",
+        "abbreviation": "OU"
+    },
+    {
+        "id": 310,
+        "name": "大手前大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "兵庫県",
+        "abbreviation": "OU"
+    },
+    {
+        "id": 311,
+        "name": "岡山大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "岡山県",
+        "abbreviation": "OU"
+    },
+    {
+        "id": 312,
+        "name": "尾道市立大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "広島県",
+        "abbreviation": "OU"
+    },
+    {
+        "id": 313,
+        "name": "沖縄大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "沖縄県",
+        "abbreviation": "OU"
+    },
+    {
+        "id": 314,
+        "name": "大阪芸術大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "大阪府",
+        "abbreviation": "OUA"
+    },
+    {
+        "id": 315,
+        "name": "帯広畜産大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "北海道",
+        "abbreviation": "OUAVM"
+    },
+    {
+        "id": 316,
+        "name": "小樽商科大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "北海道",
+        "abbreviation": "OUC"
+    },
+    {
+        "id": 317,
+        "name": "大阪商業大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "大阪府",
+        "abbreviation": "OUC"
+    },
+    {
+        "id": 318,
+        "name": "大阪体育大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "大阪府",
+        "abbreviation": "OUHS"
+    },
+    {
+        "id": 319,
+        "name": "放送大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "東京都",
+        "abbreviation": "OUJ"
+    },
+    {
+        "id": 320,
+        "name": "大阪薬科大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "大阪府",
+        "abbreviation": "OUPS"
+    },
+    {
+        "id": 321,
+        "name": "岡山理科大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "岡山県",
+        "abbreviation": "OUS"
+    },
+    {
+        "id": 322,
+        "name": "大阪観光大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "大阪府",
+        "abbreviation": "OUT"
+    },
+    {
+        "id": 323,
+        "name": "大妻女子大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "OWU"
+    },
+    {
+        "id": 324,
+        "name": "岡崎女子大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "愛知県",
+        "abbreviation": "OWU"
+    },
+    {
+        "id": 325,
+        "name": "大阪経済法科大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "大阪府",
+        "abbreviation": "OUEL"
+    },
+    {
+        "id": 326,
+        "name": "群馬パース大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "群馬県",
+        "abbreviation": "PAZ"
+    },
+    {
+        "id": 327,
+        "name": "県立広島大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "広島県",
+        "abbreviation": "PUH"
+    },
+    {
+        "id": 328,
+        "name": "熊本県立大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "熊本県",
+        "abbreviation": "PUK"
+    },
+    {
+        "id": 329,
+        "name": "九州大学",
+        "deviationLowerValue": 70,
+        "deviationUpperValue": 80,
+        "prefecture": "福岡県",
+        "abbreviation": "QU"
+    },
+    {
+        "id": 330,
+        "name": "酪農学園大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "北海道",
+        "abbreviation": "RGU"
+    },
+    {
+        "id": 331,
+        "name": "立正大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "RIS"
+    },
+    {
+        "id": 332,
+        "name": "立命館大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "京都府",
+        "abbreviation": "Rits"
+    },
+    {
+        "id": 333,
+        "name": "流通経済大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "茨城県",
+        "abbreviation": "RKU"
+    },
+    {
+        "id": 334,
+        "name": "立教大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "RU"
+    },
+    {
+        "id": 335,
+        "name": "了徳寺大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "千葉県",
+        "abbreviation": "RU"
+    },
+    {
+        "id": 336,
+        "name": "麗澤大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "千葉県",
+        "abbreviation": "RU"
+    },
+    {
+        "id": 337,
+        "name": "龍谷大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "京都府",
+        "abbreviation": "RU"
+    },
+    {
+        "id": 338,
+        "name": "東京科学大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "Science Tokyo"
+    },
+    {
+        "id": 339,
+        "name": "下関市立大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "山口県",
+        "abbreviation": "SCU"
+    },
+    {
+        "id": 340,
+        "name": "聖隷クリストファー大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "静岡県",
+        "abbreviation": "SCU"
+    },
+    {
+        "id": 341,
+        "name": "聖カタリナ大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "愛媛県",
+        "abbreviation": "SCU"
+    },
+    {
+        "id": 342,
+        "name": "星槎道都大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "北海道",
+        "abbreviation": "SDU"
+    },
+    {
+        "id": 343,
+        "name": "聖学院大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "埼玉県",
+        "abbreviation": "SEIG"
+    },
+    {
+        "id": 344,
+        "name": "杉野服飾大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "SFC"
+    },
+    {
+        "id": 345,
+        "name": "洗足学園音楽大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "神奈川県",
+        "abbreviation": "SGCM"
+    },
+    {
+        "id": 346,
+        "name": "札幌学院大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "北海道",
+        "abbreviation": "SGU"
+    },
+    {
+        "id": 347,
+        "name": "埼玉学園大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "埼玉県",
+        "abbreviation": "SGU"
+    },
+    {
+        "id": 348,
+        "name": "尚絅学院大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "宮城県",
+        "abbreviation": "SGU"
+    },
+    {
+        "id": 349,
+        "name": "白梅学園大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "SGU"
+    },
+    {
+        "id": 350,
+        "name": "静岡理工科大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "静岡県",
+        "abbreviation": "SIST"
+    },
+    {
+        "id": 351,
+        "name": "埼玉工業大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "埼玉県",
+        "abbreviation": "SIT"
+    },
+    {
+        "id": 352,
+        "name": "芝浦工業大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "SIT"
+    },
+    {
+        "id": 353,
+        "name": "湘南工科大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "神奈川県",
+        "abbreviation": "SIT"
+    },
+    {
+        "id": 354,
+        "name": "札幌国際大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "北海道",
+        "abbreviation": "SIU"
+    },
+    {
+        "id": 355,
+        "name": "鈴鹿国際大学",
+        "deviationLowerValue": 42,
+        "deviationUpperValue": 52,
+        "prefecture": "三重県",
+        "abbreviation": "SIU"
+    },
+    {
+        "id": 356,
+        "name": "清泉女学院大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "長野県",
+        "abbreviation": "SJC"
+    },
+    {
+        "id": 357,
+        "name": "西南女学院大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "福岡県",
+        "abbreviation": "SJGU"
+    },
+    {
+        "id": 358,
+        "name": "椙山女学園大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "愛知県",
+        "abbreviation": "SJU"
+    },
+    {
+        "id": 359,
+        "name": "千里金蘭大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "大阪府",
+        "abbreviation": "SKU"
+    },
+    {
+        "id": 360,
+        "name": "札幌医科大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "北海道",
+        "abbreviation": "SMU"
+    },
+    {
+        "id": 361,
+        "name": "埼玉医科大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "埼玉県",
+        "abbreviation": "SMU"
+    },
+    {
+        "id": 362,
+        "name": "聖マリアンナ医科大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "神奈川県",
+        "abbreviation": "SMU"
+    },
+    {
+        "id": 363,
+        "name": "山陽小野田市立山口東京理科大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "山口県",
+        "abbreviation": "SOCU"
+    },
+    {
+        "id": 364,
+        "name": "上智大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "Sophia"
+    },
+    {
+        "id": 365,
+        "name": "札幌大谷大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "北海道",
+        "abbreviation": "SOU"
+    },
+    {
+        "id": 366,
+        "name": "埼玉県立大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "埼玉県",
+        "abbreviation": "SPU"
+    },
+    {
+        "id": 367,
+        "name": "昭和薬科大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "SPU"
+    },
+    {
+        "id": 368,
+        "name": "仙台白百合女子大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "宮城県",
+        "abbreviation": "SSWU"
+    },
+    {
+        "id": 369,
+        "name": "札幌大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "北海道",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 370,
+        "name": "佐賀大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "佐賀県",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 371,
+        "name": "埼玉大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "埼玉県",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 372,
+        "name": "尚美学園大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "埼玉県",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 373,
+        "name": "駿河台大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "埼玉県",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 374,
+        "name": "淑徳大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "千葉県",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 375,
+        "name": "秀明大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "千葉県",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 376,
+        "name": "白百合女子大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 377,
+        "name": "専修大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 378,
+        "name": "昭和大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 379,
+        "name": "清泉女子大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 380,
+        "name": "創価大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 381,
+        "name": "松蔭大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "神奈川県",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 382,
+        "name": "産業能率大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 383,
+        "name": "信州大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "長野県",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 384,
+        "name": "静岡大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "静岡県",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 385,
+        "name": "星城大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "愛知県",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 386,
+        "name": "滋賀大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "滋賀県",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 387,
+        "name": "相愛大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "大阪府",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 388,
+        "name": "摂南大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "大阪府",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 389,
+        "name": "島根大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "島根県",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 390,
+        "name": "就実大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "岡山県",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 391,
+        "name": "仙台大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "宮城県",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 392,
+        "name": "成城大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 393,
+        "name": "成蹊大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 394,
+        "name": "尚絅大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "熊本県",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 395,
+        "name": "崇城大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "熊本県",
+        "abbreviation": "SU"
+    },
+    {
+        "id": 396,
+        "name": "東京農工大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "TAT"
+    },
+    {
+        "id": 397,
+        "name": "多摩美術大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "TAU"
+    },
+    {
+        "id": 398,
+        "name": "東京有明医療大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "TAU"
+    },
+    {
+        "id": 399,
+        "name": "東北文教大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "山形県",
+        "abbreviation": "TBC"
+    },
+    {
+        "id": 400,
+        "name": "徳島文理大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "徳島県",
+        "abbreviation": "TBU"
+    },
+    {
+        "id": 401,
+        "name": "東邦音楽大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "TCM"
+    },
+    {
+        "id": 402,
+        "name": "東京音楽大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "TCM"
+    },
+    {
+        "id": 403,
+        "name": "東京基督教大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "千葉県",
+        "abbreviation": "TCU"
+    },
+    {
+        "id": 404,
+        "name": "東京都市大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "TCU"
+    },
+    {
+        "id": 405,
+        "name": "高崎経済大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "群馬県",
+        "abbreviation": "TCUE"
+    },
+    {
+        "id": 406,
+        "name": "東京歯科大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "TDC"
+    },
+    {
+        "id": 407,
+        "name": "東京電機大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "TDU"
+    },
+    {
+        "id": 408,
+        "name": "東洋英和女学院大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "TEU"
+    },
+    {
+        "id": 409,
+        "name": "東北福祉大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "宮城県",
+        "abbreviation": "TFU"
+    },
+    {
+        "id": 410,
+        "name": "東京富士大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "東京都",
+        "abbreviation": "TFU"
+    },
+    {
+        "id": 411,
+        "name": "東京未来大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "東京都",
+        "abbreviation": "TFU"
+    },
+    {
+        "id": 412,
+        "name": "東北学院大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "宮城県",
+        "abbreviation": "TG"
+    },
+    {
+        "id": 413,
+        "name": "桐朋学園大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "TGCM"
+    },
+    {
+        "id": 414,
+        "name": "東洋学園大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "TGU"
+    },
+    {
+        "id": 415,
+        "name": "東海学院大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "岐阜県",
+        "abbreviation": "TGU"
+    },
+    {
+        "id": 416,
+        "name": "東京学芸大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "TGU"
+    },
+    {
+        "id": 417,
+        "name": "東海学園大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "愛知県",
+        "abbreviation": "TGU"
+    },
+    {
+        "id": 418,
+        "name": "太成学院大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "大阪府",
+        "abbreviation": "TGU"
+    },
+    {
+        "id": 419,
+        "name": "帝京平成大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "THU"
+    },
+    {
+        "id": 420,
+        "name": "東京工業大学",
+        "deviationLowerValue": 70,
+        "deviationUpperValue": 80,
+        "prefecture": "東京都",
+        "abbreviation": "Tokyo Tech"
+    },
+    {
+        "id": 421,
+        "name": "東京工業大学",
+        "deviationLowerValue": 70,
+        "deviationUpperValue": 80,
+        "prefecture": "東京都",
+        "abbreviation": "TIT"
+    },
+    {
+        "id": 422,
+        "name": "東京国際大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "埼玉県",
+        "abbreviation": "TIU"
+    },
+    {
+        "id": 423,
+        "name": "つくば国際大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "茨城県",
+        "abbreviation": "TIU"
+    },
+    {
+        "id": 424,
+        "name": "東京家政学院大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "TKGU"
+    },
+    {
+        "id": 425,
+        "name": "東京経済大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "TKU"
+    },
+    {
+        "id": 426,
+        "name": "東京家政大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "TKU"
+    },
+    {
+        "id": 427,
+        "name": "東京医科歯科大学",
+        "deviationLowerValue": 70,
+        "deviationUpperValue": 80,
+        "prefecture": "東京都",
+        "abbreviation": "TMDU"
+    },
+    {
+        "id": 428,
+        "name": "東京医科大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "TMU"
+    },
+    {
+        "id": 429,
+        "name": "東京都立大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "TMU"
+    },
+    {
+        "id": 430,
+        "name": "多摩大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "TMU"
+    },
+    {
+        "id": 431,
+        "name": "東北医科薬科大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "宮城県",
+        "abbreviation": "TMPU"
+    },
+    {
+        "id": 432,
+        "name": "東京工芸大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "TPU"
+    },
+    {
+        "id": 433,
+        "name": "東北生活文化大学",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "宮城県",
+        "abbreviation": "TSBU"
+    },
+    {
+        "id": 434,
+        "name": "東京成徳大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "TSU"
+    },
+    {
+        "id": 435,
+        "name": "豊田工業大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "愛知県",
+        "abbreviation": "TTI"
+    },
+    {
+        "id": 436,
+        "name": "拓殖大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 437,
+        "name": "東北大学",
+        "deviationLowerValue": 70,
+        "deviationUpperValue": 80,
+        "prefecture": "宮城県",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 438,
+        "name": "大正大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 439,
+        "name": "東海大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "神奈川県",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 440,
+        "name": "東邦大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 441,
+        "name": "東洋大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 442,
+        "name": "帝京大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 443,
+        "name": "玉川大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 444,
+        "name": "鶴見大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "神奈川県",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 445,
+        "name": "常葉大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "静岡県",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 446,
+        "name": "宝塚大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "兵庫県",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 447,
+        "name": "帝塚山大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "奈良県",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 448,
+        "name": "天理大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "奈良県",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 449,
+        "name": "鳥取大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "鳥取県",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 450,
+        "name": "徳山大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "山口県",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 451,
+        "name": "徳島大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "徳島県",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 452,
+        "name": "津田塾大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "TU"
+    },
+    {
+        "id": 453,
+        "name": "東京農業大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "TUA"
+    },
+    {
+        "id": 454,
+        "name": "東京藝術大学",
+        "deviationLowerValue": 70,
+        "deviationUpperValue": 80,
+        "prefecture": "東京都",
+        "abbreviation": "TUA"
+    },
+    {
+        "id": 455,
+        "name": "東北芸術工科大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "山形県",
+        "abbreviation": "TUAD"
+    },
+    {
+        "id": 456,
+        "name": "高崎商科大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "群馬県",
+        "abbreviation": "TUC"
+    },
+    {
+        "id": 457,
+        "name": "公立鳥取環境大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "鳥取県",
+        "abbreviation": "TUES"
+    },
+    {
+        "id": 458,
+        "name": "東京外国語大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "TUFS"
+    },
+    {
+        "id": 459,
+        "name": "高崎健康福祉大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "群馬県",
+        "abbreviation": "TUHW"
+    },
+    {
+        "id": 460,
+        "name": "東京情報大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "東京都",
+        "abbreviation": "TUIS"
+    },
+    {
+        "id": 461,
+        "name": "テンプル大学ジャパンキャンパス",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "東京都",
+        "abbreviation": "TUJ"
+    },
+    {
+        "id": 462,
+        "name": "東京海洋大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "TUMSAT"
+    },
+    {
+        "id": 463,
+        "name": "東京薬科大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "TUPLS"
+    },
+    {
+        "id": 464,
+        "name": "東京理科大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "TUS"
+    },
+    {
+        "id": 465,
+        "name": "帝京科学大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "TUST"
+    },
+    {
+        "id": 466,
+        "name": "東京福祉大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "東京都",
+        "abbreviation": "TUSW"
+    },
+    {
+        "id": 467,
+        "name": "豊橋技術科学大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "愛知県",
+        "abbreviation": "TUT"
+    },
+    {
+        "id": 468,
+        "name": "桐蔭横浜大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "神奈川県",
+        "abbreviation": "TUY"
+    },
+    {
+        "id": 469,
+        "name": "東京女子体育大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "TWCPE"
+    },
+    {
+        "id": 470,
+        "name": "東京女子大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "TWCU"
+    },
+    {
+        "id": 471,
+        "name": "東京女子医科大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "TWMU"
+    },
+    {
+        "id": 472,
+        "name": "東京造形大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "TZU"
+    },
+    {
+        "id": 473,
+        "name": "旧・稚内北星学園大学（現・育英館大学）",
+        "deviationLowerValue": 40,
+        "deviationUpperValue": 50,
+        "prefecture": "北海道",
+        "abbreviation": "wakhok"
+    },
+    {
+        "id": 474,
+        "name": "和光大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "東京都",
+        "abbreviation": "WU"
+    },
+    {
+        "id": 475,
+        "name": "早稲田大学",
+        "deviationLowerValue": 70,
+        "deviationUpperValue": 80,
+        "prefecture": "東京都",
+        "abbreviation": "WU"
+    },
+    {
+        "id": 476,
+        "name": "和歌山大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "和歌山県",
+        "abbreviation": "WU"
+    },
+    {
+        "id": 477,
+        "name": "和歌山信愛大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "和歌山県",
+        "abbreviation": "WSU"
+    },
+    {
+        "id": 478,
+        "name": "和歌山県立医科大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "和歌山県",
+        "abbreviation": "WMU"
+    },
+    {
+        "id": 479,
+        "name": "和洋女子大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "千葉県",
+        "abbreviation": "WWU"
+    },
+    {
+        "id": 480,
+        "name": "宇都宮共和大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "栃木県",
+        "abbreviation": "UKU"
+    },
+    {
+        "id": 481,
+        "name": "図書館情報大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "茨城県",
+        "abbreviation": "ULIS"
+    },
+    {
+        "id": 482,
+        "name": "流通科学大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "兵庫県",
+        "abbreviation": "UMDS"
+    },
+    {
+        "id": 483,
+        "name": "長崎県立大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "長崎県",
+        "abbreviation": "UN"
+    },
+    {
+        "id": 484,
+        "name": "長野県立大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "長野県",
+        "abbreviation": "UN"
+    },
+    {
+        "id": 485,
+        "name": "新潟県立大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "新潟県",
+        "abbreviation": "UNP"
+    },
+    {
+        "id": 486,
+        "name": "国際連合大学",
+        "deviationLowerValue": 70,
+        "deviationUpperValue": 80,
+        "prefecture": "東京都",
+        "abbreviation": "UNU"
+    },
+    {
+        "id": 487,
+        "name": "大分大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "大分県",
+        "abbreviation": "UO"
+    },
+    {
+        "id": 488,
+        "name": "産業医科大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "福岡県",
+        "abbreviation": "UOEH"
+    },
+    {
+        "id": 489,
+        "name": "会津大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "福島県",
+        "abbreviation": "UoA"
+    },
+    {
+        "id": 490,
+        "name": "兵庫県立大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "兵庫県",
+        "abbreviation": "UOH"
+    },
+    {
+        "id": 491,
+        "name": "高知県立大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "高知県",
+        "abbreviation": "UoK"
+    },
+    {
+        "id": 492,
+        "name": "琉球大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "沖縄県",
+        "abbreviation": "UR"
+    },
+    {
+        "id": 493,
+        "name": "静岡県立大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "静岡県",
+        "abbreviation": "US"
+    },
+    {
+        "id": 494,
+        "name": "島根県立大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "島根県",
+        "abbreviation": "US"
+    },
+    {
+        "id": 495,
+        "name": "聖心女子大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "東京都",
+        "abbreviation": "USH"
+    },
+    {
+        "id": 496,
+        "name": "滋賀県立大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "滋賀県",
+        "abbreviation": "USP"
+    },
+    {
+        "id": 497,
+        "name": "東京大学",
+        "deviationLowerValue": 72,
+        "deviationUpperValue": 80,
+        "prefecture": "東京都",
+        "abbreviation": "UT"
+    },
+    {
+        "id": 498,
+        "name": "富山大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "富山県",
+        "abbreviation": "UT"
+    },
+    {
+        "id": 499,
+        "name": "筑波大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "茨城県",
+        "abbreviation": "UT"
+    },
+    {
+        "id": 500,
+        "name": "お茶の水女子大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "UTea"
+    },
+    {
+        "id": 501,
+        "name": "福岡教育大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "福岡県",
+        "abbreviation": "UTEF"
+    },
+    {
+        "id": 502,
+        "name": "宇都宮大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "栃木県",
+        "abbreviation": "UU"
+    },
+    {
+        "id": 503,
+        "name": "浦和大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "埼玉県",
+        "abbreviation": "UU"
+    },
+    {
+        "id": 504,
+        "name": "横浜商科大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "神奈川県",
+        "abbreviation": "YCC"
+    },
+    {
+        "id": 505,
+        "name": "横浜薬科大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "神奈川県",
+        "abbreviation": "YCP"
+    },
+    {
+        "id": 506,
+        "name": "横浜市立大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "神奈川県",
+        "abbreviation": "YCU"
+    },
+    {
+        "id": 507,
+        "name": "八洲学園大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "神奈川県",
+        "abbreviation": "YGU"
+    },
+    {
+        "id": 508,
+        "name": "山梨学院大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "山梨県",
+        "abbreviation": "YGU"
+    },
+    {
+        "id": 509,
+        "name": "山口学芸大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "山口県",
+        "abbreviation": "YGU"
+    },
+    {
+        "id": 510,
+        "name": "横浜国立大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "神奈川県",
+        "abbreviation": "YNU"
+    },
+    {
+        "id": 511,
+        "name": "山口県立大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "山口県",
+        "abbreviation": "YPU"
+    },
+    {
+        "id": 512,
+        "name": "山梨県立大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "山梨県",
+        "abbreviation": "YPU"
+    },
+    {
+        "id": 513,
+        "name": "山形大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "山形県",
+        "abbreviation": "YU"
+    },
+    {
+        "id": 514,
+        "name": "山梨大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "山梨県",
+        "abbreviation": "YU"
+    },
+    {
+        "id": 515,
+        "name": "山口大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "山口県",
+        "abbreviation": "YU"
+    },
+    {
+        "id": 516,
+        "name": "横浜美術大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "神奈川県",
+        "abbreviation": "YUAD"
+    },
+    {
+        "id": 517,
+        "name": "山口福祉文化大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "山口県",
+        "abbreviation": "YUHWC"
+    },
+    {
+        "id": 518,
+        "name": "安田女子大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "広島県",
+        "abbreviation": "YWU"
+    },
+    {
+        "id": 519,
+        "name": "横浜創英大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "神奈川県",
+        "abbreviation": "YSU"
+    },
+    {
+        "id": 520,
+        "name": "国際信州学院大学",
+        "deviationLowerValue": 0,
+        "deviationUpperValue": 0,
+        "prefecture": "長野県",
+        "abbreviation": "2ch"
+    },
+    {
+        "id": 521,
+        "name": "東亜大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "山口県",
+        "abbreviation": "UEA"
+    },
+    {
+        "id": 522,
+        "name": "電気通信大学",
+        "deviationLowerValue": 65,
+        "deviationUpperValue": 75,
+        "prefecture": "東京都",
+        "abbreviation": "UEC"
+    },
+    {
+        "id": 523,
+        "name": "福井大学",
+        "deviationLowerValue": 55,
+        "deviationUpperValue": 65,
+        "prefecture": "福井県",
+        "abbreviation": "UF"
+    },
+    {
+        "id": 524,
+        "name": "宇部フロンティア大学",
+        "deviationLowerValue": 45,
+        "deviationUpperValue": 55,
+        "prefecture": "山口県",
+        "abbreviation": "UFU"
+    },
+    {
+        "id": 525,
+        "name": "上野学園大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "東京都",
+        "abbreviation": "UGU"
+    },
+    {
+        "id": 526,
+        "name": "人間総合科学大学",
+        "deviationLowerValue": 50,
+        "deviationUpperValue": 60,
+        "prefecture": "埼玉県",
+        "abbreviation": "UHAS"
+    },
+    {
+        "id": 527,
+        "name": "北九州市立大学",
+        "deviationLowerValue": 60,
+        "deviationUpperValue": 70,
+        "prefecture": "福岡県",
+        "abbreviation": "UKK"
+    }
+]
