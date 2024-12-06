@@ -56,6 +56,18 @@ func (f TweetFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TweetMutation", m)
 }
 
+// The TwitterUserFunc type is an adapter to allow the use of ordinary
+// function as TwitterUser mutator.
+type TwitterUserFunc func(context.Context, *ent.TwitterUserMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f TwitterUserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.TwitterUserMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TwitterUserMutation", m)
+}
+
 // The UniversityFunc type is an adapter to allow the use of ordinary
 // function as University mutator.
 type UniversityFunc func(context.Context, *ent.UniversityMutation) (ent.Value, error)

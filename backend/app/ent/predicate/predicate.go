@@ -18,6 +18,9 @@ type Sukipi func(*sql.Selector)
 // Tweet is the predicate function for tweet builders.
 type Tweet func(*sql.Selector)
 
+// TwitterUser is the predicate function for twitteruser builders.
+type TwitterUser func(*sql.Selector)
+
 // University is the predicate function for university builders.
 type University func(*sql.Selector)
 

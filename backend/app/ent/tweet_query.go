@@ -6,6 +6,7 @@ import (
 	"context"
 	"flehmen-api/ent/predicate"
 	"flehmen-api/ent/tweet"
+	"flehmen-api/ent/twitteruser"
 	"fmt"
 	"math"
 
@@ -18,11 +19,12 @@ import (
 // TweetQuery is the builder for querying Tweet entities.
 type TweetQuery struct {
 	config
-	ctx        *QueryContext
-	order      []tweet.OrderOption
-	inters     []Interceptor
-	predicates []predicate.Tweet
-	withFKs    bool
+	ctx           *QueryContext
+	order         []tweet.OrderOption
+	inters        []Interceptor
+	predicates    []predicate.Tweet
+	withReplyUser *TwitterUserQuery
+	withFKs       bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -57,6 +59,28 @@ func (tq *TweetQuery) Unique(unique bool) *TweetQuery {
 func (tq *TweetQuery) Order(o ...tweet.OrderOption) *TweetQuery {
 	tq.order = append(tq.order, o...)
 	return tq
+}
+
+// QueryReplyUser chains the current query on the "reply_user" edge.
+func (tq *TweetQuery) QueryReplyUser() *TwitterUserQuery {
+	query := (&TwitterUserClient{config: tq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := tq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := tq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(tweet.Table, tweet.FieldID, selector),
+			sqlgraph.To(twitteruser.Table, twitteruser.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, tweet.ReplyUserTable, tweet.ReplyUserColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Tweet entity from the query.
@@ -246,15 +270,27 @@ func (tq *TweetQuery) Clone() *TweetQuery {
 		return nil
 	}
 	return &TweetQuery{
-		config:     tq.config,
-		ctx:        tq.ctx.Clone(),
-		order:      append([]tweet.OrderOption{}, tq.order...),
-		inters:     append([]Interceptor{}, tq.inters...),
-		predicates: append([]predicate.Tweet{}, tq.predicates...),
+		config:        tq.config,
+		ctx:           tq.ctx.Clone(),
+		order:         append([]tweet.OrderOption{}, tq.order...),
+		inters:        append([]Interceptor{}, tq.inters...),
+		predicates:    append([]predicate.Tweet{}, tq.predicates...),
+		withReplyUser: tq.withReplyUser.Clone(),
 		// clone intermediate query.
 		sql:  tq.sql.Clone(),
 		path: tq.path,
 	}
+}
+
+// WithReplyUser tells the query-builder to eager-load the nodes that are connected to
+// the "reply_user" edge. The optional arguments are used to configure the query builder of the edge.
+func (tq *TweetQuery) WithReplyUser(opts ...func(*TwitterUserQuery)) *TweetQuery {
+	query := (&TwitterUserClient{config: tq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	tq.withReplyUser = query
+	return tq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -333,10 +369,16 @@ func (tq *TweetQuery) prepareQuery(ctx context.Context) error {
 
 func (tq *TweetQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Tweet, error) {
 	var (
-		nodes   = []*Tweet{}
-		withFKs = tq.withFKs
-		_spec   = tq.querySpec()
+		nodes       = []*Tweet{}
+		withFKs     = tq.withFKs
+		_spec       = tq.querySpec()
+		loadedTypes = [1]bool{
+			tq.withReplyUser != nil,
+		}
 	)
+	if tq.withReplyUser != nil {
+		withFKs = true
+	}
 	if withFKs {
 		_spec.Node.Columns = append(_spec.Node.Columns, tweet.ForeignKeys...)
 	}
@@ -346,6 +388,7 @@ func (tq *TweetQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Tweet,
 	_spec.Assign = func(columns []string, values []any) error {
 		node := &Tweet{config: tq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -357,7 +400,46 @@ func (tq *TweetQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Tweet,
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := tq.withReplyUser; query != nil {
+		if err := tq.loadReplyUser(ctx, query, nodes, nil,
+			func(n *Tweet, e *TwitterUser) { n.Edges.ReplyUser = e }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (tq *TweetQuery) loadReplyUser(ctx context.Context, query *TwitterUserQuery, nodes []*Tweet, init func(*Tweet), assign func(*Tweet, *TwitterUser)) error {
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*Tweet)
+	for i := range nodes {
+		if nodes[i].twitter_user_replies == nil {
+			continue
+		}
+		fk := *nodes[i].twitter_user_replies
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(twitteruser.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "twitter_user_replies" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
 }
 
 func (tq *TweetQuery) sqlCount(ctx context.Context) (int, error) {

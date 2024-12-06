@@ -7,6 +7,7 @@ import (
 	"errors"
 	"flehmen-api/ent/predicate"
 	"flehmen-api/ent/tweet"
+	"flehmen-api/ent/twitteruser"
 	"fmt"
 	"time"
 
@@ -91,9 +92,34 @@ func (tu *TweetUpdate) SetNillableCreatedAt(t *time.Time) *TweetUpdate {
 	return tu
 }
 
+// SetReplyUserID sets the "reply_user" edge to the TwitterUser entity by ID.
+func (tu *TweetUpdate) SetReplyUserID(id int) *TweetUpdate {
+	tu.mutation.SetReplyUserID(id)
+	return tu
+}
+
+// SetNillableReplyUserID sets the "reply_user" edge to the TwitterUser entity by ID if the given value is not nil.
+func (tu *TweetUpdate) SetNillableReplyUserID(id *int) *TweetUpdate {
+	if id != nil {
+		tu = tu.SetReplyUserID(*id)
+	}
+	return tu
+}
+
+// SetReplyUser sets the "reply_user" edge to the TwitterUser entity.
+func (tu *TweetUpdate) SetReplyUser(t *TwitterUser) *TweetUpdate {
+	return tu.SetReplyUserID(t.ID)
+}
+
 // Mutation returns the TweetMutation object of the builder.
 func (tu *TweetUpdate) Mutation() *TweetMutation {
 	return tu.mutation
+}
+
+// ClearReplyUser clears the "reply_user" edge to the TwitterUser entity.
+func (tu *TweetUpdate) ClearReplyUser() *TweetUpdate {
+	tu.mutation.ClearReplyUser()
+	return tu
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -146,6 +172,35 @@ func (tu *TweetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := tu.mutation.CreatedAt(); ok {
 		_spec.SetField(tweet.FieldCreatedAt, field.TypeTime, value)
+	}
+	if tu.mutation.ReplyUserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   tweet.ReplyUserTable,
+			Columns: []string{tweet.ReplyUserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(twitteruser.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tu.mutation.ReplyUserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   tweet.ReplyUserTable,
+			Columns: []string{tweet.ReplyUserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(twitteruser.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, tu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -230,9 +285,34 @@ func (tuo *TweetUpdateOne) SetNillableCreatedAt(t *time.Time) *TweetUpdateOne {
 	return tuo
 }
 
+// SetReplyUserID sets the "reply_user" edge to the TwitterUser entity by ID.
+func (tuo *TweetUpdateOne) SetReplyUserID(id int) *TweetUpdateOne {
+	tuo.mutation.SetReplyUserID(id)
+	return tuo
+}
+
+// SetNillableReplyUserID sets the "reply_user" edge to the TwitterUser entity by ID if the given value is not nil.
+func (tuo *TweetUpdateOne) SetNillableReplyUserID(id *int) *TweetUpdateOne {
+	if id != nil {
+		tuo = tuo.SetReplyUserID(*id)
+	}
+	return tuo
+}
+
+// SetReplyUser sets the "reply_user" edge to the TwitterUser entity.
+func (tuo *TweetUpdateOne) SetReplyUser(t *TwitterUser) *TweetUpdateOne {
+	return tuo.SetReplyUserID(t.ID)
+}
+
 // Mutation returns the TweetMutation object of the builder.
 func (tuo *TweetUpdateOne) Mutation() *TweetMutation {
 	return tuo.mutation
+}
+
+// ClearReplyUser clears the "reply_user" edge to the TwitterUser entity.
+func (tuo *TweetUpdateOne) ClearReplyUser() *TweetUpdateOne {
+	tuo.mutation.ClearReplyUser()
+	return tuo
 }
 
 // Where appends a list predicates to the TweetUpdate builder.
@@ -315,6 +395,35 @@ func (tuo *TweetUpdateOne) sqlSave(ctx context.Context) (_node *Tweet, err error
 	}
 	if value, ok := tuo.mutation.CreatedAt(); ok {
 		_spec.SetField(tweet.FieldCreatedAt, field.TypeTime, value)
+	}
+	if tuo.mutation.ReplyUserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   tweet.ReplyUserTable,
+			Columns: []string{tweet.ReplyUserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(twitteruser.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tuo.mutation.ReplyUserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   tweet.ReplyUserTable,
+			Columns: []string{tweet.ReplyUserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(twitteruser.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &Tweet{config: tuo.config}
 	_spec.Assign = _node.assignValues

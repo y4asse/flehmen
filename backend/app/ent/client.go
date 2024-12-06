@@ -15,6 +15,7 @@ import (
 	"flehmen-api/ent/specialevent"
 	"flehmen-api/ent/sukipi"
 	"flehmen-api/ent/tweet"
+	"flehmen-api/ent/twitteruser"
 	"flehmen-api/ent/university"
 	"flehmen-api/ent/user"
 
@@ -37,6 +38,8 @@ type Client struct {
 	Sukipi *SukipiClient
 	// Tweet is the client for interacting with the Tweet builders.
 	Tweet *TweetClient
+	// TwitterUser is the client for interacting with the TwitterUser builders.
+	TwitterUser *TwitterUserClient
 	// University is the client for interacting with the University builders.
 	University *UniversityClient
 	// User is the client for interacting with the User builders.
@@ -56,6 +59,7 @@ func (c *Client) init() {
 	c.SpecialEvent = NewSpecialEventClient(c.config)
 	c.Sukipi = NewSukipiClient(c.config)
 	c.Tweet = NewTweetClient(c.config)
+	c.TwitterUser = NewTwitterUserClient(c.config)
 	c.University = NewUniversityClient(c.config)
 	c.User = NewUserClient(c.config)
 }
@@ -154,6 +158,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		SpecialEvent: NewSpecialEventClient(cfg),
 		Sukipi:       NewSukipiClient(cfg),
 		Tweet:        NewTweetClient(cfg),
+		TwitterUser:  NewTwitterUserClient(cfg),
 		University:   NewUniversityClient(cfg),
 		User:         NewUserClient(cfg),
 	}, nil
@@ -179,6 +184,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		SpecialEvent: NewSpecialEventClient(cfg),
 		Sukipi:       NewSukipiClient(cfg),
 		Tweet:        NewTweetClient(cfg),
+		TwitterUser:  NewTwitterUserClient(cfg),
 		University:   NewUniversityClient(cfg),
 		User:         NewUserClient(cfg),
 	}, nil
@@ -210,7 +216,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Mbti, c.SpecialEvent, c.Sukipi, c.Tweet, c.University, c.User,
+		c.Mbti, c.SpecialEvent, c.Sukipi, c.Tweet, c.TwitterUser, c.University, c.User,
 	} {
 		n.Use(hooks...)
 	}
@@ -220,7 +226,7 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Mbti, c.SpecialEvent, c.Sukipi, c.Tweet, c.University, c.User,
+		c.Mbti, c.SpecialEvent, c.Sukipi, c.Tweet, c.TwitterUser, c.University, c.User,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -237,6 +243,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Sukipi.mutate(ctx, m)
 	case *TweetMutation:
 		return c.Tweet.mutate(ctx, m)
+	case *TwitterUserMutation:
+		return c.TwitterUser.mutate(ctx, m)
 	case *UniversityMutation:
 		return c.University.mutate(ctx, m)
 	case *UserMutation:
@@ -785,6 +793,22 @@ func (c *TweetClient) GetX(ctx context.Context, id int) *Tweet {
 	return obj
 }
 
+// QueryReplyUser queries the reply_user edge of a Tweet.
+func (c *TweetClient) QueryReplyUser(t *Tweet) *TwitterUserQuery {
+	query := (&TwitterUserClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := t.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(tweet.Table, tweet.FieldID, id),
+			sqlgraph.To(twitteruser.Table, twitteruser.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, tweet.ReplyUserTable, tweet.ReplyUserColumn),
+		)
+		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *TweetClient) Hooks() []Hook {
 	return c.hooks.Tweet
@@ -807,6 +831,155 @@ func (c *TweetClient) mutate(ctx context.Context, m *TweetMutation) (Value, erro
 		return (&TweetDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Tweet mutation op: %q", m.Op())
+	}
+}
+
+// TwitterUserClient is a client for the TwitterUser schema.
+type TwitterUserClient struct {
+	config
+}
+
+// NewTwitterUserClient returns a client for the TwitterUser from the given config.
+func NewTwitterUserClient(c config) *TwitterUserClient {
+	return &TwitterUserClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `twitteruser.Hooks(f(g(h())))`.
+func (c *TwitterUserClient) Use(hooks ...Hook) {
+	c.hooks.TwitterUser = append(c.hooks.TwitterUser, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `twitteruser.Intercept(f(g(h())))`.
+func (c *TwitterUserClient) Intercept(interceptors ...Interceptor) {
+	c.inters.TwitterUser = append(c.inters.TwitterUser, interceptors...)
+}
+
+// Create returns a builder for creating a TwitterUser entity.
+func (c *TwitterUserClient) Create() *TwitterUserCreate {
+	mutation := newTwitterUserMutation(c.config, OpCreate)
+	return &TwitterUserCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of TwitterUser entities.
+func (c *TwitterUserClient) CreateBulk(builders ...*TwitterUserCreate) *TwitterUserCreateBulk {
+	return &TwitterUserCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *TwitterUserClient) MapCreateBulk(slice any, setFunc func(*TwitterUserCreate, int)) *TwitterUserCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &TwitterUserCreateBulk{err: fmt.Errorf("calling to TwitterUserClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*TwitterUserCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &TwitterUserCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for TwitterUser.
+func (c *TwitterUserClient) Update() *TwitterUserUpdate {
+	mutation := newTwitterUserMutation(c.config, OpUpdate)
+	return &TwitterUserUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *TwitterUserClient) UpdateOne(tu *TwitterUser) *TwitterUserUpdateOne {
+	mutation := newTwitterUserMutation(c.config, OpUpdateOne, withTwitterUser(tu))
+	return &TwitterUserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *TwitterUserClient) UpdateOneID(id int) *TwitterUserUpdateOne {
+	mutation := newTwitterUserMutation(c.config, OpUpdateOne, withTwitterUserID(id))
+	return &TwitterUserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for TwitterUser.
+func (c *TwitterUserClient) Delete() *TwitterUserDelete {
+	mutation := newTwitterUserMutation(c.config, OpDelete)
+	return &TwitterUserDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *TwitterUserClient) DeleteOne(tu *TwitterUser) *TwitterUserDeleteOne {
+	return c.DeleteOneID(tu.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *TwitterUserClient) DeleteOneID(id int) *TwitterUserDeleteOne {
+	builder := c.Delete().Where(twitteruser.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &TwitterUserDeleteOne{builder}
+}
+
+// Query returns a query builder for TwitterUser.
+func (c *TwitterUserClient) Query() *TwitterUserQuery {
+	return &TwitterUserQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeTwitterUser},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a TwitterUser entity by its id.
+func (c *TwitterUserClient) Get(ctx context.Context, id int) (*TwitterUser, error) {
+	return c.Query().Where(twitteruser.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *TwitterUserClient) GetX(ctx context.Context, id int) *TwitterUser {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryReplies queries the replies edge of a TwitterUser.
+func (c *TwitterUserClient) QueryReplies(tu *TwitterUser) *TweetQuery {
+	query := (&TweetClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := tu.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(twitteruser.Table, twitteruser.FieldID, id),
+			sqlgraph.To(tweet.Table, tweet.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, twitteruser.RepliesTable, twitteruser.RepliesColumn),
+		)
+		fromV = sqlgraph.Neighbors(tu.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *TwitterUserClient) Hooks() []Hook {
+	return c.hooks.TwitterUser
+}
+
+// Interceptors returns the client interceptors.
+func (c *TwitterUserClient) Interceptors() []Interceptor {
+	return c.inters.TwitterUser
+}
+
+func (c *TwitterUserClient) mutate(ctx context.Context, m *TwitterUserMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&TwitterUserCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&TwitterUserUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&TwitterUserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&TwitterUserDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown TwitterUser mutation op: %q", m.Op())
 	}
 }
 
@@ -1111,9 +1284,10 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Mbti, SpecialEvent, Sukipi, Tweet, University, User []ent.Hook
+		Mbti, SpecialEvent, Sukipi, Tweet, TwitterUser, University, User []ent.Hook
 	}
 	inters struct {
-		Mbti, SpecialEvent, Sukipi, Tweet, University, User []ent.Interceptor
+		Mbti, SpecialEvent, Sukipi, Tweet, TwitterUser, University,
+		User []ent.Interceptor
 	}
 )

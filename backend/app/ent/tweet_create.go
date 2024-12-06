@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"flehmen-api/ent/tweet"
+	"flehmen-api/ent/twitteruser"
 	"fmt"
 	"time"
 
@@ -50,6 +51,25 @@ func (tc *TweetCreate) SetNillableCreatedAt(t *time.Time) *TweetCreate {
 		tc.SetCreatedAt(*t)
 	}
 	return tc
+}
+
+// SetReplyUserID sets the "reply_user" edge to the TwitterUser entity by ID.
+func (tc *TweetCreate) SetReplyUserID(id int) *TweetCreate {
+	tc.mutation.SetReplyUserID(id)
+	return tc
+}
+
+// SetNillableReplyUserID sets the "reply_user" edge to the TwitterUser entity by ID if the given value is not nil.
+func (tc *TweetCreate) SetNillableReplyUserID(id *int) *TweetCreate {
+	if id != nil {
+		tc = tc.SetReplyUserID(*id)
+	}
+	return tc
+}
+
+// SetReplyUser sets the "reply_user" edge to the TwitterUser entity.
+func (tc *TweetCreate) SetReplyUser(t *TwitterUser) *TweetCreate {
+	return tc.SetReplyUserID(t.ID)
 }
 
 // Mutation returns the TweetMutation object of the builder.
@@ -148,6 +168,23 @@ func (tc *TweetCreate) createSpec() (*Tweet, *sqlgraph.CreateSpec) {
 	if value, ok := tc.mutation.CreatedAt(); ok {
 		_spec.SetField(tweet.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
+	}
+	if nodes := tc.mutation.ReplyUserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   tweet.ReplyUserTable,
+			Columns: []string{tweet.ReplyUserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(twitteruser.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.twitter_user_replies = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

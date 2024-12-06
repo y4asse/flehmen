@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their ID field.
@@ -257,6 +258,29 @@ func CreatedAtLT(v time.Time) predicate.Tweet {
 // CreatedAtLTE applies the LTE predicate on the "created_at" field.
 func CreatedAtLTE(v time.Time) predicate.Tweet {
 	return predicate.Tweet(sql.FieldLTE(FieldCreatedAt, v))
+}
+
+// HasReplyUser applies the HasEdge predicate on the "reply_user" edge.
+func HasReplyUser() predicate.Tweet {
+	return predicate.Tweet(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, ReplyUserTable, ReplyUserColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasReplyUserWith applies the HasEdge predicate on the "reply_user" edge with a given conditions (other predicates).
+func HasReplyUserWith(preds ...predicate.TwitterUser) predicate.Tweet {
+	return predicate.Tweet(func(s *sql.Selector) {
+		step := newReplyUserStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.

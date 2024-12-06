@@ -20,6 +20,8 @@ type Tx struct {
 	Sukipi *SukipiClient
 	// Tweet is the client for interacting with the Tweet builders.
 	Tweet *TweetClient
+	// TwitterUser is the client for interacting with the TwitterUser builders.
+	TwitterUser *TwitterUserClient
 	// University is the client for interacting with the University builders.
 	University *UniversityClient
 	// User is the client for interacting with the User builders.
@@ -159,6 +161,7 @@ func (tx *Tx) init() {
 	tx.SpecialEvent = NewSpecialEventClient(tx.config)
 	tx.Sukipi = NewSukipiClient(tx.config)
 	tx.Tweet = NewTweetClient(tx.config)
+	tx.TwitterUser = NewTwitterUserClient(tx.config)
 	tx.University = NewUniversityClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 }

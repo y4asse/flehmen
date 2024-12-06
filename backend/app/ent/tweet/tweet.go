@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 const (
@@ -21,8 +22,17 @@ const (
 	FieldTweetCreatedAt = "tweet_created_at"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
+	// EdgeReplyUser holds the string denoting the reply_user edge name in mutations.
+	EdgeReplyUser = "reply_user"
 	// Table holds the table name of the tweet in the database.
 	Table = "tweets"
+	// ReplyUserTable is the table that holds the reply_user relation/edge.
+	ReplyUserTable = "tweets"
+	// ReplyUserInverseTable is the table name for the TwitterUser entity.
+	// It exists in this package in order to avoid circular dependency with the "twitteruser" package.
+	ReplyUserInverseTable = "twitter_users"
+	// ReplyUserColumn is the table column denoting the reply_user relation/edge.
+	ReplyUserColumn = "twitter_user_replies"
 )
 
 // Columns holds all SQL columns for tweet fields.
@@ -38,6 +48,7 @@ var Columns = []string{
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
 	"sukipi_tweets",
+	"twitter_user_replies",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -86,4 +97,18 @@ func ByTweetCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByCreatedAt orders the results by the created_at field.
 func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
+}
+
+// ByReplyUserField orders the results by reply_user field.
+func ByReplyUserField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newReplyUserStep(), sql.OrderByField(field, opts...))
+	}
+}
+func newReplyUserStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ReplyUserInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, ReplyUserTable, ReplyUserColumn),
+	)
 }
