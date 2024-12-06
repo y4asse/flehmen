@@ -18,9 +18,6 @@ docker_api_cli:
 docker_batch_cli:
 	${DC} exec -it batch bash
 
-db_diff:
-	make -C app db_diff
-
 db_migrate:
 	make -C app db_migrate
 
