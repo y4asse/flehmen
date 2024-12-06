@@ -1,5 +1,4 @@
 import { Windows } from "@/components/common/Windows";
-import { title } from "process";
 import React from "react";
 import ReplyList from "./_components/ReplyList";
 import { Sukipi } from "../profile/page";
