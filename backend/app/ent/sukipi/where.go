@@ -75,11 +75,6 @@ func XID(v string) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldEQ(FieldXID, v))
 }
 
-// InstagramID applies equality check predicate on the "instagram_id" field. It's identical to InstagramIDEQ.
-func InstagramID(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldEQ(FieldInstagramID, v))
-}
-
 // Hobby applies equality check predicate on the "hobby" field. It's identical to HobbyEQ.
 func Hobby(v string) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldEQ(FieldHobby, v))
@@ -90,19 +85,24 @@ func Birthday(v time.Time) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldEQ(FieldBirthday, v))
 }
 
+// ShoesSize applies equality check predicate on the "shoesSize" field. It's identical to ShoesSizeEQ.
+func ShoesSize(v float64) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldShoesSize, v))
+}
+
 // Family applies equality check predicate on the "family" field. It's identical to FamilyEQ.
 func Family(v string) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldEQ(FieldFamily, v))
 }
 
-// IsMale applies equality check predicate on the "is_male" field. It's identical to IsMaleEQ.
-func IsMale(v bool) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldEQ(FieldIsMale, v))
+// NearlyStation applies equality check predicate on the "nearly_station" field. It's identical to NearlyStationEQ.
+func NearlyStation(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldNearlyStation, v))
 }
 
-// StartAt applies equality check predicate on the "start_at" field. It's identical to StartAtEQ.
-func StartAt(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldEQ(FieldStartAt, v))
+// LikedAt applies equality check predicate on the "liked_at" field. It's identical to LikedAtEQ.
+func LikedAt(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldLikedAt, v))
 }
 
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
@@ -350,81 +350,6 @@ func XIDContainsFold(v string) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldContainsFold(FieldXID, v))
 }
 
-// InstagramIDEQ applies the EQ predicate on the "instagram_id" field.
-func InstagramIDEQ(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldEQ(FieldInstagramID, v))
-}
-
-// InstagramIDNEQ applies the NEQ predicate on the "instagram_id" field.
-func InstagramIDNEQ(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldNEQ(FieldInstagramID, v))
-}
-
-// InstagramIDIn applies the In predicate on the "instagram_id" field.
-func InstagramIDIn(vs ...string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldIn(FieldInstagramID, vs...))
-}
-
-// InstagramIDNotIn applies the NotIn predicate on the "instagram_id" field.
-func InstagramIDNotIn(vs ...string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldNotIn(FieldInstagramID, vs...))
-}
-
-// InstagramIDGT applies the GT predicate on the "instagram_id" field.
-func InstagramIDGT(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldGT(FieldInstagramID, v))
-}
-
-// InstagramIDGTE applies the GTE predicate on the "instagram_id" field.
-func InstagramIDGTE(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldGTE(FieldInstagramID, v))
-}
-
-// InstagramIDLT applies the LT predicate on the "instagram_id" field.
-func InstagramIDLT(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldLT(FieldInstagramID, v))
-}
-
-// InstagramIDLTE applies the LTE predicate on the "instagram_id" field.
-func InstagramIDLTE(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldLTE(FieldInstagramID, v))
-}
-
-// InstagramIDContains applies the Contains predicate on the "instagram_id" field.
-func InstagramIDContains(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldContains(FieldInstagramID, v))
-}
-
-// InstagramIDHasPrefix applies the HasPrefix predicate on the "instagram_id" field.
-func InstagramIDHasPrefix(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldHasPrefix(FieldInstagramID, v))
-}
-
-// InstagramIDHasSuffix applies the HasSuffix predicate on the "instagram_id" field.
-func InstagramIDHasSuffix(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldHasSuffix(FieldInstagramID, v))
-}
-
-// InstagramIDIsNil applies the IsNil predicate on the "instagram_id" field.
-func InstagramIDIsNil() predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldIsNull(FieldInstagramID))
-}
-
-// InstagramIDNotNil applies the NotNil predicate on the "instagram_id" field.
-func InstagramIDNotNil() predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldNotNull(FieldInstagramID))
-}
-
-// InstagramIDEqualFold applies the EqualFold predicate on the "instagram_id" field.
-func InstagramIDEqualFold(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldEqualFold(FieldInstagramID, v))
-}
-
-// InstagramIDContainsFold applies the ContainsFold predicate on the "instagram_id" field.
-func InstagramIDContainsFold(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldContainsFold(FieldInstagramID, v))
-}
-
 // HobbyEQ applies the EQ predicate on the "hobby" field.
 func HobbyEQ(v string) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldEQ(FieldHobby, v))
@@ -550,6 +475,56 @@ func BirthdayNotNil() predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldNotNull(FieldBirthday))
 }
 
+// ShoesSizeEQ applies the EQ predicate on the "shoesSize" field.
+func ShoesSizeEQ(v float64) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldShoesSize, v))
+}
+
+// ShoesSizeNEQ applies the NEQ predicate on the "shoesSize" field.
+func ShoesSizeNEQ(v float64) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNEQ(FieldShoesSize, v))
+}
+
+// ShoesSizeIn applies the In predicate on the "shoesSize" field.
+func ShoesSizeIn(vs ...float64) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldIn(FieldShoesSize, vs...))
+}
+
+// ShoesSizeNotIn applies the NotIn predicate on the "shoesSize" field.
+func ShoesSizeNotIn(vs ...float64) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNotIn(FieldShoesSize, vs...))
+}
+
+// ShoesSizeGT applies the GT predicate on the "shoesSize" field.
+func ShoesSizeGT(v float64) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGT(FieldShoesSize, v))
+}
+
+// ShoesSizeGTE applies the GTE predicate on the "shoesSize" field.
+func ShoesSizeGTE(v float64) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGTE(FieldShoesSize, v))
+}
+
+// ShoesSizeLT applies the LT predicate on the "shoesSize" field.
+func ShoesSizeLT(v float64) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLT(FieldShoesSize, v))
+}
+
+// ShoesSizeLTE applies the LTE predicate on the "shoesSize" field.
+func ShoesSizeLTE(v float64) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLTE(FieldShoesSize, v))
+}
+
+// ShoesSizeIsNil applies the IsNil predicate on the "shoesSize" field.
+func ShoesSizeIsNil() predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldIsNull(FieldShoesSize))
+}
+
+// ShoesSizeNotNil applies the NotNil predicate on the "shoesSize" field.
+func ShoesSizeNotNil() predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNotNull(FieldShoesSize))
+}
+
 // FamilyEQ applies the EQ predicate on the "family" field.
 func FamilyEQ(v string) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldEQ(FieldFamily, v))
@@ -625,54 +600,119 @@ func FamilyContainsFold(v string) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldContainsFold(FieldFamily, v))
 }
 
-// IsMaleEQ applies the EQ predicate on the "is_male" field.
-func IsMaleEQ(v bool) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldEQ(FieldIsMale, v))
+// NearlyStationEQ applies the EQ predicate on the "nearly_station" field.
+func NearlyStationEQ(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldNearlyStation, v))
 }
 
-// IsMaleNEQ applies the NEQ predicate on the "is_male" field.
-func IsMaleNEQ(v bool) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldNEQ(FieldIsMale, v))
+// NearlyStationNEQ applies the NEQ predicate on the "nearly_station" field.
+func NearlyStationNEQ(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNEQ(FieldNearlyStation, v))
 }
 
-// StartAtEQ applies the EQ predicate on the "start_at" field.
-func StartAtEQ(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldEQ(FieldStartAt, v))
+// NearlyStationIn applies the In predicate on the "nearly_station" field.
+func NearlyStationIn(vs ...string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldIn(FieldNearlyStation, vs...))
 }
 
-// StartAtNEQ applies the NEQ predicate on the "start_at" field.
-func StartAtNEQ(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldNEQ(FieldStartAt, v))
+// NearlyStationNotIn applies the NotIn predicate on the "nearly_station" field.
+func NearlyStationNotIn(vs ...string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNotIn(FieldNearlyStation, vs...))
 }
 
-// StartAtIn applies the In predicate on the "start_at" field.
-func StartAtIn(vs ...time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldIn(FieldStartAt, vs...))
+// NearlyStationGT applies the GT predicate on the "nearly_station" field.
+func NearlyStationGT(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGT(FieldNearlyStation, v))
 }
 
-// StartAtNotIn applies the NotIn predicate on the "start_at" field.
-func StartAtNotIn(vs ...time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldNotIn(FieldStartAt, vs...))
+// NearlyStationGTE applies the GTE predicate on the "nearly_station" field.
+func NearlyStationGTE(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGTE(FieldNearlyStation, v))
 }
 
-// StartAtGT applies the GT predicate on the "start_at" field.
-func StartAtGT(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldGT(FieldStartAt, v))
+// NearlyStationLT applies the LT predicate on the "nearly_station" field.
+func NearlyStationLT(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLT(FieldNearlyStation, v))
 }
 
-// StartAtGTE applies the GTE predicate on the "start_at" field.
-func StartAtGTE(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldGTE(FieldStartAt, v))
+// NearlyStationLTE applies the LTE predicate on the "nearly_station" field.
+func NearlyStationLTE(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLTE(FieldNearlyStation, v))
 }
 
-// StartAtLT applies the LT predicate on the "start_at" field.
-func StartAtLT(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldLT(FieldStartAt, v))
+// NearlyStationContains applies the Contains predicate on the "nearly_station" field.
+func NearlyStationContains(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldContains(FieldNearlyStation, v))
 }
 
-// StartAtLTE applies the LTE predicate on the "start_at" field.
-func StartAtLTE(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldLTE(FieldStartAt, v))
+// NearlyStationHasPrefix applies the HasPrefix predicate on the "nearly_station" field.
+func NearlyStationHasPrefix(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldHasPrefix(FieldNearlyStation, v))
+}
+
+// NearlyStationHasSuffix applies the HasSuffix predicate on the "nearly_station" field.
+func NearlyStationHasSuffix(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldHasSuffix(FieldNearlyStation, v))
+}
+
+// NearlyStationIsNil applies the IsNil predicate on the "nearly_station" field.
+func NearlyStationIsNil() predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldIsNull(FieldNearlyStation))
+}
+
+// NearlyStationNotNil applies the NotNil predicate on the "nearly_station" field.
+func NearlyStationNotNil() predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNotNull(FieldNearlyStation))
+}
+
+// NearlyStationEqualFold applies the EqualFold predicate on the "nearly_station" field.
+func NearlyStationEqualFold(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEqualFold(FieldNearlyStation, v))
+}
+
+// NearlyStationContainsFold applies the ContainsFold predicate on the "nearly_station" field.
+func NearlyStationContainsFold(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldContainsFold(FieldNearlyStation, v))
+}
+
+// LikedAtEQ applies the EQ predicate on the "liked_at" field.
+func LikedAtEQ(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldLikedAt, v))
+}
+
+// LikedAtNEQ applies the NEQ predicate on the "liked_at" field.
+func LikedAtNEQ(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNEQ(FieldLikedAt, v))
+}
+
+// LikedAtIn applies the In predicate on the "liked_at" field.
+func LikedAtIn(vs ...time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldIn(FieldLikedAt, vs...))
+}
+
+// LikedAtNotIn applies the NotIn predicate on the "liked_at" field.
+func LikedAtNotIn(vs ...time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNotIn(FieldLikedAt, vs...))
+}
+
+// LikedAtGT applies the GT predicate on the "liked_at" field.
+func LikedAtGT(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGT(FieldLikedAt, v))
+}
+
+// LikedAtGTE applies the GTE predicate on the "liked_at" field.
+func LikedAtGTE(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGTE(FieldLikedAt, v))
+}
+
+// LikedAtLT applies the LT predicate on the "liked_at" field.
+func LikedAtLT(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLT(FieldLikedAt, v))
+}
+
+// LikedAtLTE applies the LTE predicate on the "liked_at" field.
+func LikedAtLTE(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLTE(FieldLikedAt, v))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
