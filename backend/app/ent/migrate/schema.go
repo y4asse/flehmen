@@ -77,6 +77,7 @@ var (
 		{Name: "tweet_created_at", Type: field.TypeTime},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "sukipi_tweets", Type: field.TypeInt, Nullable: true},
+		{Name: "reply_twitter_user_id", Type: field.TypeInt, Nullable: true},
 	}
 	// TweetsTable holds the schema information for the "tweets" table.
 	TweetsTable = &schema.Table{
@@ -90,7 +91,26 @@ var (
 				RefColumns: []*schema.Column{SukipisColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
+			{
+				Symbol:     "tweets_twitter_users_replies",
+				Columns:    []*schema.Column{TweetsColumns[6]},
+				RefColumns: []*schema.Column{TwitterUsersColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
 		},
+	}
+	// TwitterUsersColumns holds the columns for the "twitter_users" table.
+	TwitterUsersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "name", Type: field.TypeString},
+		{Name: "username", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
+	}
+	// TwitterUsersTable holds the schema information for the "twitter_users" table.
+	TwitterUsersTable = &schema.Table{
+		Name:       "twitter_users",
+		Columns:    TwitterUsersColumns,
+		PrimaryKey: []*schema.Column{TwitterUsersColumns[0]},
 	}
 	// UniversitiesColumns holds the columns for the "universities" table.
 	UniversitiesColumns = []*schema.Column{
@@ -146,6 +166,7 @@ var (
 		SpecialEventsTable,
 		SukipisTable,
 		TweetsTable,
+		TwitterUsersTable,
 		UniversitiesTable,
 		UsersTable,
 	}
@@ -155,5 +176,6 @@ func init() {
 	SpecialEventsTable.ForeignKeys[0].RefTable = UsersTable
 	SukipisTable.ForeignKeys[0].RefTable = MbtisTable
 	TweetsTable.ForeignKeys[0].RefTable = SukipisTable
+	TweetsTable.ForeignKeys[1].RefTable = TwitterUsersTable
 	UsersTable.ForeignKeys[0].RefTable = MbtisTable
 }

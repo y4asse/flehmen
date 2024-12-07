@@ -7,6 +7,7 @@ import (
 	"flehmen-api/ent/schema"
 	"flehmen-api/ent/sukipi"
 	"flehmen-api/ent/tweet"
+	"flehmen-api/ent/twitteruser"
 	"flehmen-api/ent/university"
 	"flehmen-api/ent/user"
 	"time"
@@ -31,9 +32,15 @@ func init() {
 	tweetFields := schema.Tweet{}.Fields()
 	_ = tweetFields
 	// tweetDescCreatedAt is the schema descriptor for created_at field.
-	tweetDescCreatedAt := tweetFields[3].Descriptor()
+	tweetDescCreatedAt := tweetFields[4].Descriptor()
 	// tweet.DefaultCreatedAt holds the default value on creation for the created_at field.
 	tweet.DefaultCreatedAt = tweetDescCreatedAt.Default.(func() time.Time)
+	twitteruserFields := schema.TwitterUser{}.Fields()
+	_ = twitteruserFields
+	// twitteruserDescCreatedAt is the schema descriptor for created_at field.
+	twitteruserDescCreatedAt := twitteruserFields[3].Descriptor()
+	// twitteruser.DefaultCreatedAt holds the default value on creation for the created_at field.
+	twitteruser.DefaultCreatedAt = twitteruserDescCreatedAt.Default.(func() time.Time)
 	universityFields := schema.University{}.Fields()
 	_ = universityFields
 	// universityDescCreatedAt is the schema descriptor for created_at field.
