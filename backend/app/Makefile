@@ -12,3 +12,6 @@ db_status:
 
 ent_generate:
 	go generate ./ent
+
+db_seed:
+	go run seeds/main.go

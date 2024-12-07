@@ -1,5 +1,6 @@
+"use client";
 import { Windows } from "@/components/common/Windows";
-import React from "react";
+import React, { useState } from "react";
 import dayjs from "dayjs";
 import { SukipiInfo } from "./_components/SukipiInfo";
 import { SukipiLikedAt } from "./_components/SukipiLikedAt";
@@ -39,6 +40,12 @@ type SukipiLikedAt = {
 };
 
 const Page = () => {
+  const [sukipiData, setSukipiData] = useState<Sukipi>(sukipi);
+
+  const handleUpdate = (updatedSukipi: Sukipi) => {
+    setSukipiData(updatedSukipi);
+  };
+
   const sukipiLikedAt: SukipiLikedAt = {
     likedAt: dayjs("2010-04-01").toISOString(), // 1月始まり
   };
@@ -47,7 +54,7 @@ const Page = () => {
     {
       ...sukipiInfoWindow,
       title: `${sukipi.name}くんのこと`,
-      children: <SukipiInfo sukipi={sukipi} />,
+      children: <SukipiInfo sukipi={sukipiData} onUpdate={handleUpdate} />,
     },
     {
       ...sukipiLikeAtWindow,

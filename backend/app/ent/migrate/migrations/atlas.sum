@@ -1,3 +1,8 @@
-h1:CaQcIVJbqOgN6/MIHXlIUEryj4uUt12LEMIBQ7daPBg=
-20241204145126_init.sql h1:vYq4vw20XCOBvYSsSQU446WnnN4iaRn2rPb6TaA54vI=
-20241206055500_update_tweet_id.sql h1:yMVcDu6rCjslXFADZir8jj7B5arR7UGNszG8fF/cI08=
+h1:q6O64O3ppFAEA7z0oKHOoPn1+b8AtmF6w4OMuJwPI78=
+20241206114839_init.sql h1:QT3EoBe1olnNBw2gTjrGOWVyp4ITmrnvWVKCOsyxT/0=
+20241206125420_add_university.sql h1:XOj549/HXlaXX+QyPrMRInhDYKfjkjbTzA1nKFQ/G0k=
+20241206135552_add_university_column.sql h1:KTZcxY/J/UCLGywg3upIqqTz+zOzTdFEKIyVuaCgrV0=
+20241206150208_update_university.sql h1:0PBqdR11IgI5ghz7bEy0DOnkk/45XKfbItoqOIsrnI0=
+20241207031051_update_twitter_user.sql h1:vFwp3/Kcpa97LZq/wljiqEEPh5p5u44VZ1jmXHxvNX4=
+20241207071349_update_sukipi.sql h1:a9mq/NBoBY8KnCDnRSRgrJpUBiS6/YR3HmcRZaJ1xKE=
+20241207072517_update_sukipi.sql h1:L93bW4Z0cYjIfjgF0f+37y7ndvBc4aNUxMZm+MsnfaI=

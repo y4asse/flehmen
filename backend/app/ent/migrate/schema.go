@@ -46,13 +46,16 @@ var (
 	SukipisColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString},
-		{Name: "weight", Type: field.TypeFloat64},
-		{Name: "height", Type: field.TypeFloat64},
-		{Name: "x_id", Type: field.TypeString},
-		{Name: "instagram_id", Type: field.TypeString},
-		{Name: "created_at", Type: field.TypeTime},
+		{Name: "weight", Type: field.TypeFloat64, Nullable: true},
+		{Name: "height", Type: field.TypeFloat64, Nullable: true},
+		{Name: "x_id", Type: field.TypeString, Nullable: true},
+		{Name: "instagram_id", Type: field.TypeString, Nullable: true},
+		{Name: "hobby", Type: field.TypeString, Nullable: true},
+		{Name: "birthday", Type: field.TypeTime, Nullable: true},
+		{Name: "family", Type: field.TypeString, Nullable: true},
 		{Name: "is_male", Type: field.TypeBool},
-		{Name: "start_at", Type: field.TypeTime, Nullable: true},
+		{Name: "start_at", Type: field.TypeTime},
+		{Name: "created_at", Type: field.TypeTime},
 		{Name: "sukipi_mbti", Type: field.TypeInt, Nullable: true},
 	}
 	// SukipisTable holds the schema information for the "sukipis" table.
@@ -63,7 +66,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sukipis_mbtis_mbti",
-				Columns:    []*schema.Column{SukipisColumns[9]},
+				Columns:    []*schema.Column{SukipisColumns[12]},
 				RefColumns: []*schema.Column{MbtisColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -77,6 +80,7 @@ var (
 		{Name: "tweet_created_at", Type: field.TypeTime},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "sukipi_tweets", Type: field.TypeInt, Nullable: true},
+		{Name: "reply_twitter_user_id", Type: field.TypeInt, Nullable: true},
 	}
 	// TweetsTable holds the schema information for the "tweets" table.
 	TweetsTable = &schema.Table{
@@ -89,6 +93,48 @@ var (
 				Columns:    []*schema.Column{TweetsColumns[5]},
 				RefColumns: []*schema.Column{SukipisColumns[0]},
 				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:     "tweets_twitter_users_replies",
+				Columns:    []*schema.Column{TweetsColumns[6]},
+				RefColumns: []*schema.Column{TwitterUsersColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
+	// TwitterUsersColumns holds the columns for the "twitter_users" table.
+	TwitterUsersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "name", Type: field.TypeString},
+		{Name: "username", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
+	}
+	// TwitterUsersTable holds the schema information for the "twitter_users" table.
+	TwitterUsersTable = &schema.Table{
+		Name:       "twitter_users",
+		Columns:    TwitterUsersColumns,
+		PrimaryKey: []*schema.Column{TwitterUsersColumns[0]},
+	}
+	// UniversitiesColumns holds the columns for the "universities" table.
+	UniversitiesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "name", Type: field.TypeString},
+		{Name: "deviation_lower_value", Type: field.TypeInt},
+		{Name: "deviation_upper_value", Type: field.TypeInt},
+		{Name: "abbreviation", Type: field.TypeString},
+		{Name: "prefecture", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
+	}
+	// UniversitiesTable holds the schema information for the "universities" table.
+	UniversitiesTable = &schema.Table{
+		Name:       "universities",
+		Columns:    UniversitiesColumns,
+		PrimaryKey: []*schema.Column{UniversitiesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "university_name_abbreviation",
+				Unique:  true,
+				Columns: []*schema.Column{UniversitiesColumns[1], UniversitiesColumns[4]},
 			},
 		},
 	}
@@ -123,6 +169,8 @@ var (
 		SpecialEventsTable,
 		SukipisTable,
 		TweetsTable,
+		TwitterUsersTable,
+		UniversitiesTable,
 		UsersTable,
 	}
 )
@@ -131,5 +179,6 @@ func init() {
 	SpecialEventsTable.ForeignKeys[0].RefTable = UsersTable
 	SukipisTable.ForeignKeys[0].RefTable = MbtisTable
 	TweetsTable.ForeignKeys[0].RefTable = SukipisTable
+	TweetsTable.ForeignKeys[1].RefTable = TwitterUsersTable
 	UsersTable.ForeignKeys[0].RefTable = MbtisTable
 }

@@ -65,6 +65,12 @@ func (su *SukipiUpdate) AddWeight(f float64) *SukipiUpdate {
 	return su
 }
 
+// ClearWeight clears the value of the "weight" field.
+func (su *SukipiUpdate) ClearWeight() *SukipiUpdate {
+	su.mutation.ClearWeight()
+	return su
+}
+
 // SetHeight sets the "height" field.
 func (su *SukipiUpdate) SetHeight(f float64) *SukipiUpdate {
 	su.mutation.ResetHeight()
@@ -86,6 +92,12 @@ func (su *SukipiUpdate) AddHeight(f float64) *SukipiUpdate {
 	return su
 }
 
+// ClearHeight clears the value of the "height" field.
+func (su *SukipiUpdate) ClearHeight() *SukipiUpdate {
+	su.mutation.ClearHeight()
+	return su
+}
+
 // SetXID sets the "x_id" field.
 func (su *SukipiUpdate) SetXID(s string) *SukipiUpdate {
 	su.mutation.SetXID(s)
@@ -97,6 +109,12 @@ func (su *SukipiUpdate) SetNillableXID(s *string) *SukipiUpdate {
 	if s != nil {
 		su.SetXID(*s)
 	}
+	return su
+}
+
+// ClearXID clears the value of the "x_id" field.
+func (su *SukipiUpdate) ClearXID() *SukipiUpdate {
+	su.mutation.ClearXID()
 	return su
 }
 
@@ -114,17 +132,69 @@ func (su *SukipiUpdate) SetNillableInstagramID(s *string) *SukipiUpdate {
 	return su
 }
 
-// SetCreatedAt sets the "created_at" field.
-func (su *SukipiUpdate) SetCreatedAt(t time.Time) *SukipiUpdate {
-	su.mutation.SetCreatedAt(t)
+// ClearInstagramID clears the value of the "instagram_id" field.
+func (su *SukipiUpdate) ClearInstagramID() *SukipiUpdate {
+	su.mutation.ClearInstagramID()
 	return su
 }
 
-// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (su *SukipiUpdate) SetNillableCreatedAt(t *time.Time) *SukipiUpdate {
-	if t != nil {
-		su.SetCreatedAt(*t)
+// SetHobby sets the "hobby" field.
+func (su *SukipiUpdate) SetHobby(s string) *SukipiUpdate {
+	su.mutation.SetHobby(s)
+	return su
+}
+
+// SetNillableHobby sets the "hobby" field if the given value is not nil.
+func (su *SukipiUpdate) SetNillableHobby(s *string) *SukipiUpdate {
+	if s != nil {
+		su.SetHobby(*s)
 	}
+	return su
+}
+
+// ClearHobby clears the value of the "hobby" field.
+func (su *SukipiUpdate) ClearHobby() *SukipiUpdate {
+	su.mutation.ClearHobby()
+	return su
+}
+
+// SetBirthday sets the "birthday" field.
+func (su *SukipiUpdate) SetBirthday(t time.Time) *SukipiUpdate {
+	su.mutation.SetBirthday(t)
+	return su
+}
+
+// SetNillableBirthday sets the "birthday" field if the given value is not nil.
+func (su *SukipiUpdate) SetNillableBirthday(t *time.Time) *SukipiUpdate {
+	if t != nil {
+		su.SetBirthday(*t)
+	}
+	return su
+}
+
+// ClearBirthday clears the value of the "birthday" field.
+func (su *SukipiUpdate) ClearBirthday() *SukipiUpdate {
+	su.mutation.ClearBirthday()
+	return su
+}
+
+// SetFamily sets the "family" field.
+func (su *SukipiUpdate) SetFamily(s string) *SukipiUpdate {
+	su.mutation.SetFamily(s)
+	return su
+}
+
+// SetNillableFamily sets the "family" field if the given value is not nil.
+func (su *SukipiUpdate) SetNillableFamily(s *string) *SukipiUpdate {
+	if s != nil {
+		su.SetFamily(*s)
+	}
+	return su
+}
+
+// ClearFamily clears the value of the "family" field.
+func (su *SukipiUpdate) ClearFamily() *SukipiUpdate {
+	su.mutation.ClearFamily()
 	return su
 }
 
@@ -156,9 +226,17 @@ func (su *SukipiUpdate) SetNillableStartAt(t *time.Time) *SukipiUpdate {
 	return su
 }
 
-// ClearStartAt clears the value of the "start_at" field.
-func (su *SukipiUpdate) ClearStartAt() *SukipiUpdate {
-	su.mutation.ClearStartAt()
+// SetCreatedAt sets the "created_at" field.
+func (su *SukipiUpdate) SetCreatedAt(t time.Time) *SukipiUpdate {
+	su.mutation.SetCreatedAt(t)
+	return su
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (su *SukipiUpdate) SetNillableCreatedAt(t *time.Time) *SukipiUpdate {
+	if t != nil {
+		su.SetCreatedAt(*t)
+	}
 	return su
 }
 
@@ -273,20 +351,47 @@ func (su *SukipiUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := su.mutation.AddedWeight(); ok {
 		_spec.AddField(sukipi.FieldWeight, field.TypeFloat64, value)
 	}
+	if su.mutation.WeightCleared() {
+		_spec.ClearField(sukipi.FieldWeight, field.TypeFloat64)
+	}
 	if value, ok := su.mutation.Height(); ok {
 		_spec.SetField(sukipi.FieldHeight, field.TypeFloat64, value)
 	}
 	if value, ok := su.mutation.AddedHeight(); ok {
 		_spec.AddField(sukipi.FieldHeight, field.TypeFloat64, value)
 	}
+	if su.mutation.HeightCleared() {
+		_spec.ClearField(sukipi.FieldHeight, field.TypeFloat64)
+	}
 	if value, ok := su.mutation.XID(); ok {
 		_spec.SetField(sukipi.FieldXID, field.TypeString, value)
+	}
+	if su.mutation.XIDCleared() {
+		_spec.ClearField(sukipi.FieldXID, field.TypeString)
 	}
 	if value, ok := su.mutation.InstagramID(); ok {
 		_spec.SetField(sukipi.FieldInstagramID, field.TypeString, value)
 	}
-	if value, ok := su.mutation.CreatedAt(); ok {
-		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)
+	if su.mutation.InstagramIDCleared() {
+		_spec.ClearField(sukipi.FieldInstagramID, field.TypeString)
+	}
+	if value, ok := su.mutation.Hobby(); ok {
+		_spec.SetField(sukipi.FieldHobby, field.TypeString, value)
+	}
+	if su.mutation.HobbyCleared() {
+		_spec.ClearField(sukipi.FieldHobby, field.TypeString)
+	}
+	if value, ok := su.mutation.Birthday(); ok {
+		_spec.SetField(sukipi.FieldBirthday, field.TypeTime, value)
+	}
+	if su.mutation.BirthdayCleared() {
+		_spec.ClearField(sukipi.FieldBirthday, field.TypeTime)
+	}
+	if value, ok := su.mutation.Family(); ok {
+		_spec.SetField(sukipi.FieldFamily, field.TypeString, value)
+	}
+	if su.mutation.FamilyCleared() {
+		_spec.ClearField(sukipi.FieldFamily, field.TypeString)
 	}
 	if value, ok := su.mutation.IsMale(); ok {
 		_spec.SetField(sukipi.FieldIsMale, field.TypeBool, value)
@@ -294,8 +399,8 @@ func (su *SukipiUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := su.mutation.StartAt(); ok {
 		_spec.SetField(sukipi.FieldStartAt, field.TypeTime, value)
 	}
-	if su.mutation.StartAtCleared() {
-		_spec.ClearField(sukipi.FieldStartAt, field.TypeTime)
+	if value, ok := su.mutation.CreatedAt(); ok {
+		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)
 	}
 	if su.mutation.MbtiCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -426,6 +531,12 @@ func (suo *SukipiUpdateOne) AddWeight(f float64) *SukipiUpdateOne {
 	return suo
 }
 
+// ClearWeight clears the value of the "weight" field.
+func (suo *SukipiUpdateOne) ClearWeight() *SukipiUpdateOne {
+	suo.mutation.ClearWeight()
+	return suo
+}
+
 // SetHeight sets the "height" field.
 func (suo *SukipiUpdateOne) SetHeight(f float64) *SukipiUpdateOne {
 	suo.mutation.ResetHeight()
@@ -447,6 +558,12 @@ func (suo *SukipiUpdateOne) AddHeight(f float64) *SukipiUpdateOne {
 	return suo
 }
 
+// ClearHeight clears the value of the "height" field.
+func (suo *SukipiUpdateOne) ClearHeight() *SukipiUpdateOne {
+	suo.mutation.ClearHeight()
+	return suo
+}
+
 // SetXID sets the "x_id" field.
 func (suo *SukipiUpdateOne) SetXID(s string) *SukipiUpdateOne {
 	suo.mutation.SetXID(s)
@@ -458,6 +575,12 @@ func (suo *SukipiUpdateOne) SetNillableXID(s *string) *SukipiUpdateOne {
 	if s != nil {
 		suo.SetXID(*s)
 	}
+	return suo
+}
+
+// ClearXID clears the value of the "x_id" field.
+func (suo *SukipiUpdateOne) ClearXID() *SukipiUpdateOne {
+	suo.mutation.ClearXID()
 	return suo
 }
 
@@ -475,17 +598,69 @@ func (suo *SukipiUpdateOne) SetNillableInstagramID(s *string) *SukipiUpdateOne {
 	return suo
 }
 
-// SetCreatedAt sets the "created_at" field.
-func (suo *SukipiUpdateOne) SetCreatedAt(t time.Time) *SukipiUpdateOne {
-	suo.mutation.SetCreatedAt(t)
+// ClearInstagramID clears the value of the "instagram_id" field.
+func (suo *SukipiUpdateOne) ClearInstagramID() *SukipiUpdateOne {
+	suo.mutation.ClearInstagramID()
 	return suo
 }
 
-// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (suo *SukipiUpdateOne) SetNillableCreatedAt(t *time.Time) *SukipiUpdateOne {
-	if t != nil {
-		suo.SetCreatedAt(*t)
+// SetHobby sets the "hobby" field.
+func (suo *SukipiUpdateOne) SetHobby(s string) *SukipiUpdateOne {
+	suo.mutation.SetHobby(s)
+	return suo
+}
+
+// SetNillableHobby sets the "hobby" field if the given value is not nil.
+func (suo *SukipiUpdateOne) SetNillableHobby(s *string) *SukipiUpdateOne {
+	if s != nil {
+		suo.SetHobby(*s)
 	}
+	return suo
+}
+
+// ClearHobby clears the value of the "hobby" field.
+func (suo *SukipiUpdateOne) ClearHobby() *SukipiUpdateOne {
+	suo.mutation.ClearHobby()
+	return suo
+}
+
+// SetBirthday sets the "birthday" field.
+func (suo *SukipiUpdateOne) SetBirthday(t time.Time) *SukipiUpdateOne {
+	suo.mutation.SetBirthday(t)
+	return suo
+}
+
+// SetNillableBirthday sets the "birthday" field if the given value is not nil.
+func (suo *SukipiUpdateOne) SetNillableBirthday(t *time.Time) *SukipiUpdateOne {
+	if t != nil {
+		suo.SetBirthday(*t)
+	}
+	return suo
+}
+
+// ClearBirthday clears the value of the "birthday" field.
+func (suo *SukipiUpdateOne) ClearBirthday() *SukipiUpdateOne {
+	suo.mutation.ClearBirthday()
+	return suo
+}
+
+// SetFamily sets the "family" field.
+func (suo *SukipiUpdateOne) SetFamily(s string) *SukipiUpdateOne {
+	suo.mutation.SetFamily(s)
+	return suo
+}
+
+// SetNillableFamily sets the "family" field if the given value is not nil.
+func (suo *SukipiUpdateOne) SetNillableFamily(s *string) *SukipiUpdateOne {
+	if s != nil {
+		suo.SetFamily(*s)
+	}
+	return suo
+}
+
+// ClearFamily clears the value of the "family" field.
+func (suo *SukipiUpdateOne) ClearFamily() *SukipiUpdateOne {
+	suo.mutation.ClearFamily()
 	return suo
 }
 
@@ -517,9 +692,17 @@ func (suo *SukipiUpdateOne) SetNillableStartAt(t *time.Time) *SukipiUpdateOne {
 	return suo
 }
 
-// ClearStartAt clears the value of the "start_at" field.
-func (suo *SukipiUpdateOne) ClearStartAt() *SukipiUpdateOne {
-	suo.mutation.ClearStartAt()
+// SetCreatedAt sets the "created_at" field.
+func (suo *SukipiUpdateOne) SetCreatedAt(t time.Time) *SukipiUpdateOne {
+	suo.mutation.SetCreatedAt(t)
+	return suo
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (suo *SukipiUpdateOne) SetNillableCreatedAt(t *time.Time) *SukipiUpdateOne {
+	if t != nil {
+		suo.SetCreatedAt(*t)
+	}
 	return suo
 }
 
@@ -664,20 +847,47 @@ func (suo *SukipiUpdateOne) sqlSave(ctx context.Context) (_node *Sukipi, err err
 	if value, ok := suo.mutation.AddedWeight(); ok {
 		_spec.AddField(sukipi.FieldWeight, field.TypeFloat64, value)
 	}
+	if suo.mutation.WeightCleared() {
+		_spec.ClearField(sukipi.FieldWeight, field.TypeFloat64)
+	}
 	if value, ok := suo.mutation.Height(); ok {
 		_spec.SetField(sukipi.FieldHeight, field.TypeFloat64, value)
 	}
 	if value, ok := suo.mutation.AddedHeight(); ok {
 		_spec.AddField(sukipi.FieldHeight, field.TypeFloat64, value)
 	}
+	if suo.mutation.HeightCleared() {
+		_spec.ClearField(sukipi.FieldHeight, field.TypeFloat64)
+	}
 	if value, ok := suo.mutation.XID(); ok {
 		_spec.SetField(sukipi.FieldXID, field.TypeString, value)
+	}
+	if suo.mutation.XIDCleared() {
+		_spec.ClearField(sukipi.FieldXID, field.TypeString)
 	}
 	if value, ok := suo.mutation.InstagramID(); ok {
 		_spec.SetField(sukipi.FieldInstagramID, field.TypeString, value)
 	}
-	if value, ok := suo.mutation.CreatedAt(); ok {
-		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)
+	if suo.mutation.InstagramIDCleared() {
+		_spec.ClearField(sukipi.FieldInstagramID, field.TypeString)
+	}
+	if value, ok := suo.mutation.Hobby(); ok {
+		_spec.SetField(sukipi.FieldHobby, field.TypeString, value)
+	}
+	if suo.mutation.HobbyCleared() {
+		_spec.ClearField(sukipi.FieldHobby, field.TypeString)
+	}
+	if value, ok := suo.mutation.Birthday(); ok {
+		_spec.SetField(sukipi.FieldBirthday, field.TypeTime, value)
+	}
+	if suo.mutation.BirthdayCleared() {
+		_spec.ClearField(sukipi.FieldBirthday, field.TypeTime)
+	}
+	if value, ok := suo.mutation.Family(); ok {
+		_spec.SetField(sukipi.FieldFamily, field.TypeString, value)
+	}
+	if suo.mutation.FamilyCleared() {
+		_spec.ClearField(sukipi.FieldFamily, field.TypeString)
 	}
 	if value, ok := suo.mutation.IsMale(); ok {
 		_spec.SetField(sukipi.FieldIsMale, field.TypeBool, value)
@@ -685,8 +895,8 @@ func (suo *SukipiUpdateOne) sqlSave(ctx context.Context) (_node *Sukipi, err err
 	if value, ok := suo.mutation.StartAt(); ok {
 		_spec.SetField(sukipi.FieldStartAt, field.TypeTime, value)
 	}
-	if suo.mutation.StartAtCleared() {
-		_spec.ClearField(sukipi.FieldStartAt, field.TypeTime)
+	if value, ok := suo.mutation.CreatedAt(); ok {
+		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)
 	}
 	if suo.mutation.MbtiCleared() {
 		edge := &sqlgraph.EdgeSpec{

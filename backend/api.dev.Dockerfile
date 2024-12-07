@@ -2,8 +2,6 @@ FROM golang:1.23.0
 
 WORKDIR /app
 
-COPY app .
+RUN go install github.com/air-verse/air@latest
 
-RUN go mod tidy
-
-CMD ["go", "run", "main.go"]
+CMD ["air", "-c", ".air.toml"]

@@ -18,14 +18,14 @@ docker_api_cli:
 docker_batch_cli:
 	${DC} exec -it batch bash
 
-db_diff:
-	make -C app db_diff
-
 db_migrate:
 	make -C app db_migrate
 
 db_status:
 	make -C app db_status
+
+db_seed:
+	${DC} exec api make db_seed
 
 deploy:
 	gcloud builds submit --region=asia-east1

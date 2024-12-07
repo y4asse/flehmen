@@ -34,9 +34,25 @@ func (sc *SukipiCreate) SetWeight(f float64) *SukipiCreate {
 	return sc
 }
 
+// SetNillableWeight sets the "weight" field if the given value is not nil.
+func (sc *SukipiCreate) SetNillableWeight(f *float64) *SukipiCreate {
+	if f != nil {
+		sc.SetWeight(*f)
+	}
+	return sc
+}
+
 // SetHeight sets the "height" field.
 func (sc *SukipiCreate) SetHeight(f float64) *SukipiCreate {
 	sc.mutation.SetHeight(f)
+	return sc
+}
+
+// SetNillableHeight sets the "height" field if the given value is not nil.
+func (sc *SukipiCreate) SetNillableHeight(f *float64) *SukipiCreate {
+	if f != nil {
+		sc.SetHeight(*f)
+	}
 	return sc
 }
 
@@ -46,22 +62,66 @@ func (sc *SukipiCreate) SetXID(s string) *SukipiCreate {
 	return sc
 }
 
+// SetNillableXID sets the "x_id" field if the given value is not nil.
+func (sc *SukipiCreate) SetNillableXID(s *string) *SukipiCreate {
+	if s != nil {
+		sc.SetXID(*s)
+	}
+	return sc
+}
+
 // SetInstagramID sets the "instagram_id" field.
 func (sc *SukipiCreate) SetInstagramID(s string) *SukipiCreate {
 	sc.mutation.SetInstagramID(s)
 	return sc
 }
 
-// SetCreatedAt sets the "created_at" field.
-func (sc *SukipiCreate) SetCreatedAt(t time.Time) *SukipiCreate {
-	sc.mutation.SetCreatedAt(t)
+// SetNillableInstagramID sets the "instagram_id" field if the given value is not nil.
+func (sc *SukipiCreate) SetNillableInstagramID(s *string) *SukipiCreate {
+	if s != nil {
+		sc.SetInstagramID(*s)
+	}
 	return sc
 }
 
-// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (sc *SukipiCreate) SetNillableCreatedAt(t *time.Time) *SukipiCreate {
+// SetHobby sets the "hobby" field.
+func (sc *SukipiCreate) SetHobby(s string) *SukipiCreate {
+	sc.mutation.SetHobby(s)
+	return sc
+}
+
+// SetNillableHobby sets the "hobby" field if the given value is not nil.
+func (sc *SukipiCreate) SetNillableHobby(s *string) *SukipiCreate {
+	if s != nil {
+		sc.SetHobby(*s)
+	}
+	return sc
+}
+
+// SetBirthday sets the "birthday" field.
+func (sc *SukipiCreate) SetBirthday(t time.Time) *SukipiCreate {
+	sc.mutation.SetBirthday(t)
+	return sc
+}
+
+// SetNillableBirthday sets the "birthday" field if the given value is not nil.
+func (sc *SukipiCreate) SetNillableBirthday(t *time.Time) *SukipiCreate {
 	if t != nil {
-		sc.SetCreatedAt(*t)
+		sc.SetBirthday(*t)
+	}
+	return sc
+}
+
+// SetFamily sets the "family" field.
+func (sc *SukipiCreate) SetFamily(s string) *SukipiCreate {
+	sc.mutation.SetFamily(s)
+	return sc
+}
+
+// SetNillableFamily sets the "family" field if the given value is not nil.
+func (sc *SukipiCreate) SetNillableFamily(s *string) *SukipiCreate {
+	if s != nil {
+		sc.SetFamily(*s)
 	}
 	return sc
 }
@@ -78,10 +138,16 @@ func (sc *SukipiCreate) SetStartAt(t time.Time) *SukipiCreate {
 	return sc
 }
 
-// SetNillableStartAt sets the "start_at" field if the given value is not nil.
-func (sc *SukipiCreate) SetNillableStartAt(t *time.Time) *SukipiCreate {
+// SetCreatedAt sets the "created_at" field.
+func (sc *SukipiCreate) SetCreatedAt(t time.Time) *SukipiCreate {
+	sc.mutation.SetCreatedAt(t)
+	return sc
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (sc *SukipiCreate) SetNillableCreatedAt(t *time.Time) *SukipiCreate {
 	if t != nil {
-		sc.SetStartAt(*t)
+		sc.SetCreatedAt(*t)
 	}
 	return sc
 }
@@ -166,23 +232,14 @@ func (sc *SukipiCreate) check() error {
 	if _, ok := sc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Sukipi.name"`)}
 	}
-	if _, ok := sc.mutation.Weight(); !ok {
-		return &ValidationError{Name: "weight", err: errors.New(`ent: missing required field "Sukipi.weight"`)}
+	if _, ok := sc.mutation.IsMale(); !ok {
+		return &ValidationError{Name: "is_male", err: errors.New(`ent: missing required field "Sukipi.is_male"`)}
 	}
-	if _, ok := sc.mutation.Height(); !ok {
-		return &ValidationError{Name: "height", err: errors.New(`ent: missing required field "Sukipi.height"`)}
-	}
-	if _, ok := sc.mutation.XID(); !ok {
-		return &ValidationError{Name: "x_id", err: errors.New(`ent: missing required field "Sukipi.x_id"`)}
-	}
-	if _, ok := sc.mutation.InstagramID(); !ok {
-		return &ValidationError{Name: "instagram_id", err: errors.New(`ent: missing required field "Sukipi.instagram_id"`)}
+	if _, ok := sc.mutation.StartAt(); !ok {
+		return &ValidationError{Name: "start_at", err: errors.New(`ent: missing required field "Sukipi.start_at"`)}
 	}
 	if _, ok := sc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Sukipi.created_at"`)}
-	}
-	if _, ok := sc.mutation.IsMale(); !ok {
-		return &ValidationError{Name: "is_male", err: errors.New(`ent: missing required field "Sukipi.is_male"`)}
 	}
 	return nil
 }
@@ -230,9 +287,17 @@ func (sc *SukipiCreate) createSpec() (*Sukipi, *sqlgraph.CreateSpec) {
 		_spec.SetField(sukipi.FieldInstagramID, field.TypeString, value)
 		_node.InstagramID = &value
 	}
-	if value, ok := sc.mutation.CreatedAt(); ok {
-		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)
-		_node.CreatedAt = value
+	if value, ok := sc.mutation.Hobby(); ok {
+		_spec.SetField(sukipi.FieldHobby, field.TypeString, value)
+		_node.Hobby = &value
+	}
+	if value, ok := sc.mutation.Birthday(); ok {
+		_spec.SetField(sukipi.FieldBirthday, field.TypeTime, value)
+		_node.Birthday = &value
+	}
+	if value, ok := sc.mutation.Family(); ok {
+		_spec.SetField(sukipi.FieldFamily, field.TypeString, value)
+		_node.Family = &value
 	}
 	if value, ok := sc.mutation.IsMale(); ok {
 		_spec.SetField(sukipi.FieldIsMale, field.TypeBool, value)
@@ -241,6 +306,10 @@ func (sc *SukipiCreate) createSpec() (*Sukipi, *sqlgraph.CreateSpec) {
 	if value, ok := sc.mutation.StartAt(); ok {
 		_spec.SetField(sukipi.FieldStartAt, field.TypeTime, value)
 		_node.StartAt = value
+	}
+	if value, ok := sc.mutation.CreatedAt(); ok {
+		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)
+		_node.CreatedAt = value
 	}
 	if nodes := sc.mutation.MbtiIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

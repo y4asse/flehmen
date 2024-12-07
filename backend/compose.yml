@@ -46,6 +46,7 @@ services:
     tty: true
     volumes:
       - ./docker/mysql/data:/var/lib/mysql:cached
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:cached
     networks:
       - flehmen
 
