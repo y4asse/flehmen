@@ -46,13 +46,16 @@ var (
 	SukipisColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString},
-		{Name: "weight", Type: field.TypeFloat64},
-		{Name: "height", Type: field.TypeFloat64},
-		{Name: "x_id", Type: field.TypeString},
-		{Name: "instagram_id", Type: field.TypeString},
-		{Name: "created_at", Type: field.TypeTime},
+		{Name: "weight", Type: field.TypeFloat64, Nullable: true},
+		{Name: "height", Type: field.TypeFloat64, Nullable: true},
+		{Name: "x_id", Type: field.TypeString, Nullable: true},
+		{Name: "instagram_id", Type: field.TypeString, Nullable: true},
+		{Name: "hobby", Type: field.TypeString, Nullable: true},
+		{Name: "birthday", Type: field.TypeTime, Nullable: true},
+		{Name: "family", Type: field.TypeString, Nullable: true},
 		{Name: "is_male", Type: field.TypeBool},
-		{Name: "start_at", Type: field.TypeTime, Nullable: true},
+		{Name: "start_at", Type: field.TypeTime},
+		{Name: "created_at", Type: field.TypeTime},
 		{Name: "sukipi_mbti", Type: field.TypeInt, Nullable: true},
 	}
 	// SukipisTable holds the schema information for the "sukipis" table.
@@ -63,7 +66,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sukipis_mbtis_mbti",
-				Columns:    []*schema.Column{SukipisColumns[9]},
+				Columns:    []*schema.Column{SukipisColumns[12]},
 				RefColumns: []*schema.Column{MbtisColumns[0]},
 				OnDelete:   schema.SetNull,
 			},

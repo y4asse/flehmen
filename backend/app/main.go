@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
+	"time"
 
 	"entgo.io/ent/dialect"
 	"github.com/go-sql-driver/mysql"
@@ -25,6 +27,57 @@ func (controller *Controller) GetUniversities(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err) // TODO: errを返すのはセキュリティ的に問題がありそう
 	}
 	return c.JSON(http.StatusOK, universities)
+}
+
+type SukipiRequest struct {
+	Name        string     `json:"name" validate:"required"`
+	Weight      *float64   `json:"weight"`
+	Height      *float64   `json:"height"`
+	XID         *string    `json:"x_id"`
+	InstagramID *string    `json:"instagram_id"`
+	Hobby       *string    `json:"hobby"`
+	Birthday    *time.Time `json:"birthday"`
+	Family      *string    `json:"family"`
+	IsMale      bool       `json:"is_male" validate:"required"`
+	StartAt     time.Time  `json:"start_at" validate:"required"`
+	MbtiId      *int       `json:"mbti_id"`
+}
+
+func (controller *Controller) GetSukipiById(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	sukipi, err := controller.entClient.Sukipi.Get(c.Request().Context(), id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	return c.JSON(http.StatusOK, sukipi)
+}
+
+func (controller *Controller) SaveSukipi(c echo.Context) error {
+	req := new(SukipiRequest)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	sukipi, err := controller.entClient.Sukipi.
+		Create().
+		SetName(req.Name).
+		SetNillableWeight(req.Weight).
+		SetNillableHeight(req.Height).
+		SetNillableXID(req.XID).
+		SetNillableInstagramID(req.InstagramID).
+		SetNillableHobby(req.Hobby).
+		SetNillableBirthday(req.Birthday).
+		SetNillableFamily(req.Family).
+		SetIsMale(req.IsMale).
+		SetStartAt(req.StartAt).
+		SetNillableMbtiID(req.MbtiId).
+		Save(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	return c.JSON(http.StatusOK, sukipi)
 }
 
 func main() {
@@ -49,6 +102,8 @@ func main() {
 
 	e.GET("/ok", controller.Ok)
 	e.GET("/universities", controller.GetUniversities)
+	e.GET("/sukipi/:id", controller.GetSukipiById)
+	e.POST("/sukipi", controller.SaveSukipi)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
