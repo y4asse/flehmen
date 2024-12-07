@@ -85,9 +85,9 @@ func Birthday(v time.Time) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldEQ(FieldBirthday, v))
 }
 
-// ShowsSize applies equality check predicate on the "showsSize" field. It's identical to ShowsSizeEQ.
-func ShowsSize(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldEQ(FieldShowsSize, v))
+// ShoesSize applies equality check predicate on the "shoesSize" field. It's identical to ShoesSizeEQ.
+func ShoesSize(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldShoesSize, v))
 }
 
 // Family applies equality check predicate on the "family" field. It's identical to FamilyEQ.
@@ -475,79 +475,79 @@ func BirthdayNotNil() predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldNotNull(FieldBirthday))
 }
 
-// ShowsSizeEQ applies the EQ predicate on the "showsSize" field.
-func ShowsSizeEQ(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldEQ(FieldShowsSize, v))
+// ShoesSizeEQ applies the EQ predicate on the "shoesSize" field.
+func ShoesSizeEQ(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldShoesSize, v))
 }
 
-// ShowsSizeNEQ applies the NEQ predicate on the "showsSize" field.
-func ShowsSizeNEQ(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldNEQ(FieldShowsSize, v))
+// ShoesSizeNEQ applies the NEQ predicate on the "shoesSize" field.
+func ShoesSizeNEQ(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNEQ(FieldShoesSize, v))
 }
 
-// ShowsSizeIn applies the In predicate on the "showsSize" field.
-func ShowsSizeIn(vs ...string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldIn(FieldShowsSize, vs...))
+// ShoesSizeIn applies the In predicate on the "shoesSize" field.
+func ShoesSizeIn(vs ...string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldIn(FieldShoesSize, vs...))
 }
 
-// ShowsSizeNotIn applies the NotIn predicate on the "showsSize" field.
-func ShowsSizeNotIn(vs ...string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldNotIn(FieldShowsSize, vs...))
+// ShoesSizeNotIn applies the NotIn predicate on the "shoesSize" field.
+func ShoesSizeNotIn(vs ...string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNotIn(FieldShoesSize, vs...))
 }
 
-// ShowsSizeGT applies the GT predicate on the "showsSize" field.
-func ShowsSizeGT(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldGT(FieldShowsSize, v))
+// ShoesSizeGT applies the GT predicate on the "shoesSize" field.
+func ShoesSizeGT(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGT(FieldShoesSize, v))
 }
 
-// ShowsSizeGTE applies the GTE predicate on the "showsSize" field.
-func ShowsSizeGTE(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldGTE(FieldShowsSize, v))
+// ShoesSizeGTE applies the GTE predicate on the "shoesSize" field.
+func ShoesSizeGTE(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGTE(FieldShoesSize, v))
 }
 
-// ShowsSizeLT applies the LT predicate on the "showsSize" field.
-func ShowsSizeLT(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldLT(FieldShowsSize, v))
+// ShoesSizeLT applies the LT predicate on the "shoesSize" field.
+func ShoesSizeLT(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLT(FieldShoesSize, v))
 }
 
-// ShowsSizeLTE applies the LTE predicate on the "showsSize" field.
-func ShowsSizeLTE(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldLTE(FieldShowsSize, v))
+// ShoesSizeLTE applies the LTE predicate on the "shoesSize" field.
+func ShoesSizeLTE(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLTE(FieldShoesSize, v))
 }
 
-// ShowsSizeContains applies the Contains predicate on the "showsSize" field.
-func ShowsSizeContains(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldContains(FieldShowsSize, v))
+// ShoesSizeContains applies the Contains predicate on the "shoesSize" field.
+func ShoesSizeContains(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldContains(FieldShoesSize, v))
 }
 
-// ShowsSizeHasPrefix applies the HasPrefix predicate on the "showsSize" field.
-func ShowsSizeHasPrefix(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldHasPrefix(FieldShowsSize, v))
+// ShoesSizeHasPrefix applies the HasPrefix predicate on the "shoesSize" field.
+func ShoesSizeHasPrefix(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldHasPrefix(FieldShoesSize, v))
 }
 
-// ShowsSizeHasSuffix applies the HasSuffix predicate on the "showsSize" field.
-func ShowsSizeHasSuffix(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldHasSuffix(FieldShowsSize, v))
+// ShoesSizeHasSuffix applies the HasSuffix predicate on the "shoesSize" field.
+func ShoesSizeHasSuffix(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldHasSuffix(FieldShoesSize, v))
 }
 
-// ShowsSizeIsNil applies the IsNil predicate on the "showsSize" field.
-func ShowsSizeIsNil() predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldIsNull(FieldShowsSize))
+// ShoesSizeIsNil applies the IsNil predicate on the "shoesSize" field.
+func ShoesSizeIsNil() predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldIsNull(FieldShoesSize))
 }
 
-// ShowsSizeNotNil applies the NotNil predicate on the "showsSize" field.
-func ShowsSizeNotNil() predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldNotNull(FieldShowsSize))
+// ShoesSizeNotNil applies the NotNil predicate on the "shoesSize" field.
+func ShoesSizeNotNil() predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNotNull(FieldShoesSize))
 }
 
-// ShowsSizeEqualFold applies the EqualFold predicate on the "showsSize" field.
-func ShowsSizeEqualFold(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldEqualFold(FieldShowsSize, v))
+// ShoesSizeEqualFold applies the EqualFold predicate on the "shoesSize" field.
+func ShoesSizeEqualFold(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEqualFold(FieldShoesSize, v))
 }
 
-// ShowsSizeContainsFold applies the ContainsFold predicate on the "showsSize" field.
-func ShowsSizeContainsFold(v string) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldContainsFold(FieldShowsSize, v))
+// ShoesSizeContainsFold applies the ContainsFold predicate on the "shoesSize" field.
+func ShoesSizeContainsFold(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldContainsFold(FieldShoesSize, v))
 }
 
 // FamilyEQ applies the EQ predicate on the "family" field.

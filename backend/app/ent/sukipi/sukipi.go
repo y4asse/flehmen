@@ -26,8 +26,8 @@ const (
 	FieldHobby = "hobby"
 	// FieldBirthday holds the string denoting the birthday field in the database.
 	FieldBirthday = "birthday"
-	// FieldShowsSize holds the string denoting the showssize field in the database.
-	FieldShowsSize = "shows_size"
+	// FieldShoesSize holds the string denoting the shoessize field in the database.
+	FieldShoesSize = "shoes_size"
 	// FieldFamily holds the string denoting the family field in the database.
 	FieldFamily = "family"
 	// FieldNearlyStation holds the string denoting the nearly_station field in the database.
@@ -67,7 +67,7 @@ var Columns = []string{
 	FieldXID,
 	FieldHobby,
 	FieldBirthday,
-	FieldShowsSize,
+	FieldShoesSize,
 	FieldFamily,
 	FieldNearlyStation,
 	FieldLikedAt,
@@ -138,9 +138,9 @@ func ByBirthday(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldBirthday, opts...).ToFunc()
 }
 
-// ByShowsSize orders the results by the showsSize field.
-func ByShowsSize(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldShowsSize, opts...).ToFunc()
+// ByShoesSize orders the results by the shoesSize field.
+func ByShoesSize(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldShoesSize, opts...).ToFunc()
 }
 
 // ByFamily orders the results by the family field.

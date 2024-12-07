@@ -867,7 +867,7 @@ type SukipiMutation struct {
 	x_id           *string
 	hobby          *string
 	birthday       *time.Time
-	showsSize      *string
+	shoesSize      *string
 	family         *string
 	nearly_station *string
 	liked_at       *time.Time
@@ -1304,53 +1304,53 @@ func (m *SukipiMutation) ResetBirthday() {
 	delete(m.clearedFields, sukipi.FieldBirthday)
 }
 
-// SetShowsSize sets the "showsSize" field.
-func (m *SukipiMutation) SetShowsSize(s string) {
-	m.showsSize = &s
+// SetShoesSize sets the "shoesSize" field.
+func (m *SukipiMutation) SetShoesSize(s string) {
+	m.shoesSize = &s
 }
 
-// ShowsSize returns the value of the "showsSize" field in the mutation.
-func (m *SukipiMutation) ShowsSize() (r string, exists bool) {
-	v := m.showsSize
+// ShoesSize returns the value of the "shoesSize" field in the mutation.
+func (m *SukipiMutation) ShoesSize() (r string, exists bool) {
+	v := m.shoesSize
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldShowsSize returns the old "showsSize" field's value of the Sukipi entity.
+// OldShoesSize returns the old "shoesSize" field's value of the Sukipi entity.
 // If the Sukipi object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SukipiMutation) OldShowsSize(ctx context.Context) (v *string, err error) {
+func (m *SukipiMutation) OldShoesSize(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldShowsSize is only allowed on UpdateOne operations")
+		return v, errors.New("OldShoesSize is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldShowsSize requires an ID field in the mutation")
+		return v, errors.New("OldShoesSize requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldShowsSize: %w", err)
+		return v, fmt.Errorf("querying old value for OldShoesSize: %w", err)
 	}
-	return oldValue.ShowsSize, nil
+	return oldValue.ShoesSize, nil
 }
 
-// ClearShowsSize clears the value of the "showsSize" field.
-func (m *SukipiMutation) ClearShowsSize() {
-	m.showsSize = nil
-	m.clearedFields[sukipi.FieldShowsSize] = struct{}{}
+// ClearShoesSize clears the value of the "shoesSize" field.
+func (m *SukipiMutation) ClearShoesSize() {
+	m.shoesSize = nil
+	m.clearedFields[sukipi.FieldShoesSize] = struct{}{}
 }
 
-// ShowsSizeCleared returns if the "showsSize" field was cleared in this mutation.
-func (m *SukipiMutation) ShowsSizeCleared() bool {
-	_, ok := m.clearedFields[sukipi.FieldShowsSize]
+// ShoesSizeCleared returns if the "shoesSize" field was cleared in this mutation.
+func (m *SukipiMutation) ShoesSizeCleared() bool {
+	_, ok := m.clearedFields[sukipi.FieldShoesSize]
 	return ok
 }
 
-// ResetShowsSize resets all changes to the "showsSize" field.
-func (m *SukipiMutation) ResetShowsSize() {
-	m.showsSize = nil
-	delete(m.clearedFields, sukipi.FieldShowsSize)
+// ResetShoesSize resets all changes to the "shoesSize" field.
+func (m *SukipiMutation) ResetShoesSize() {
+	m.shoesSize = nil
+	delete(m.clearedFields, sukipi.FieldShoesSize)
 }
 
 // SetFamily sets the "family" field.
@@ -1669,8 +1669,8 @@ func (m *SukipiMutation) Fields() []string {
 	if m.birthday != nil {
 		fields = append(fields, sukipi.FieldBirthday)
 	}
-	if m.showsSize != nil {
-		fields = append(fields, sukipi.FieldShowsSize)
+	if m.shoesSize != nil {
+		fields = append(fields, sukipi.FieldShoesSize)
 	}
 	if m.family != nil {
 		fields = append(fields, sukipi.FieldFamily)
@@ -1704,8 +1704,8 @@ func (m *SukipiMutation) Field(name string) (ent.Value, bool) {
 		return m.Hobby()
 	case sukipi.FieldBirthday:
 		return m.Birthday()
-	case sukipi.FieldShowsSize:
-		return m.ShowsSize()
+	case sukipi.FieldShoesSize:
+		return m.ShoesSize()
 	case sukipi.FieldFamily:
 		return m.Family()
 	case sukipi.FieldNearlyStation:
@@ -1735,8 +1735,8 @@ func (m *SukipiMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldHobby(ctx)
 	case sukipi.FieldBirthday:
 		return m.OldBirthday(ctx)
-	case sukipi.FieldShowsSize:
-		return m.OldShowsSize(ctx)
+	case sukipi.FieldShoesSize:
+		return m.OldShoesSize(ctx)
 	case sukipi.FieldFamily:
 		return m.OldFamily(ctx)
 	case sukipi.FieldNearlyStation:
@@ -1796,12 +1796,12 @@ func (m *SukipiMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetBirthday(v)
 		return nil
-	case sukipi.FieldShowsSize:
+	case sukipi.FieldShoesSize:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetShowsSize(v)
+		m.SetShoesSize(v)
 		return nil
 	case sukipi.FieldFamily:
 		v, ok := value.(string)
@@ -1903,8 +1903,8 @@ func (m *SukipiMutation) ClearedFields() []string {
 	if m.FieldCleared(sukipi.FieldBirthday) {
 		fields = append(fields, sukipi.FieldBirthday)
 	}
-	if m.FieldCleared(sukipi.FieldShowsSize) {
-		fields = append(fields, sukipi.FieldShowsSize)
+	if m.FieldCleared(sukipi.FieldShoesSize) {
+		fields = append(fields, sukipi.FieldShoesSize)
 	}
 	if m.FieldCleared(sukipi.FieldFamily) {
 		fields = append(fields, sukipi.FieldFamily)
@@ -1941,8 +1941,8 @@ func (m *SukipiMutation) ClearField(name string) error {
 	case sukipi.FieldBirthday:
 		m.ClearBirthday()
 		return nil
-	case sukipi.FieldShowsSize:
-		m.ClearShowsSize()
+	case sukipi.FieldShoesSize:
+		m.ClearShoesSize()
 		return nil
 	case sukipi.FieldFamily:
 		m.ClearFamily()
@@ -1976,8 +1976,8 @@ func (m *SukipiMutation) ResetField(name string) error {
 	case sukipi.FieldBirthday:
 		m.ResetBirthday()
 		return nil
-	case sukipi.FieldShowsSize:
-		m.ResetShowsSize()
+	case sukipi.FieldShoesSize:
+		m.ResetShoesSize()
 		return nil
 	case sukipi.FieldFamily:
 		m.ResetFamily()

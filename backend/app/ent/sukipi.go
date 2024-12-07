@@ -30,8 +30,8 @@ type Sukipi struct {
 	Hobby *string `json:"hobby,omitempty"`
 	// Birthday holds the value of the "birthday" field.
 	Birthday *time.Time `json:"birthday,omitempty"`
-	// ShowsSize holds the value of the "showsSize" field.
-	ShowsSize *string `json:"showsSize,omitempty"`
+	// ShoesSize holds the value of the "shoesSize" field.
+	ShoesSize *string `json:"shoesSize,omitempty"`
 	// Family holds the value of the "family" field.
 	Family *string `json:"family,omitempty"`
 	// NearlyStation holds the value of the "nearly_station" field.
@@ -87,7 +87,7 @@ func (*Sukipi) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullFloat64)
 		case sukipi.FieldID:
 			values[i] = new(sql.NullInt64)
-		case sukipi.FieldName, sukipi.FieldXID, sukipi.FieldHobby, sukipi.FieldShowsSize, sukipi.FieldFamily, sukipi.FieldNearlyStation:
+		case sukipi.FieldName, sukipi.FieldXID, sukipi.FieldHobby, sukipi.FieldShoesSize, sukipi.FieldFamily, sukipi.FieldNearlyStation:
 			values[i] = new(sql.NullString)
 		case sukipi.FieldBirthday, sukipi.FieldLikedAt, sukipi.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
@@ -155,12 +155,12 @@ func (s *Sukipi) assignValues(columns []string, values []any) error {
 				s.Birthday = new(time.Time)
 				*s.Birthday = value.Time
 			}
-		case sukipi.FieldShowsSize:
+		case sukipi.FieldShoesSize:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field showsSize", values[i])
+				return fmt.Errorf("unexpected type %T for field shoesSize", values[i])
 			} else if value.Valid {
-				s.ShowsSize = new(string)
-				*s.ShowsSize = value.String
+				s.ShoesSize = new(string)
+				*s.ShoesSize = value.String
 			}
 		case sukipi.FieldFamily:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -269,8 +269,8 @@ func (s *Sukipi) String() string {
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
-	if v := s.ShowsSize; v != nil {
-		builder.WriteString("showsSize=")
+	if v := s.ShoesSize; v != nil {
+		builder.WriteString("shoesSize=")
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")

@@ -158,23 +158,23 @@ func (su *SukipiUpdate) ClearBirthday() *SukipiUpdate {
 	return su
 }
 
-// SetShowsSize sets the "showsSize" field.
-func (su *SukipiUpdate) SetShowsSize(s string) *SukipiUpdate {
-	su.mutation.SetShowsSize(s)
+// SetShoesSize sets the "shoesSize" field.
+func (su *SukipiUpdate) SetShoesSize(s string) *SukipiUpdate {
+	su.mutation.SetShoesSize(s)
 	return su
 }
 
-// SetNillableShowsSize sets the "showsSize" field if the given value is not nil.
-func (su *SukipiUpdate) SetNillableShowsSize(s *string) *SukipiUpdate {
+// SetNillableShoesSize sets the "shoesSize" field if the given value is not nil.
+func (su *SukipiUpdate) SetNillableShoesSize(s *string) *SukipiUpdate {
 	if s != nil {
-		su.SetShowsSize(*s)
+		su.SetShoesSize(*s)
 	}
 	return su
 }
 
-// ClearShowsSize clears the value of the "showsSize" field.
-func (su *SukipiUpdate) ClearShowsSize() *SukipiUpdate {
-	su.mutation.ClearShowsSize()
+// ClearShoesSize clears the value of the "shoesSize" field.
+func (su *SukipiUpdate) ClearShoesSize() *SukipiUpdate {
+	su.mutation.ClearShoesSize()
 	return su
 }
 
@@ -387,11 +387,11 @@ func (su *SukipiUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if su.mutation.BirthdayCleared() {
 		_spec.ClearField(sukipi.FieldBirthday, field.TypeTime)
 	}
-	if value, ok := su.mutation.ShowsSize(); ok {
-		_spec.SetField(sukipi.FieldShowsSize, field.TypeString, value)
+	if value, ok := su.mutation.ShoesSize(); ok {
+		_spec.SetField(sukipi.FieldShoesSize, field.TypeString, value)
 	}
-	if su.mutation.ShowsSizeCleared() {
-		_spec.ClearField(sukipi.FieldShowsSize, field.TypeString)
+	if su.mutation.ShoesSizeCleared() {
+		_spec.ClearField(sukipi.FieldShoesSize, field.TypeString)
 	}
 	if value, ok := su.mutation.Family(); ok {
 		_spec.SetField(sukipi.FieldFamily, field.TypeString, value)
@@ -633,23 +633,23 @@ func (suo *SukipiUpdateOne) ClearBirthday() *SukipiUpdateOne {
 	return suo
 }
 
-// SetShowsSize sets the "showsSize" field.
-func (suo *SukipiUpdateOne) SetShowsSize(s string) *SukipiUpdateOne {
-	suo.mutation.SetShowsSize(s)
+// SetShoesSize sets the "shoesSize" field.
+func (suo *SukipiUpdateOne) SetShoesSize(s string) *SukipiUpdateOne {
+	suo.mutation.SetShoesSize(s)
 	return suo
 }
 
-// SetNillableShowsSize sets the "showsSize" field if the given value is not nil.
-func (suo *SukipiUpdateOne) SetNillableShowsSize(s *string) *SukipiUpdateOne {
+// SetNillableShoesSize sets the "shoesSize" field if the given value is not nil.
+func (suo *SukipiUpdateOne) SetNillableShoesSize(s *string) *SukipiUpdateOne {
 	if s != nil {
-		suo.SetShowsSize(*s)
+		suo.SetShoesSize(*s)
 	}
 	return suo
 }
 
-// ClearShowsSize clears the value of the "showsSize" field.
-func (suo *SukipiUpdateOne) ClearShowsSize() *SukipiUpdateOne {
-	suo.mutation.ClearShowsSize()
+// ClearShoesSize clears the value of the "shoesSize" field.
+func (suo *SukipiUpdateOne) ClearShoesSize() *SukipiUpdateOne {
+	suo.mutation.ClearShoesSize()
 	return suo
 }
 
@@ -892,11 +892,11 @@ func (suo *SukipiUpdateOne) sqlSave(ctx context.Context) (_node *Sukipi, err err
 	if suo.mutation.BirthdayCleared() {
 		_spec.ClearField(sukipi.FieldBirthday, field.TypeTime)
 	}
-	if value, ok := suo.mutation.ShowsSize(); ok {
-		_spec.SetField(sukipi.FieldShowsSize, field.TypeString, value)
+	if value, ok := suo.mutation.ShoesSize(); ok {
+		_spec.SetField(sukipi.FieldShoesSize, field.TypeString, value)
 	}
-	if suo.mutation.ShowsSizeCleared() {
-		_spec.ClearField(sukipi.FieldShowsSize, field.TypeString)
+	if suo.mutation.ShoesSizeCleared() {
+		_spec.ClearField(sukipi.FieldShoesSize, field.TypeString)
 	}
 	if value, ok := suo.mutation.Family(); ok {
 		_spec.SetField(sukipi.FieldFamily, field.TypeString, value)

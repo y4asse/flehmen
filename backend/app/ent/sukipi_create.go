@@ -98,16 +98,16 @@ func (sc *SukipiCreate) SetNillableBirthday(t *time.Time) *SukipiCreate {
 	return sc
 }
 
-// SetShowsSize sets the "showsSize" field.
-func (sc *SukipiCreate) SetShowsSize(s string) *SukipiCreate {
-	sc.mutation.SetShowsSize(s)
+// SetShoesSize sets the "shoesSize" field.
+func (sc *SukipiCreate) SetShoesSize(s string) *SukipiCreate {
+	sc.mutation.SetShoesSize(s)
 	return sc
 }
 
-// SetNillableShowsSize sets the "showsSize" field if the given value is not nil.
-func (sc *SukipiCreate) SetNillableShowsSize(s *string) *SukipiCreate {
+// SetNillableShoesSize sets the "shoesSize" field if the given value is not nil.
+func (sc *SukipiCreate) SetNillableShoesSize(s *string) *SukipiCreate {
 	if s != nil {
-		sc.SetShowsSize(*s)
+		sc.SetShoesSize(*s)
 	}
 	return sc
 }
@@ -296,9 +296,9 @@ func (sc *SukipiCreate) createSpec() (*Sukipi, *sqlgraph.CreateSpec) {
 		_spec.SetField(sukipi.FieldBirthday, field.TypeTime, value)
 		_node.Birthday = &value
 	}
-	if value, ok := sc.mutation.ShowsSize(); ok {
-		_spec.SetField(sukipi.FieldShowsSize, field.TypeString, value)
-		_node.ShowsSize = &value
+	if value, ok := sc.mutation.ShoesSize(); ok {
+		_spec.SetField(sukipi.FieldShoesSize, field.TypeString, value)
+		_node.ShoesSize = &value
 	}
 	if value, ok := sc.mutation.Family(); ok {
 		_spec.SetField(sukipi.FieldFamily, field.TypeString, value)

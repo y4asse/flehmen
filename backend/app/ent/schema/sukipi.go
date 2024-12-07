@@ -22,7 +22,7 @@ func (Sukipi) Fields() []ent.Field {
 		field.String("x_id").Nillable().Optional(),
 		field.String("hobby").Nillable().Optional(),
 		field.Time("birthday").Nillable().Optional(),
-		field.String("showsSize").Nillable().Optional(),
+		field.String("shoesSize").Nillable().Optional(),
 		field.String("family").Nillable().Optional(),
 		field.String("nearly_station").Nillable().Optional(),
 		field.Time("liked_at"),
