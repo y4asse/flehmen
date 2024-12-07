@@ -1,18 +1,17 @@
 @font-face {
-    font-family: 'PixelMplus';
-    src: url('/fonts/PixelMplus10-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-  }
-  
-  @font-face {
-    font-family: 'PixelMplus';
-    src: url('/fonts/PixelMplus10-Bold.ttf') format('truetype');
-    font-weight: bold;
-    font-style: normal;
-  }
-  
-  body {
-    font-family: 'PixelMplus', sans-serif;
-  }
-  
+  font-family: "PixelMplus";
+  src: url("/fonts/PixelMplus12-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "PixelMplus";
+  src: url("/fonts/PixelMplus12-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+body {
+  font-family: "PixelMplus", sans-serif;
+}

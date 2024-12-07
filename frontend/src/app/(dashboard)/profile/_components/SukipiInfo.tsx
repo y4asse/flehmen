@@ -22,8 +22,6 @@ export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
     setIsEditing(false);
   };
 
-  console.log(formData);
-
   // Sukipiオブジェクトから情報もらう
   const infoItems = [
     { title: "なまえ", content: sukipi.name },
@@ -97,10 +95,10 @@ type InfoItemProps = {
 
 const InfoItem = ({ title, content }: InfoItemProps) => {
   return (
-    <div style={styles.infoItem}>
-      <div style={styles.title}>{title}</div>
-      <div style={styles.content}>{content}</div>
-    </div>
+    <p style={styles.infoItem}>
+      <span style={styles.title}>{title}</span>
+      <span style={styles.content}>{content}</span>
+    </p>
   );
 };
 
@@ -109,8 +107,6 @@ const styles: { [key: string]: React.CSSProperties } = {
   infoItem: {
     display: "flex",
     margin: "10px 0",
-    fontSize: "0.8em",
-    fontWeight: "bold",
     color: "white",
   },
   editor: {
