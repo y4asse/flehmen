@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"entgo.io/ent/dialect"
 	"github.com/go-sql-driver/mysql"
@@ -25,6 +26,44 @@ func (controller *Controller) GetUniversities(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err) // TODO: errを返すのはセキュリティ的に問題がありそう
 	}
 	return c.JSON(http.StatusOK, universities)
+}
+
+type Sukipi struct {
+	Name        string    `json:"name"`
+	Birthday    time.Time `json:"birthday"`
+	Family      string    `json:"family"`
+	Height      int       `json:"height"`
+	Weight      int       `json:"weight"`
+	Hobby       string    `json:"hobby"`
+	Mbti        string    `json:"mbti"`
+	LikedAt     time.Time `json:"liked_at"`
+	NearStation string    `json:"near_station"`
+	ShoesSize   int       `json:"shoes_size"`
+	TwitterId   string    `json:"twitter_id"`
+}
+
+func (controller *Controller) SaveSukipi(c echo.Context) error {
+	sukipi := new(Sukipi)
+	if err := c.Bind(sukipi); err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	sukipi, err := controller.entClient.Sukipi.Create().
+		SetName(sukipi.Name).
+		SetBirthday(sukipi.Birthday).
+		SetFamily(sukipi.Family).
+		SetHeight(sukipi.Height).
+		SetWeight(sukipi.Weight).
+		SetHobby(sukipi.Hobby).
+		SetMbti(sukipi.Mbti).
+		SetLikedAt(sukipi.LikedAt).
+		SetNearStation(sukipi.NearStation).
+		SetShoesSize(sukipi.ShoesSize).
+		SetTwitterId(sukipi.TwitterId).
+		Save(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	return c.JSON(http.StatusOK, sukipi)
 }
 
 func main() {
@@ -49,6 +88,7 @@ func main() {
 
 	e.GET("/ok", controller.Ok)
 	e.GET("/universities", controller.GetUniversities)
+	e.POST("/sukipi", controller.SaveSukipi)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

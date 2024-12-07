@@ -24,12 +24,14 @@ const (
 	FieldXID = "x_id"
 	// FieldInstagramID holds the string denoting the instagram_id field in the database.
 	FieldInstagramID = "instagram_id"
-	// FieldCreatedAt holds the string denoting the created_at field in the database.
-	FieldCreatedAt = "created_at"
 	// FieldIsMale holds the string denoting the is_male field in the database.
 	FieldIsMale = "is_male"
 	// FieldStartAt holds the string denoting the start_at field in the database.
 	FieldStartAt = "start_at"
+	// FieldBirthday holds the string denoting the birthday field in the database.
+	FieldBirthday = "birthday"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
 	// EdgeMbti holds the string denoting the mbti edge name in mutations.
 	EdgeMbti = "mbti"
 	// EdgeTweets holds the string denoting the tweets edge name in mutations.
@@ -60,9 +62,10 @@ var Columns = []string{
 	FieldHeight,
 	FieldXID,
 	FieldInstagramID,
-	FieldCreatedAt,
 	FieldIsMale,
 	FieldStartAt,
+	FieldBirthday,
+	FieldCreatedAt,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "sukipis"
@@ -124,11 +127,6 @@ func ByInstagramID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldInstagramID, opts...).ToFunc()
 }
 
-// ByCreatedAt orders the results by the created_at field.
-func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
-}
-
 // ByIsMale orders the results by the is_male field.
 func ByIsMale(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIsMale, opts...).ToFunc()
@@ -137,6 +135,16 @@ func ByIsMale(opts ...sql.OrderTermOption) OrderOption {
 // ByStartAt orders the results by the start_at field.
 func ByStartAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStartAt, opts...).ToFunc()
+}
+
+// ByBirthday orders the results by the birthday field.
+func ByBirthday(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldBirthday, opts...).ToFunc()
+}
+
+// ByCreatedAt orders the results by the created_at field.
+func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
 }
 
 // ByMbtiField orders the results by mbti field.
