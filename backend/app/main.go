@@ -152,7 +152,7 @@ func (controller *Controller) CreateSukipiVoice(c echo.Context) error {
 	voiceResponse := new(SukipiVoiceResponse)
 	err = json.Unmarshal(body, &voiceResponse)
 	if err != nil {
-		log.Fatal(err)
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to parse ElevenLabs response"})
 	}
 
 	fmt.Println(voiceResponse)
@@ -188,8 +188,9 @@ func (controller *Controller) CreateSukipiVoice(c echo.Context) error {
 func main() {
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:3000"},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowOrigins: []string{"*"}, // 全オリジンを許可
+		AllowHeaders: []string{"*"}, // 全ヘッダーを許可
+		AllowMethods: []string{"*"}, // 全HTTPメソッドを許可
 	}))
 	e.Use(middleware.Logger())
 	c := mysql.Config{
