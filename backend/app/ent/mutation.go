@@ -867,7 +867,8 @@ type SukipiMutation struct {
 	x_id           *string
 	hobby          *string
 	birthday       *time.Time
-	shoesSize      *string
+	shoesSize      *float64
+	addshoesSize   *float64
 	family         *string
 	nearly_station *string
 	liked_at       *time.Time
@@ -1305,12 +1306,13 @@ func (m *SukipiMutation) ResetBirthday() {
 }
 
 // SetShoesSize sets the "shoesSize" field.
-func (m *SukipiMutation) SetShoesSize(s string) {
-	m.shoesSize = &s
+func (m *SukipiMutation) SetShoesSize(f float64) {
+	m.shoesSize = &f
+	m.addshoesSize = nil
 }
 
 // ShoesSize returns the value of the "shoesSize" field in the mutation.
-func (m *SukipiMutation) ShoesSize() (r string, exists bool) {
+func (m *SukipiMutation) ShoesSize() (r float64, exists bool) {
 	v := m.shoesSize
 	if v == nil {
 		return
@@ -1321,7 +1323,7 @@ func (m *SukipiMutation) ShoesSize() (r string, exists bool) {
 // OldShoesSize returns the old "shoesSize" field's value of the Sukipi entity.
 // If the Sukipi object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SukipiMutation) OldShoesSize(ctx context.Context) (v *string, err error) {
+func (m *SukipiMutation) OldShoesSize(ctx context.Context) (v *float64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldShoesSize is only allowed on UpdateOne operations")
 	}
@@ -1335,9 +1337,28 @@ func (m *SukipiMutation) OldShoesSize(ctx context.Context) (v *string, err error
 	return oldValue.ShoesSize, nil
 }
 
+// AddShoesSize adds f to the "shoesSize" field.
+func (m *SukipiMutation) AddShoesSize(f float64) {
+	if m.addshoesSize != nil {
+		*m.addshoesSize += f
+	} else {
+		m.addshoesSize = &f
+	}
+}
+
+// AddedShoesSize returns the value that was added to the "shoesSize" field in this mutation.
+func (m *SukipiMutation) AddedShoesSize() (r float64, exists bool) {
+	v := m.addshoesSize
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ClearShoesSize clears the value of the "shoesSize" field.
 func (m *SukipiMutation) ClearShoesSize() {
 	m.shoesSize = nil
+	m.addshoesSize = nil
 	m.clearedFields[sukipi.FieldShoesSize] = struct{}{}
 }
 
@@ -1350,6 +1371,7 @@ func (m *SukipiMutation) ShoesSizeCleared() bool {
 // ResetShoesSize resets all changes to the "shoesSize" field.
 func (m *SukipiMutation) ResetShoesSize() {
 	m.shoesSize = nil
+	m.addshoesSize = nil
 	delete(m.clearedFields, sukipi.FieldShoesSize)
 }
 
@@ -1797,7 +1819,7 @@ func (m *SukipiMutation) SetField(name string, value ent.Value) error {
 		m.SetBirthday(v)
 		return nil
 	case sukipi.FieldShoesSize:
-		v, ok := value.(string)
+		v, ok := value.(float64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -1845,6 +1867,9 @@ func (m *SukipiMutation) AddedFields() []string {
 	if m.addheight != nil {
 		fields = append(fields, sukipi.FieldHeight)
 	}
+	if m.addshoesSize != nil {
+		fields = append(fields, sukipi.FieldShoesSize)
+	}
 	return fields
 }
 
@@ -1857,6 +1882,8 @@ func (m *SukipiMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedWeight()
 	case sukipi.FieldHeight:
 		return m.AddedHeight()
+	case sukipi.FieldShoesSize:
+		return m.AddedShoesSize()
 	}
 	return nil, false
 }
@@ -1879,6 +1906,13 @@ func (m *SukipiMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddHeight(v)
+		return nil
+	case sukipi.FieldShoesSize:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddShoesSize(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Sukipi numeric field %s", name)

@@ -51,7 +51,7 @@ var (
 		{Name: "x_id", Type: field.TypeString, Nullable: true},
 		{Name: "hobby", Type: field.TypeString, Nullable: true},
 		{Name: "birthday", Type: field.TypeTime, Nullable: true},
-		{Name: "shoes_size", Type: field.TypeString, Nullable: true},
+		{Name: "shoes_size", Type: field.TypeFloat64, Nullable: true},
 		{Name: "family", Type: field.TypeString, Nullable: true},
 		{Name: "nearly_station", Type: field.TypeString, Nullable: true},
 		{Name: "liked_at", Type: field.TypeTime},

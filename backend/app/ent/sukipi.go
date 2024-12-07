@@ -31,7 +31,7 @@ type Sukipi struct {
 	// Birthday holds the value of the "birthday" field.
 	Birthday *time.Time `json:"birthday,omitempty"`
 	// ShoesSize holds the value of the "shoesSize" field.
-	ShoesSize *string `json:"shoesSize,omitempty"`
+	ShoesSize *float64 `json:"shoesSize,omitempty"`
 	// Family holds the value of the "family" field.
 	Family *string `json:"family,omitempty"`
 	// NearlyStation holds the value of the "nearly_station" field.
@@ -83,11 +83,11 @@ func (*Sukipi) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case sukipi.FieldWeight, sukipi.FieldHeight:
+		case sukipi.FieldWeight, sukipi.FieldHeight, sukipi.FieldShoesSize:
 			values[i] = new(sql.NullFloat64)
 		case sukipi.FieldID:
 			values[i] = new(sql.NullInt64)
-		case sukipi.FieldName, sukipi.FieldXID, sukipi.FieldHobby, sukipi.FieldShoesSize, sukipi.FieldFamily, sukipi.FieldNearlyStation:
+		case sukipi.FieldName, sukipi.FieldXID, sukipi.FieldHobby, sukipi.FieldFamily, sukipi.FieldNearlyStation:
 			values[i] = new(sql.NullString)
 		case sukipi.FieldBirthday, sukipi.FieldLikedAt, sukipi.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
@@ -156,11 +156,11 @@ func (s *Sukipi) assignValues(columns []string, values []any) error {
 				*s.Birthday = value.Time
 			}
 		case sukipi.FieldShoesSize:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
 				return fmt.Errorf("unexpected type %T for field shoesSize", values[i])
 			} else if value.Valid {
-				s.ShoesSize = new(string)
-				*s.ShoesSize = value.String
+				s.ShoesSize = new(float64)
+				*s.ShoesSize = value.Float64
 			}
 		case sukipi.FieldFamily:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -271,7 +271,7 @@ func (s *Sukipi) String() string {
 	builder.WriteString(", ")
 	if v := s.ShoesSize; v != nil {
 		builder.WriteString("shoesSize=")
-		builder.WriteString(*v)
+		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
 	if v := s.Family; v != nil {
