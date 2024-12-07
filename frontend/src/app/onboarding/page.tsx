@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Flex } from "@/components/ui/flex";
 import Typewriter from "@/components/common/Typewriter";
 import { useRouter } from "next/navigation";
+import { fetchPost } from "@/lib/fetcher";
 
 type SukipiInput = {
   title: string;
@@ -91,6 +92,19 @@ const sukipiInput: SukipiInput[] = [
     required: false,
   },
 ];
+type RequestBody = {
+  name: string;
+  twitterId: string;
+  likedAt: string;
+  weight: number | null;
+  height: number | null;
+  mbti: string | null;
+  birthday: Date | null;
+  hobby: string | null;
+  shoesSize: number | null;
+  family: string | null;
+  nearStation: string | null;
+};
 
 const Page = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -136,7 +150,7 @@ const Page = () => {
     setCheckMessage("Press Enter");
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (currentIndex != sukipiInput.length - 1) {
       return;
@@ -164,10 +178,12 @@ const Page = () => {
 
         return acc;
       },
-      {} as { [key: string]: string | number | Date | null } // 型定義を更新
+      {} as RequestBody // 型定義を更新
     );
-    console.log(data);
-    router.push("/loading?redirect=home");
+    const result = await fetchPost("/sukipi", data);
+    console.log(result);
+    console.log(router);
+    // router.push("/loading?redirect=home");
   };
 
   return (
