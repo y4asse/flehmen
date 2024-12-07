@@ -80,6 +80,21 @@ func InstagramID(v string) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldEQ(FieldInstagramID, v))
 }
 
+// Hobby applies equality check predicate on the "hobby" field. It's identical to HobbyEQ.
+func Hobby(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldHobby, v))
+}
+
+// Birthday applies equality check predicate on the "birthday" field. It's identical to BirthdayEQ.
+func Birthday(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldBirthday, v))
+}
+
+// Family applies equality check predicate on the "family" field. It's identical to FamilyEQ.
+func Family(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldFamily, v))
+}
+
 // IsMale applies equality check predicate on the "is_male" field. It's identical to IsMaleEQ.
 func IsMale(v bool) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldEQ(FieldIsMale, v))
@@ -88,11 +103,6 @@ func IsMale(v bool) predicate.Sukipi {
 // StartAt applies equality check predicate on the "start_at" field. It's identical to StartAtEQ.
 func StartAt(v time.Time) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldEQ(FieldStartAt, v))
-}
-
-// Birthday applies equality check predicate on the "birthday" field. It's identical to BirthdayEQ.
-func Birthday(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldEQ(FieldBirthday, v))
 }
 
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
@@ -415,54 +425,79 @@ func InstagramIDContainsFold(v string) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldContainsFold(FieldInstagramID, v))
 }
 
-// IsMaleEQ applies the EQ predicate on the "is_male" field.
-func IsMaleEQ(v bool) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldEQ(FieldIsMale, v))
+// HobbyEQ applies the EQ predicate on the "hobby" field.
+func HobbyEQ(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldHobby, v))
 }
 
-// IsMaleNEQ applies the NEQ predicate on the "is_male" field.
-func IsMaleNEQ(v bool) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldNEQ(FieldIsMale, v))
+// HobbyNEQ applies the NEQ predicate on the "hobby" field.
+func HobbyNEQ(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNEQ(FieldHobby, v))
 }
 
-// StartAtEQ applies the EQ predicate on the "start_at" field.
-func StartAtEQ(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldEQ(FieldStartAt, v))
+// HobbyIn applies the In predicate on the "hobby" field.
+func HobbyIn(vs ...string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldIn(FieldHobby, vs...))
 }
 
-// StartAtNEQ applies the NEQ predicate on the "start_at" field.
-func StartAtNEQ(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldNEQ(FieldStartAt, v))
+// HobbyNotIn applies the NotIn predicate on the "hobby" field.
+func HobbyNotIn(vs ...string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNotIn(FieldHobby, vs...))
 }
 
-// StartAtIn applies the In predicate on the "start_at" field.
-func StartAtIn(vs ...time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldIn(FieldStartAt, vs...))
+// HobbyGT applies the GT predicate on the "hobby" field.
+func HobbyGT(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGT(FieldHobby, v))
 }
 
-// StartAtNotIn applies the NotIn predicate on the "start_at" field.
-func StartAtNotIn(vs ...time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldNotIn(FieldStartAt, vs...))
+// HobbyGTE applies the GTE predicate on the "hobby" field.
+func HobbyGTE(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGTE(FieldHobby, v))
 }
 
-// StartAtGT applies the GT predicate on the "start_at" field.
-func StartAtGT(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldGT(FieldStartAt, v))
+// HobbyLT applies the LT predicate on the "hobby" field.
+func HobbyLT(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLT(FieldHobby, v))
 }
 
-// StartAtGTE applies the GTE predicate on the "start_at" field.
-func StartAtGTE(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldGTE(FieldStartAt, v))
+// HobbyLTE applies the LTE predicate on the "hobby" field.
+func HobbyLTE(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLTE(FieldHobby, v))
 }
 
-// StartAtLT applies the LT predicate on the "start_at" field.
-func StartAtLT(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldLT(FieldStartAt, v))
+// HobbyContains applies the Contains predicate on the "hobby" field.
+func HobbyContains(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldContains(FieldHobby, v))
 }
 
-// StartAtLTE applies the LTE predicate on the "start_at" field.
-func StartAtLTE(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldLTE(FieldStartAt, v))
+// HobbyHasPrefix applies the HasPrefix predicate on the "hobby" field.
+func HobbyHasPrefix(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldHasPrefix(FieldHobby, v))
+}
+
+// HobbyHasSuffix applies the HasSuffix predicate on the "hobby" field.
+func HobbyHasSuffix(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldHasSuffix(FieldHobby, v))
+}
+
+// HobbyIsNil applies the IsNil predicate on the "hobby" field.
+func HobbyIsNil() predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldIsNull(FieldHobby))
+}
+
+// HobbyNotNil applies the NotNil predicate on the "hobby" field.
+func HobbyNotNil() predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNotNull(FieldHobby))
+}
+
+// HobbyEqualFold applies the EqualFold predicate on the "hobby" field.
+func HobbyEqualFold(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEqualFold(FieldHobby, v))
+}
+
+// HobbyContainsFold applies the ContainsFold predicate on the "hobby" field.
+func HobbyContainsFold(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldContainsFold(FieldHobby, v))
 }
 
 // BirthdayEQ applies the EQ predicate on the "birthday" field.
@@ -513,6 +548,131 @@ func BirthdayIsNil() predicate.Sukipi {
 // BirthdayNotNil applies the NotNil predicate on the "birthday" field.
 func BirthdayNotNil() predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldNotNull(FieldBirthday))
+}
+
+// FamilyEQ applies the EQ predicate on the "family" field.
+func FamilyEQ(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldFamily, v))
+}
+
+// FamilyNEQ applies the NEQ predicate on the "family" field.
+func FamilyNEQ(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNEQ(FieldFamily, v))
+}
+
+// FamilyIn applies the In predicate on the "family" field.
+func FamilyIn(vs ...string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldIn(FieldFamily, vs...))
+}
+
+// FamilyNotIn applies the NotIn predicate on the "family" field.
+func FamilyNotIn(vs ...string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNotIn(FieldFamily, vs...))
+}
+
+// FamilyGT applies the GT predicate on the "family" field.
+func FamilyGT(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGT(FieldFamily, v))
+}
+
+// FamilyGTE applies the GTE predicate on the "family" field.
+func FamilyGTE(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGTE(FieldFamily, v))
+}
+
+// FamilyLT applies the LT predicate on the "family" field.
+func FamilyLT(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLT(FieldFamily, v))
+}
+
+// FamilyLTE applies the LTE predicate on the "family" field.
+func FamilyLTE(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLTE(FieldFamily, v))
+}
+
+// FamilyContains applies the Contains predicate on the "family" field.
+func FamilyContains(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldContains(FieldFamily, v))
+}
+
+// FamilyHasPrefix applies the HasPrefix predicate on the "family" field.
+func FamilyHasPrefix(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldHasPrefix(FieldFamily, v))
+}
+
+// FamilyHasSuffix applies the HasSuffix predicate on the "family" field.
+func FamilyHasSuffix(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldHasSuffix(FieldFamily, v))
+}
+
+// FamilyIsNil applies the IsNil predicate on the "family" field.
+func FamilyIsNil() predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldIsNull(FieldFamily))
+}
+
+// FamilyNotNil applies the NotNil predicate on the "family" field.
+func FamilyNotNil() predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNotNull(FieldFamily))
+}
+
+// FamilyEqualFold applies the EqualFold predicate on the "family" field.
+func FamilyEqualFold(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEqualFold(FieldFamily, v))
+}
+
+// FamilyContainsFold applies the ContainsFold predicate on the "family" field.
+func FamilyContainsFold(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldContainsFold(FieldFamily, v))
+}
+
+// IsMaleEQ applies the EQ predicate on the "is_male" field.
+func IsMaleEQ(v bool) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldIsMale, v))
+}
+
+// IsMaleNEQ applies the NEQ predicate on the "is_male" field.
+func IsMaleNEQ(v bool) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNEQ(FieldIsMale, v))
+}
+
+// StartAtEQ applies the EQ predicate on the "start_at" field.
+func StartAtEQ(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldStartAt, v))
+}
+
+// StartAtNEQ applies the NEQ predicate on the "start_at" field.
+func StartAtNEQ(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNEQ(FieldStartAt, v))
+}
+
+// StartAtIn applies the In predicate on the "start_at" field.
+func StartAtIn(vs ...time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldIn(FieldStartAt, vs...))
+}
+
+// StartAtNotIn applies the NotIn predicate on the "start_at" field.
+func StartAtNotIn(vs ...time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNotIn(FieldStartAt, vs...))
+}
+
+// StartAtGT applies the GT predicate on the "start_at" field.
+func StartAtGT(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGT(FieldStartAt, v))
+}
+
+// StartAtGTE applies the GTE predicate on the "start_at" field.
+func StartAtGTE(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGTE(FieldStartAt, v))
+}
+
+// StartAtLT applies the LT predicate on the "start_at" field.
+func StartAtLT(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLT(FieldStartAt, v))
+}
+
+// StartAtLTE applies the LTE predicate on the "start_at" field.
+func StartAtLTE(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLTE(FieldStartAt, v))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.

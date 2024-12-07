@@ -866,9 +866,11 @@ type SukipiMutation struct {
 	addheight     *float64
 	x_id          *string
 	instagram_id  *string
+	hobby         *string
+	birthday      *time.Time
+	family        *string
 	is_male       *bool
 	start_at      *time.Time
-	birthday      *time.Time
 	created_at    *time.Time
 	clearedFields map[string]struct{}
 	mbti          *int
@@ -1253,6 +1255,153 @@ func (m *SukipiMutation) ResetInstagramID() {
 	delete(m.clearedFields, sukipi.FieldInstagramID)
 }
 
+// SetHobby sets the "hobby" field.
+func (m *SukipiMutation) SetHobby(s string) {
+	m.hobby = &s
+}
+
+// Hobby returns the value of the "hobby" field in the mutation.
+func (m *SukipiMutation) Hobby() (r string, exists bool) {
+	v := m.hobby
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHobby returns the old "hobby" field's value of the Sukipi entity.
+// If the Sukipi object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SukipiMutation) OldHobby(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHobby is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHobby requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHobby: %w", err)
+	}
+	return oldValue.Hobby, nil
+}
+
+// ClearHobby clears the value of the "hobby" field.
+func (m *SukipiMutation) ClearHobby() {
+	m.hobby = nil
+	m.clearedFields[sukipi.FieldHobby] = struct{}{}
+}
+
+// HobbyCleared returns if the "hobby" field was cleared in this mutation.
+func (m *SukipiMutation) HobbyCleared() bool {
+	_, ok := m.clearedFields[sukipi.FieldHobby]
+	return ok
+}
+
+// ResetHobby resets all changes to the "hobby" field.
+func (m *SukipiMutation) ResetHobby() {
+	m.hobby = nil
+	delete(m.clearedFields, sukipi.FieldHobby)
+}
+
+// SetBirthday sets the "birthday" field.
+func (m *SukipiMutation) SetBirthday(t time.Time) {
+	m.birthday = &t
+}
+
+// Birthday returns the value of the "birthday" field in the mutation.
+func (m *SukipiMutation) Birthday() (r time.Time, exists bool) {
+	v := m.birthday
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldBirthday returns the old "birthday" field's value of the Sukipi entity.
+// If the Sukipi object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SukipiMutation) OldBirthday(ctx context.Context) (v *time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldBirthday is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldBirthday requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldBirthday: %w", err)
+	}
+	return oldValue.Birthday, nil
+}
+
+// ClearBirthday clears the value of the "birthday" field.
+func (m *SukipiMutation) ClearBirthday() {
+	m.birthday = nil
+	m.clearedFields[sukipi.FieldBirthday] = struct{}{}
+}
+
+// BirthdayCleared returns if the "birthday" field was cleared in this mutation.
+func (m *SukipiMutation) BirthdayCleared() bool {
+	_, ok := m.clearedFields[sukipi.FieldBirthday]
+	return ok
+}
+
+// ResetBirthday resets all changes to the "birthday" field.
+func (m *SukipiMutation) ResetBirthday() {
+	m.birthday = nil
+	delete(m.clearedFields, sukipi.FieldBirthday)
+}
+
+// SetFamily sets the "family" field.
+func (m *SukipiMutation) SetFamily(s string) {
+	m.family = &s
+}
+
+// Family returns the value of the "family" field in the mutation.
+func (m *SukipiMutation) Family() (r string, exists bool) {
+	v := m.family
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFamily returns the old "family" field's value of the Sukipi entity.
+// If the Sukipi object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SukipiMutation) OldFamily(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFamily is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFamily requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFamily: %w", err)
+	}
+	return oldValue.Family, nil
+}
+
+// ClearFamily clears the value of the "family" field.
+func (m *SukipiMutation) ClearFamily() {
+	m.family = nil
+	m.clearedFields[sukipi.FieldFamily] = struct{}{}
+}
+
+// FamilyCleared returns if the "family" field was cleared in this mutation.
+func (m *SukipiMutation) FamilyCleared() bool {
+	_, ok := m.clearedFields[sukipi.FieldFamily]
+	return ok
+}
+
+// ResetFamily resets all changes to the "family" field.
+func (m *SukipiMutation) ResetFamily() {
+	m.family = nil
+	delete(m.clearedFields, sukipi.FieldFamily)
+}
+
 // SetIsMale sets the "is_male" field.
 func (m *SukipiMutation) SetIsMale(b bool) {
 	m.is_male = &b
@@ -1323,55 +1472,6 @@ func (m *SukipiMutation) OldStartAt(ctx context.Context) (v time.Time, err error
 // ResetStartAt resets all changes to the "start_at" field.
 func (m *SukipiMutation) ResetStartAt() {
 	m.start_at = nil
-}
-
-// SetBirthday sets the "birthday" field.
-func (m *SukipiMutation) SetBirthday(t time.Time) {
-	m.birthday = &t
-}
-
-// Birthday returns the value of the "birthday" field in the mutation.
-func (m *SukipiMutation) Birthday() (r time.Time, exists bool) {
-	v := m.birthday
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldBirthday returns the old "birthday" field's value of the Sukipi entity.
-// If the Sukipi object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SukipiMutation) OldBirthday(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldBirthday is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldBirthday requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldBirthday: %w", err)
-	}
-	return oldValue.Birthday, nil
-}
-
-// ClearBirthday clears the value of the "birthday" field.
-func (m *SukipiMutation) ClearBirthday() {
-	m.birthday = nil
-	m.clearedFields[sukipi.FieldBirthday] = struct{}{}
-}
-
-// BirthdayCleared returns if the "birthday" field was cleared in this mutation.
-func (m *SukipiMutation) BirthdayCleared() bool {
-	_, ok := m.clearedFields[sukipi.FieldBirthday]
-	return ok
-}
-
-// ResetBirthday resets all changes to the "birthday" field.
-func (m *SukipiMutation) ResetBirthday() {
-	m.birthday = nil
-	delete(m.clearedFields, sukipi.FieldBirthday)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -1537,7 +1637,7 @@ func (m *SukipiMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *SukipiMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 11)
 	if m.name != nil {
 		fields = append(fields, sukipi.FieldName)
 	}
@@ -1553,14 +1653,20 @@ func (m *SukipiMutation) Fields() []string {
 	if m.instagram_id != nil {
 		fields = append(fields, sukipi.FieldInstagramID)
 	}
+	if m.hobby != nil {
+		fields = append(fields, sukipi.FieldHobby)
+	}
+	if m.birthday != nil {
+		fields = append(fields, sukipi.FieldBirthday)
+	}
+	if m.family != nil {
+		fields = append(fields, sukipi.FieldFamily)
+	}
 	if m.is_male != nil {
 		fields = append(fields, sukipi.FieldIsMale)
 	}
 	if m.start_at != nil {
 		fields = append(fields, sukipi.FieldStartAt)
-	}
-	if m.birthday != nil {
-		fields = append(fields, sukipi.FieldBirthday)
 	}
 	if m.created_at != nil {
 		fields = append(fields, sukipi.FieldCreatedAt)
@@ -1583,12 +1689,16 @@ func (m *SukipiMutation) Field(name string) (ent.Value, bool) {
 		return m.XID()
 	case sukipi.FieldInstagramID:
 		return m.InstagramID()
+	case sukipi.FieldHobby:
+		return m.Hobby()
+	case sukipi.FieldBirthday:
+		return m.Birthday()
+	case sukipi.FieldFamily:
+		return m.Family()
 	case sukipi.FieldIsMale:
 		return m.IsMale()
 	case sukipi.FieldStartAt:
 		return m.StartAt()
-	case sukipi.FieldBirthday:
-		return m.Birthday()
 	case sukipi.FieldCreatedAt:
 		return m.CreatedAt()
 	}
@@ -1610,12 +1720,16 @@ func (m *SukipiMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldXID(ctx)
 	case sukipi.FieldInstagramID:
 		return m.OldInstagramID(ctx)
+	case sukipi.FieldHobby:
+		return m.OldHobby(ctx)
+	case sukipi.FieldBirthday:
+		return m.OldBirthday(ctx)
+	case sukipi.FieldFamily:
+		return m.OldFamily(ctx)
 	case sukipi.FieldIsMale:
 		return m.OldIsMale(ctx)
 	case sukipi.FieldStartAt:
 		return m.OldStartAt(ctx)
-	case sukipi.FieldBirthday:
-		return m.OldBirthday(ctx)
 	case sukipi.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	}
@@ -1662,6 +1776,27 @@ func (m *SukipiMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetInstagramID(v)
 		return nil
+	case sukipi.FieldHobby:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHobby(v)
+		return nil
+	case sukipi.FieldBirthday:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetBirthday(v)
+		return nil
+	case sukipi.FieldFamily:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFamily(v)
+		return nil
 	case sukipi.FieldIsMale:
 		v, ok := value.(bool)
 		if !ok {
@@ -1675,13 +1810,6 @@ func (m *SukipiMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetStartAt(v)
-		return nil
-	case sukipi.FieldBirthday:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetBirthday(v)
 		return nil
 	case sukipi.FieldCreatedAt:
 		v, ok := value.(time.Time)
@@ -1759,8 +1887,14 @@ func (m *SukipiMutation) ClearedFields() []string {
 	if m.FieldCleared(sukipi.FieldInstagramID) {
 		fields = append(fields, sukipi.FieldInstagramID)
 	}
+	if m.FieldCleared(sukipi.FieldHobby) {
+		fields = append(fields, sukipi.FieldHobby)
+	}
 	if m.FieldCleared(sukipi.FieldBirthday) {
 		fields = append(fields, sukipi.FieldBirthday)
+	}
+	if m.FieldCleared(sukipi.FieldFamily) {
+		fields = append(fields, sukipi.FieldFamily)
 	}
 	return fields
 }
@@ -1788,8 +1922,14 @@ func (m *SukipiMutation) ClearField(name string) error {
 	case sukipi.FieldInstagramID:
 		m.ClearInstagramID()
 		return nil
+	case sukipi.FieldHobby:
+		m.ClearHobby()
+		return nil
 	case sukipi.FieldBirthday:
 		m.ClearBirthday()
+		return nil
+	case sukipi.FieldFamily:
+		m.ClearFamily()
 		return nil
 	}
 	return fmt.Errorf("unknown Sukipi nullable field %s", name)
@@ -1814,14 +1954,20 @@ func (m *SukipiMutation) ResetField(name string) error {
 	case sukipi.FieldInstagramID:
 		m.ResetInstagramID()
 		return nil
+	case sukipi.FieldHobby:
+		m.ResetHobby()
+		return nil
+	case sukipi.FieldBirthday:
+		m.ResetBirthday()
+		return nil
+	case sukipi.FieldFamily:
+		m.ResetFamily()
+		return nil
 	case sukipi.FieldIsMale:
 		m.ResetIsMale()
 		return nil
 	case sukipi.FieldStartAt:
 		m.ResetStartAt()
-		return nil
-	case sukipi.FieldBirthday:
-		m.ResetBirthday()
 		return nil
 	case sukipi.FieldCreatedAt:
 		m.ResetCreatedAt()

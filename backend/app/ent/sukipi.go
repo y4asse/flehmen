@@ -28,12 +28,16 @@ type Sukipi struct {
 	XID *string `json:"x_id,omitempty"`
 	// InstagramID holds the value of the "instagram_id" field.
 	InstagramID *string `json:"instagram_id,omitempty"`
+	// Hobby holds the value of the "hobby" field.
+	Hobby *string `json:"hobby,omitempty"`
+	// Birthday holds the value of the "birthday" field.
+	Birthday *time.Time `json:"birthday,omitempty"`
+	// Family holds the value of the "family" field.
+	Family *string `json:"family,omitempty"`
 	// IsMale holds the value of the "is_male" field.
 	IsMale bool `json:"is_male,omitempty"`
 	// StartAt holds the value of the "start_at" field.
 	StartAt time.Time `json:"start_at,omitempty"`
-	// Birthday holds the value of the "birthday" field.
-	Birthday time.Time `json:"birthday,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -85,9 +89,9 @@ func (*Sukipi) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullFloat64)
 		case sukipi.FieldID:
 			values[i] = new(sql.NullInt64)
-		case sukipi.FieldName, sukipi.FieldXID, sukipi.FieldInstagramID:
+		case sukipi.FieldName, sukipi.FieldXID, sukipi.FieldInstagramID, sukipi.FieldHobby, sukipi.FieldFamily:
 			values[i] = new(sql.NullString)
-		case sukipi.FieldStartAt, sukipi.FieldBirthday, sukipi.FieldCreatedAt:
+		case sukipi.FieldBirthday, sukipi.FieldStartAt, sukipi.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
 		case sukipi.ForeignKeys[0]: // sukipi_mbti
 			values[i] = new(sql.NullInt64)
@@ -146,6 +150,27 @@ func (s *Sukipi) assignValues(columns []string, values []any) error {
 				s.InstagramID = new(string)
 				*s.InstagramID = value.String
 			}
+		case sukipi.FieldHobby:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field hobby", values[i])
+			} else if value.Valid {
+				s.Hobby = new(string)
+				*s.Hobby = value.String
+			}
+		case sukipi.FieldBirthday:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field birthday", values[i])
+			} else if value.Valid {
+				s.Birthday = new(time.Time)
+				*s.Birthday = value.Time
+			}
+		case sukipi.FieldFamily:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field family", values[i])
+			} else if value.Valid {
+				s.Family = new(string)
+				*s.Family = value.String
+			}
 		case sukipi.FieldIsMale:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field is_male", values[i])
@@ -157,12 +182,6 @@ func (s *Sukipi) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field start_at", values[i])
 			} else if value.Valid {
 				s.StartAt = value.Time
-			}
-		case sukipi.FieldBirthday:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field birthday", values[i])
-			} else if value.Valid {
-				s.Birthday = value.Time
 			}
 		case sukipi.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -246,14 +265,26 @@ func (s *Sukipi) String() string {
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
+	if v := s.Hobby; v != nil {
+		builder.WriteString("hobby=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := s.Birthday; v != nil {
+		builder.WriteString("birthday=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
+	builder.WriteString(", ")
+	if v := s.Family; v != nil {
+		builder.WriteString("family=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
 	builder.WriteString("is_male=")
 	builder.WriteString(fmt.Sprintf("%v", s.IsMale))
 	builder.WriteString(", ")
 	builder.WriteString("start_at=")
 	builder.WriteString(s.StartAt.Format(time.ANSIC))
-	builder.WriteString(", ")
-	builder.WriteString("birthday=")
-	builder.WriteString(s.Birthday.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(s.CreatedAt.Format(time.ANSIC))

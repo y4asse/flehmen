@@ -24,12 +24,16 @@ const (
 	FieldXID = "x_id"
 	// FieldInstagramID holds the string denoting the instagram_id field in the database.
 	FieldInstagramID = "instagram_id"
+	// FieldHobby holds the string denoting the hobby field in the database.
+	FieldHobby = "hobby"
+	// FieldBirthday holds the string denoting the birthday field in the database.
+	FieldBirthday = "birthday"
+	// FieldFamily holds the string denoting the family field in the database.
+	FieldFamily = "family"
 	// FieldIsMale holds the string denoting the is_male field in the database.
 	FieldIsMale = "is_male"
 	// FieldStartAt holds the string denoting the start_at field in the database.
 	FieldStartAt = "start_at"
-	// FieldBirthday holds the string denoting the birthday field in the database.
-	FieldBirthday = "birthday"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// EdgeMbti holds the string denoting the mbti edge name in mutations.
@@ -62,9 +66,11 @@ var Columns = []string{
 	FieldHeight,
 	FieldXID,
 	FieldInstagramID,
+	FieldHobby,
+	FieldBirthday,
+	FieldFamily,
 	FieldIsMale,
 	FieldStartAt,
-	FieldBirthday,
 	FieldCreatedAt,
 }
 
@@ -127,6 +133,21 @@ func ByInstagramID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldInstagramID, opts...).ToFunc()
 }
 
+// ByHobby orders the results by the hobby field.
+func ByHobby(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHobby, opts...).ToFunc()
+}
+
+// ByBirthday orders the results by the birthday field.
+func ByBirthday(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldBirthday, opts...).ToFunc()
+}
+
+// ByFamily orders the results by the family field.
+func ByFamily(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFamily, opts...).ToFunc()
+}
+
 // ByIsMale orders the results by the is_male field.
 func ByIsMale(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIsMale, opts...).ToFunc()
@@ -135,11 +156,6 @@ func ByIsMale(opts ...sql.OrderTermOption) OrderOption {
 // ByStartAt orders the results by the start_at field.
 func ByStartAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStartAt, opts...).ToFunc()
-}
-
-// ByBirthday orders the results by the birthday field.
-func ByBirthday(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldBirthday, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.

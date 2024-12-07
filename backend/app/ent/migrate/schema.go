@@ -50,9 +50,11 @@ var (
 		{Name: "height", Type: field.TypeFloat64, Nullable: true},
 		{Name: "x_id", Type: field.TypeString, Nullable: true},
 		{Name: "instagram_id", Type: field.TypeString, Nullable: true},
+		{Name: "hobby", Type: field.TypeString, Nullable: true},
+		{Name: "birthday", Type: field.TypeTime, Nullable: true},
+		{Name: "family", Type: field.TypeString, Nullable: true},
 		{Name: "is_male", Type: field.TypeBool},
 		{Name: "start_at", Type: field.TypeTime},
-		{Name: "birthday", Type: field.TypeTime, Nullable: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "sukipi_mbti", Type: field.TypeInt, Nullable: true},
 	}
@@ -64,7 +66,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sukipis_mbtis_mbti",
-				Columns:    []*schema.Column{SukipisColumns[10]},
+				Columns:    []*schema.Column{SukipisColumns[12]},
 				RefColumns: []*schema.Column{MbtisColumns[0]},
 				OnDelete:   schema.SetNull,
 			},

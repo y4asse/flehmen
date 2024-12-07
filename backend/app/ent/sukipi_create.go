@@ -84,15 +84,17 @@ func (sc *SukipiCreate) SetNillableInstagramID(s *string) *SukipiCreate {
 	return sc
 }
 
-// SetIsMale sets the "is_male" field.
-func (sc *SukipiCreate) SetIsMale(b bool) *SukipiCreate {
-	sc.mutation.SetIsMale(b)
+// SetHobby sets the "hobby" field.
+func (sc *SukipiCreate) SetHobby(s string) *SukipiCreate {
+	sc.mutation.SetHobby(s)
 	return sc
 }
 
-// SetStartAt sets the "start_at" field.
-func (sc *SukipiCreate) SetStartAt(t time.Time) *SukipiCreate {
-	sc.mutation.SetStartAt(t)
+// SetNillableHobby sets the "hobby" field if the given value is not nil.
+func (sc *SukipiCreate) SetNillableHobby(s *string) *SukipiCreate {
+	if s != nil {
+		sc.SetHobby(*s)
+	}
 	return sc
 }
 
@@ -107,6 +109,32 @@ func (sc *SukipiCreate) SetNillableBirthday(t *time.Time) *SukipiCreate {
 	if t != nil {
 		sc.SetBirthday(*t)
 	}
+	return sc
+}
+
+// SetFamily sets the "family" field.
+func (sc *SukipiCreate) SetFamily(s string) *SukipiCreate {
+	sc.mutation.SetFamily(s)
+	return sc
+}
+
+// SetNillableFamily sets the "family" field if the given value is not nil.
+func (sc *SukipiCreate) SetNillableFamily(s *string) *SukipiCreate {
+	if s != nil {
+		sc.SetFamily(*s)
+	}
+	return sc
+}
+
+// SetIsMale sets the "is_male" field.
+func (sc *SukipiCreate) SetIsMale(b bool) *SukipiCreate {
+	sc.mutation.SetIsMale(b)
+	return sc
+}
+
+// SetStartAt sets the "start_at" field.
+func (sc *SukipiCreate) SetStartAt(t time.Time) *SukipiCreate {
+	sc.mutation.SetStartAt(t)
 	return sc
 }
 
@@ -259,6 +287,18 @@ func (sc *SukipiCreate) createSpec() (*Sukipi, *sqlgraph.CreateSpec) {
 		_spec.SetField(sukipi.FieldInstagramID, field.TypeString, value)
 		_node.InstagramID = &value
 	}
+	if value, ok := sc.mutation.Hobby(); ok {
+		_spec.SetField(sukipi.FieldHobby, field.TypeString, value)
+		_node.Hobby = &value
+	}
+	if value, ok := sc.mutation.Birthday(); ok {
+		_spec.SetField(sukipi.FieldBirthday, field.TypeTime, value)
+		_node.Birthday = &value
+	}
+	if value, ok := sc.mutation.Family(); ok {
+		_spec.SetField(sukipi.FieldFamily, field.TypeString, value)
+		_node.Family = &value
+	}
 	if value, ok := sc.mutation.IsMale(); ok {
 		_spec.SetField(sukipi.FieldIsMale, field.TypeBool, value)
 		_node.IsMale = value
@@ -266,10 +306,6 @@ func (sc *SukipiCreate) createSpec() (*Sukipi, *sqlgraph.CreateSpec) {
 	if value, ok := sc.mutation.StartAt(); ok {
 		_spec.SetField(sukipi.FieldStartAt, field.TypeTime, value)
 		_node.StartAt = value
-	}
-	if value, ok := sc.mutation.Birthday(); ok {
-		_spec.SetField(sukipi.FieldBirthday, field.TypeTime, value)
-		_node.Birthday = value
 	}
 	if value, ok := sc.mutation.CreatedAt(); ok {
 		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)

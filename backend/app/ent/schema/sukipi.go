@@ -21,9 +21,11 @@ func (Sukipi) Fields() []ent.Field {
 		field.Float("height").Nillable().Optional(),
 		field.String("x_id").Nillable().Optional(),
 		field.String("instagram_id").Nillable().Optional(),
+		field.String("hobby").Nillable().Optional(),
+		field.Time("birthday").Nillable().Optional(),
+		field.String("family").Nillable().Optional(),
 		field.Bool("is_male"),
 		field.Time("start_at"),
-		field.Time("birthday").Optional(),
 		field.Time("created_at").Default(time.Now),
 	}
 }
