@@ -100,7 +100,7 @@ const sukipi: Sukipi = {
   height: 170,
   mbti: "INTP",
   birthday: "2003-02-18",
-  hobby: "セクハラ",
+  hobby: "バスケ",
   shoesSize: 27,
   family: "",
   nearlyStation: "新宿",
