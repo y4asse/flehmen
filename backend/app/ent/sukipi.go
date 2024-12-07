@@ -26,18 +26,18 @@ type Sukipi struct {
 	Height *float64 `json:"height,omitempty"`
 	// XID holds the value of the "x_id" field.
 	XID *string `json:"x_id,omitempty"`
-	// InstagramID holds the value of the "instagram_id" field.
-	InstagramID *string `json:"instagram_id,omitempty"`
 	// Hobby holds the value of the "hobby" field.
 	Hobby *string `json:"hobby,omitempty"`
 	// Birthday holds the value of the "birthday" field.
 	Birthday *time.Time `json:"birthday,omitempty"`
+	// ShowsSize holds the value of the "showsSize" field.
+	ShowsSize *string `json:"showsSize,omitempty"`
 	// Family holds the value of the "family" field.
 	Family *string `json:"family,omitempty"`
-	// IsMale holds the value of the "is_male" field.
-	IsMale bool `json:"is_male,omitempty"`
-	// StartAt holds the value of the "start_at" field.
-	StartAt time.Time `json:"start_at,omitempty"`
+	// NearlyStation holds the value of the "nearly_station" field.
+	NearlyStation *string `json:"nearly_station,omitempty"`
+	// LikedAt holds the value of the "liked_at" field.
+	LikedAt time.Time `json:"liked_at,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -83,15 +83,13 @@ func (*Sukipi) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case sukipi.FieldIsMale:
-			values[i] = new(sql.NullBool)
 		case sukipi.FieldWeight, sukipi.FieldHeight:
 			values[i] = new(sql.NullFloat64)
 		case sukipi.FieldID:
 			values[i] = new(sql.NullInt64)
-		case sukipi.FieldName, sukipi.FieldXID, sukipi.FieldInstagramID, sukipi.FieldHobby, sukipi.FieldFamily:
+		case sukipi.FieldName, sukipi.FieldXID, sukipi.FieldHobby, sukipi.FieldShowsSize, sukipi.FieldFamily, sukipi.FieldNearlyStation:
 			values[i] = new(sql.NullString)
-		case sukipi.FieldBirthday, sukipi.FieldStartAt, sukipi.FieldCreatedAt:
+		case sukipi.FieldBirthday, sukipi.FieldLikedAt, sukipi.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
 		case sukipi.ForeignKeys[0]: // sukipi_mbti
 			values[i] = new(sql.NullInt64)
@@ -143,13 +141,6 @@ func (s *Sukipi) assignValues(columns []string, values []any) error {
 				s.XID = new(string)
 				*s.XID = value.String
 			}
-		case sukipi.FieldInstagramID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field instagram_id", values[i])
-			} else if value.Valid {
-				s.InstagramID = new(string)
-				*s.InstagramID = value.String
-			}
 		case sukipi.FieldHobby:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field hobby", values[i])
@@ -164,6 +155,13 @@ func (s *Sukipi) assignValues(columns []string, values []any) error {
 				s.Birthday = new(time.Time)
 				*s.Birthday = value.Time
 			}
+		case sukipi.FieldShowsSize:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field showsSize", values[i])
+			} else if value.Valid {
+				s.ShowsSize = new(string)
+				*s.ShowsSize = value.String
+			}
 		case sukipi.FieldFamily:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field family", values[i])
@@ -171,17 +169,18 @@ func (s *Sukipi) assignValues(columns []string, values []any) error {
 				s.Family = new(string)
 				*s.Family = value.String
 			}
-		case sukipi.FieldIsMale:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field is_male", values[i])
+		case sukipi.FieldNearlyStation:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field nearly_station", values[i])
 			} else if value.Valid {
-				s.IsMale = value.Bool
+				s.NearlyStation = new(string)
+				*s.NearlyStation = value.String
 			}
-		case sukipi.FieldStartAt:
+		case sukipi.FieldLikedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field start_at", values[i])
+				return fmt.Errorf("unexpected type %T for field liked_at", values[i])
 			} else if value.Valid {
-				s.StartAt = value.Time
+				s.LikedAt = value.Time
 			}
 		case sukipi.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -260,11 +259,6 @@ func (s *Sukipi) String() string {
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
-	if v := s.InstagramID; v != nil {
-		builder.WriteString("instagram_id=")
-		builder.WriteString(*v)
-	}
-	builder.WriteString(", ")
 	if v := s.Hobby; v != nil {
 		builder.WriteString("hobby=")
 		builder.WriteString(*v)
@@ -275,16 +269,23 @@ func (s *Sukipi) String() string {
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
+	if v := s.ShowsSize; v != nil {
+		builder.WriteString("showsSize=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
 	if v := s.Family; v != nil {
 		builder.WriteString("family=")
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
-	builder.WriteString("is_male=")
-	builder.WriteString(fmt.Sprintf("%v", s.IsMale))
+	if v := s.NearlyStation; v != nil {
+		builder.WriteString("nearly_station=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
-	builder.WriteString("start_at=")
-	builder.WriteString(s.StartAt.Format(time.ANSIC))
+	builder.WriteString("liked_at=")
+	builder.WriteString(s.LikedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(s.CreatedAt.Format(time.ANSIC))

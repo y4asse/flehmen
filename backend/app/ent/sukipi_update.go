@@ -118,26 +118,6 @@ func (su *SukipiUpdate) ClearXID() *SukipiUpdate {
 	return su
 }
 
-// SetInstagramID sets the "instagram_id" field.
-func (su *SukipiUpdate) SetInstagramID(s string) *SukipiUpdate {
-	su.mutation.SetInstagramID(s)
-	return su
-}
-
-// SetNillableInstagramID sets the "instagram_id" field if the given value is not nil.
-func (su *SukipiUpdate) SetNillableInstagramID(s *string) *SukipiUpdate {
-	if s != nil {
-		su.SetInstagramID(*s)
-	}
-	return su
-}
-
-// ClearInstagramID clears the value of the "instagram_id" field.
-func (su *SukipiUpdate) ClearInstagramID() *SukipiUpdate {
-	su.mutation.ClearInstagramID()
-	return su
-}
-
 // SetHobby sets the "hobby" field.
 func (su *SukipiUpdate) SetHobby(s string) *SukipiUpdate {
 	su.mutation.SetHobby(s)
@@ -178,6 +158,26 @@ func (su *SukipiUpdate) ClearBirthday() *SukipiUpdate {
 	return su
 }
 
+// SetShowsSize sets the "showsSize" field.
+func (su *SukipiUpdate) SetShowsSize(s string) *SukipiUpdate {
+	su.mutation.SetShowsSize(s)
+	return su
+}
+
+// SetNillableShowsSize sets the "showsSize" field if the given value is not nil.
+func (su *SukipiUpdate) SetNillableShowsSize(s *string) *SukipiUpdate {
+	if s != nil {
+		su.SetShowsSize(*s)
+	}
+	return su
+}
+
+// ClearShowsSize clears the value of the "showsSize" field.
+func (su *SukipiUpdate) ClearShowsSize() *SukipiUpdate {
+	su.mutation.ClearShowsSize()
+	return su
+}
+
 // SetFamily sets the "family" field.
 func (su *SukipiUpdate) SetFamily(s string) *SukipiUpdate {
 	su.mutation.SetFamily(s)
@@ -198,30 +198,36 @@ func (su *SukipiUpdate) ClearFamily() *SukipiUpdate {
 	return su
 }
 
-// SetIsMale sets the "is_male" field.
-func (su *SukipiUpdate) SetIsMale(b bool) *SukipiUpdate {
-	su.mutation.SetIsMale(b)
+// SetNearlyStation sets the "nearly_station" field.
+func (su *SukipiUpdate) SetNearlyStation(s string) *SukipiUpdate {
+	su.mutation.SetNearlyStation(s)
 	return su
 }
 
-// SetNillableIsMale sets the "is_male" field if the given value is not nil.
-func (su *SukipiUpdate) SetNillableIsMale(b *bool) *SukipiUpdate {
-	if b != nil {
-		su.SetIsMale(*b)
+// SetNillableNearlyStation sets the "nearly_station" field if the given value is not nil.
+func (su *SukipiUpdate) SetNillableNearlyStation(s *string) *SukipiUpdate {
+	if s != nil {
+		su.SetNearlyStation(*s)
 	}
 	return su
 }
 
-// SetStartAt sets the "start_at" field.
-func (su *SukipiUpdate) SetStartAt(t time.Time) *SukipiUpdate {
-	su.mutation.SetStartAt(t)
+// ClearNearlyStation clears the value of the "nearly_station" field.
+func (su *SukipiUpdate) ClearNearlyStation() *SukipiUpdate {
+	su.mutation.ClearNearlyStation()
 	return su
 }
 
-// SetNillableStartAt sets the "start_at" field if the given value is not nil.
-func (su *SukipiUpdate) SetNillableStartAt(t *time.Time) *SukipiUpdate {
+// SetLikedAt sets the "liked_at" field.
+func (su *SukipiUpdate) SetLikedAt(t time.Time) *SukipiUpdate {
+	su.mutation.SetLikedAt(t)
+	return su
+}
+
+// SetNillableLikedAt sets the "liked_at" field if the given value is not nil.
+func (su *SukipiUpdate) SetNillableLikedAt(t *time.Time) *SukipiUpdate {
 	if t != nil {
-		su.SetStartAt(*t)
+		su.SetLikedAt(*t)
 	}
 	return su
 }
@@ -369,12 +375,6 @@ func (su *SukipiUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if su.mutation.XIDCleared() {
 		_spec.ClearField(sukipi.FieldXID, field.TypeString)
 	}
-	if value, ok := su.mutation.InstagramID(); ok {
-		_spec.SetField(sukipi.FieldInstagramID, field.TypeString, value)
-	}
-	if su.mutation.InstagramIDCleared() {
-		_spec.ClearField(sukipi.FieldInstagramID, field.TypeString)
-	}
 	if value, ok := su.mutation.Hobby(); ok {
 		_spec.SetField(sukipi.FieldHobby, field.TypeString, value)
 	}
@@ -387,17 +387,26 @@ func (su *SukipiUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if su.mutation.BirthdayCleared() {
 		_spec.ClearField(sukipi.FieldBirthday, field.TypeTime)
 	}
+	if value, ok := su.mutation.ShowsSize(); ok {
+		_spec.SetField(sukipi.FieldShowsSize, field.TypeString, value)
+	}
+	if su.mutation.ShowsSizeCleared() {
+		_spec.ClearField(sukipi.FieldShowsSize, field.TypeString)
+	}
 	if value, ok := su.mutation.Family(); ok {
 		_spec.SetField(sukipi.FieldFamily, field.TypeString, value)
 	}
 	if su.mutation.FamilyCleared() {
 		_spec.ClearField(sukipi.FieldFamily, field.TypeString)
 	}
-	if value, ok := su.mutation.IsMale(); ok {
-		_spec.SetField(sukipi.FieldIsMale, field.TypeBool, value)
+	if value, ok := su.mutation.NearlyStation(); ok {
+		_spec.SetField(sukipi.FieldNearlyStation, field.TypeString, value)
 	}
-	if value, ok := su.mutation.StartAt(); ok {
-		_spec.SetField(sukipi.FieldStartAt, field.TypeTime, value)
+	if su.mutation.NearlyStationCleared() {
+		_spec.ClearField(sukipi.FieldNearlyStation, field.TypeString)
+	}
+	if value, ok := su.mutation.LikedAt(); ok {
+		_spec.SetField(sukipi.FieldLikedAt, field.TypeTime, value)
 	}
 	if value, ok := su.mutation.CreatedAt(); ok {
 		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)
@@ -584,26 +593,6 @@ func (suo *SukipiUpdateOne) ClearXID() *SukipiUpdateOne {
 	return suo
 }
 
-// SetInstagramID sets the "instagram_id" field.
-func (suo *SukipiUpdateOne) SetInstagramID(s string) *SukipiUpdateOne {
-	suo.mutation.SetInstagramID(s)
-	return suo
-}
-
-// SetNillableInstagramID sets the "instagram_id" field if the given value is not nil.
-func (suo *SukipiUpdateOne) SetNillableInstagramID(s *string) *SukipiUpdateOne {
-	if s != nil {
-		suo.SetInstagramID(*s)
-	}
-	return suo
-}
-
-// ClearInstagramID clears the value of the "instagram_id" field.
-func (suo *SukipiUpdateOne) ClearInstagramID() *SukipiUpdateOne {
-	suo.mutation.ClearInstagramID()
-	return suo
-}
-
 // SetHobby sets the "hobby" field.
 func (suo *SukipiUpdateOne) SetHobby(s string) *SukipiUpdateOne {
 	suo.mutation.SetHobby(s)
@@ -644,6 +633,26 @@ func (suo *SukipiUpdateOne) ClearBirthday() *SukipiUpdateOne {
 	return suo
 }
 
+// SetShowsSize sets the "showsSize" field.
+func (suo *SukipiUpdateOne) SetShowsSize(s string) *SukipiUpdateOne {
+	suo.mutation.SetShowsSize(s)
+	return suo
+}
+
+// SetNillableShowsSize sets the "showsSize" field if the given value is not nil.
+func (suo *SukipiUpdateOne) SetNillableShowsSize(s *string) *SukipiUpdateOne {
+	if s != nil {
+		suo.SetShowsSize(*s)
+	}
+	return suo
+}
+
+// ClearShowsSize clears the value of the "showsSize" field.
+func (suo *SukipiUpdateOne) ClearShowsSize() *SukipiUpdateOne {
+	suo.mutation.ClearShowsSize()
+	return suo
+}
+
 // SetFamily sets the "family" field.
 func (suo *SukipiUpdateOne) SetFamily(s string) *SukipiUpdateOne {
 	suo.mutation.SetFamily(s)
@@ -664,30 +673,36 @@ func (suo *SukipiUpdateOne) ClearFamily() *SukipiUpdateOne {
 	return suo
 }
 
-// SetIsMale sets the "is_male" field.
-func (suo *SukipiUpdateOne) SetIsMale(b bool) *SukipiUpdateOne {
-	suo.mutation.SetIsMale(b)
+// SetNearlyStation sets the "nearly_station" field.
+func (suo *SukipiUpdateOne) SetNearlyStation(s string) *SukipiUpdateOne {
+	suo.mutation.SetNearlyStation(s)
 	return suo
 }
 
-// SetNillableIsMale sets the "is_male" field if the given value is not nil.
-func (suo *SukipiUpdateOne) SetNillableIsMale(b *bool) *SukipiUpdateOne {
-	if b != nil {
-		suo.SetIsMale(*b)
+// SetNillableNearlyStation sets the "nearly_station" field if the given value is not nil.
+func (suo *SukipiUpdateOne) SetNillableNearlyStation(s *string) *SukipiUpdateOne {
+	if s != nil {
+		suo.SetNearlyStation(*s)
 	}
 	return suo
 }
 
-// SetStartAt sets the "start_at" field.
-func (suo *SukipiUpdateOne) SetStartAt(t time.Time) *SukipiUpdateOne {
-	suo.mutation.SetStartAt(t)
+// ClearNearlyStation clears the value of the "nearly_station" field.
+func (suo *SukipiUpdateOne) ClearNearlyStation() *SukipiUpdateOne {
+	suo.mutation.ClearNearlyStation()
 	return suo
 }
 
-// SetNillableStartAt sets the "start_at" field if the given value is not nil.
-func (suo *SukipiUpdateOne) SetNillableStartAt(t *time.Time) *SukipiUpdateOne {
+// SetLikedAt sets the "liked_at" field.
+func (suo *SukipiUpdateOne) SetLikedAt(t time.Time) *SukipiUpdateOne {
+	suo.mutation.SetLikedAt(t)
+	return suo
+}
+
+// SetNillableLikedAt sets the "liked_at" field if the given value is not nil.
+func (suo *SukipiUpdateOne) SetNillableLikedAt(t *time.Time) *SukipiUpdateOne {
 	if t != nil {
-		suo.SetStartAt(*t)
+		suo.SetLikedAt(*t)
 	}
 	return suo
 }
@@ -865,12 +880,6 @@ func (suo *SukipiUpdateOne) sqlSave(ctx context.Context) (_node *Sukipi, err err
 	if suo.mutation.XIDCleared() {
 		_spec.ClearField(sukipi.FieldXID, field.TypeString)
 	}
-	if value, ok := suo.mutation.InstagramID(); ok {
-		_spec.SetField(sukipi.FieldInstagramID, field.TypeString, value)
-	}
-	if suo.mutation.InstagramIDCleared() {
-		_spec.ClearField(sukipi.FieldInstagramID, field.TypeString)
-	}
 	if value, ok := suo.mutation.Hobby(); ok {
 		_spec.SetField(sukipi.FieldHobby, field.TypeString, value)
 	}
@@ -883,17 +892,26 @@ func (suo *SukipiUpdateOne) sqlSave(ctx context.Context) (_node *Sukipi, err err
 	if suo.mutation.BirthdayCleared() {
 		_spec.ClearField(sukipi.FieldBirthday, field.TypeTime)
 	}
+	if value, ok := suo.mutation.ShowsSize(); ok {
+		_spec.SetField(sukipi.FieldShowsSize, field.TypeString, value)
+	}
+	if suo.mutation.ShowsSizeCleared() {
+		_spec.ClearField(sukipi.FieldShowsSize, field.TypeString)
+	}
 	if value, ok := suo.mutation.Family(); ok {
 		_spec.SetField(sukipi.FieldFamily, field.TypeString, value)
 	}
 	if suo.mutation.FamilyCleared() {
 		_spec.ClearField(sukipi.FieldFamily, field.TypeString)
 	}
-	if value, ok := suo.mutation.IsMale(); ok {
-		_spec.SetField(sukipi.FieldIsMale, field.TypeBool, value)
+	if value, ok := suo.mutation.NearlyStation(); ok {
+		_spec.SetField(sukipi.FieldNearlyStation, field.TypeString, value)
 	}
-	if value, ok := suo.mutation.StartAt(); ok {
-		_spec.SetField(sukipi.FieldStartAt, field.TypeTime, value)
+	if suo.mutation.NearlyStationCleared() {
+		_spec.ClearField(sukipi.FieldNearlyStation, field.TypeString)
+	}
+	if value, ok := suo.mutation.LikedAt(); ok {
+		_spec.SetField(sukipi.FieldLikedAt, field.TypeTime, value)
 	}
 	if value, ok := suo.mutation.CreatedAt(); ok {
 		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)
