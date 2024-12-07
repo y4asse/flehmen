@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"entgo.io/ent/dialect"
@@ -40,6 +41,18 @@ type SukipiRequest struct {
 	IsMale      bool       `json:"is_male" validate:"required"`
 	StartAt     time.Time  `json:"start_at" validate:"required"`
 	MbtiId      *int       `json:"mbti_id"`
+}
+
+func (controller *Controller) GetSukipiById(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	sukipi, err := controller.entClient.Sukipi.Get(c.Request().Context(), id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	return c.JSON(http.StatusOK, sukipi)
 }
 
 func (controller *Controller) SaveSukipi(c echo.Context) error {
@@ -89,6 +102,7 @@ func main() {
 
 	e.GET("/ok", controller.Ok)
 	e.GET("/universities", controller.GetUniversities)
+	e.GET("/sukipi/:id", controller.GetSukipiById)
 	e.POST("/sukipi", controller.SaveSukipi)
 
 	e.Logger.Fatal(e.Start(":8080"))
