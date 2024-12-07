@@ -8,6 +8,7 @@ type Props = {
   onUpdate: (updatedSukipi: Sukipi) => void;
 };
 
+
 export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Sukipi>(sukipi);
@@ -21,6 +22,7 @@ export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
     onUpdate(formData);
     setIsEditing(false);
   };
+
 
   const infoItems = [
     { key: "name", title: "なまえ", content: sukipi.name },
@@ -91,6 +93,7 @@ export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
     );
   }
 
+
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="flex flex-col gap-4 p-4 pt-10 w-4/5 max-w-lg mx-auto">
@@ -114,7 +117,6 @@ export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
       </div>
     </div>
   );
-  
   
 };
 
