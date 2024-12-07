@@ -8,10 +8,6 @@ type Props = {
   onUpdate: (updatedSukipi: Sukipi) => void;
 };
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Sukipi>(sukipi);
@@ -26,10 +22,6 @@ export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
     setIsEditing(false);
   };
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
   const infoItems = [
     { key: "name", title: "なまえ", content: sukipi.name },
     {
@@ -48,29 +40,21 @@ export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
       title: "誕生日",
       content: sukipi.birthday || "?まだわからない?",
     },
-<<<<<<< Updated upstream
-    { key: "hobby", title: "趣味", content: sukipi.hobby || "?まだわからない?" },
-=======
     {
       key: "hobby",
       title: "趣味",
       content: sukipi.hobby || "?まだわからない?",
     },
->>>>>>> Stashed changes
     {
       key: "shoesSize",
       title: "くつのサイズ",
       content: sukipi.shoesSize ? `${sukipi.shoesSize} cm` : "?まだわからない?",
     },
-<<<<<<< Updated upstream
-    { key: "family", title: "かぞく", content: sukipi.family || "?まだわからない?" },
-=======
     {
       key: "family",
       title: "かぞく",
       content: sukipi.family || "?まだわからない?",
     },
->>>>>>> Stashed changes
     {
       key: "nearlyStation",
       title: "最寄駅",
@@ -90,11 +74,7 @@ export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
               </div>
               <Input
                 name={item.key}
-<<<<<<< Updated upstream
-                value={(formData as any)[item.key] || ""}
-=======
                 value={(formData as never)[item.key] || ""}
->>>>>>> Stashed changes
                 onChange={handleInputChange}
                 className="text-white"
               />
@@ -119,19 +99,11 @@ export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
     );
   }
 
-
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="flex flex-col gap-4 p-4 pt-10 w-4/5 max-w-lg mx-auto">
         {infoItems.map((item) => (
-<<<<<<< Updated upstream
-          <div 
-            key={item.key} 
-            className="grid grid-cols-[6rem_1fr] gap-2"
-          >
-=======
           <div key={item.key} className="grid grid-cols-[6rem_1fr] gap-2">
->>>>>>> Stashed changes
             <div className="text-white font-bold text-left">{item.title}</div>
             <div className="text-white text-left w-40">{item.content}</div>
           </div>
@@ -147,10 +119,6 @@ export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
       </div>
     </div>
   );
-<<<<<<< Updated upstream
-  
-=======
->>>>>>> Stashed changes
 };
 
 export default SukipiInfo;
