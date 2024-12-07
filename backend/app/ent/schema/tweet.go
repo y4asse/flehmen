@@ -19,7 +19,7 @@ func (Tweet) Fields() []ent.Field {
 		field.String("text"),
 		field.Int("tweet_id").Unique(),
 		field.Time("tweet_created_at"),
-		field.Int("reply_twitter_user_id").Optional(),
+		field.Int("reply_twitter_user_id").Optional().Nillable(),
 		field.Time("created_at").Default(time.Now),
 	}
 }

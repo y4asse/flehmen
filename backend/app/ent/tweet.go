@@ -25,7 +25,7 @@ type Tweet struct {
 	// TweetCreatedAt holds the value of the "tweet_created_at" field.
 	TweetCreatedAt time.Time `json:"tweet_created_at,omitempty"`
 	// ReplyTwitterUserID holds the value of the "reply_twitter_user_id" field.
-	ReplyTwitterUserID int `json:"reply_twitter_user_id,omitempty"`
+	ReplyTwitterUserID *int `json:"reply_twitter_user_id,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -111,7 +111,8 @@ func (t *Tweet) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field reply_twitter_user_id", values[i])
 			} else if value.Valid {
-				t.ReplyTwitterUserID = int(value.Int64)
+				t.ReplyTwitterUserID = new(int)
+				*t.ReplyTwitterUserID = int(value.Int64)
 			}
 		case tweet.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -176,8 +177,10 @@ func (t *Tweet) String() string {
 	builder.WriteString("tweet_created_at=")
 	builder.WriteString(t.TweetCreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("reply_twitter_user_id=")
-	builder.WriteString(fmt.Sprintf("%v", t.ReplyTwitterUserID))
+	if v := t.ReplyTwitterUserID; v != nil {
+		builder.WriteString("reply_twitter_user_id=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(t.CreatedAt.Format(time.ANSIC))

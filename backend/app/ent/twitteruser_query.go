@@ -426,9 +426,12 @@ func (tuq *TwitterUserQuery) loadReplies(ctx context.Context, query *TweetQuery,
 	}
 	for _, n := range neighbors {
 		fk := n.ReplyTwitterUserID
-		node, ok := nodeids[fk]
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "reply_twitter_user_id" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
 		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "reply_twitter_user_id" returned %v for node %v`, fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "reply_twitter_user_id" returned %v for node %v`, *fk, n.ID)
 		}
 		assign(node, n)
 	}

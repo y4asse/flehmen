@@ -2062,7 +2062,7 @@ func (m *TweetMutation) ReplyTwitterUserID() (r int, exists bool) {
 // OldReplyTwitterUserID returns the old "reply_twitter_user_id" field's value of the Tweet entity.
 // If the Tweet object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TweetMutation) OldReplyTwitterUserID(ctx context.Context) (v int, err error) {
+func (m *TweetMutation) OldReplyTwitterUserID(ctx context.Context) (v *int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldReplyTwitterUserID is only allowed on UpdateOne operations")
 	}

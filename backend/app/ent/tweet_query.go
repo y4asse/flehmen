@@ -410,7 +410,10 @@ func (tq *TweetQuery) loadUser(ctx context.Context, query *TwitterUserQuery, nod
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*Tweet)
 	for i := range nodes {
-		fk := nodes[i].ReplyTwitterUserID
+		if nodes[i].ReplyTwitterUserID == nil {
+			continue
+		}
+		fk := *nodes[i].ReplyTwitterUserID
 		if _, ok := nodeids[fk]; !ok {
 			ids = append(ids, fk)
 		}
