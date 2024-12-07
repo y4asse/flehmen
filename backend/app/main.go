@@ -12,11 +12,19 @@ import (
 )
 
 type Controller struct {
-	client *ent.Client
+	entClient *ent.Client
 }
 
 func (controller *Controller) Ok(c echo.Context) error {
 	return c.String(http.StatusOK, "ok")
+}
+
+func (controller *Controller) GetUniversities(c echo.Context) error {
+	universities, err := controller.entClient.University.Query().All(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err) // TODO: errを返すのはセキュリティ的に問題がありそう
+	}
+	return c.JSON(http.StatusOK, universities)
 }
 
 func main() {
@@ -37,9 +45,10 @@ func main() {
 	}
 	defer client.Close()
 
-	controller := &Controller{client: client}
+	controller := &Controller{entClient: client}
 
 	e.GET("/ok", controller.Ok)
+	e.GET("/universities", controller.GetUniversities)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
