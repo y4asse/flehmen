@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useRef } from 'react';
-import { Flex } from '@/components/ui/flex';
-import { Button } from '@/components/ui/button';
-import Image from 'next/image';
+import React, { useState, useRef } from "react";
+import { Flex } from "@/components/ui/flex";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 const AudioPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -29,7 +29,8 @@ const AudioPlayer = () => {
 
   const updateProgress = () => {
     if (audioRef.current) {
-      const progressPercent = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+      const progressPercent =
+        (audioRef.current.currentTime / audioRef.current.duration) * 100;
       setProgress(progressPercent);
     }
   };
@@ -43,7 +44,7 @@ const AudioPlayer = () => {
     <Flex className="relative flex flex-col items-center space-y-4 p-4 w-full h-[400px]">
       <div className="relative inline-block">
         <Image
-          src="/images/mic.png"
+          src="/images/mic.svg"
           alt="Mic"
           width={100}
           height={100}
@@ -55,10 +56,10 @@ const AudioPlayer = () => {
         onClick={handlePlayPause}
         className="text-white p-4 rounded-full bg-gray-800"
         style={{
-          width: '20%',
-          height: '20%',
-          fontSize: '1.5rem',
-          imageRendering: 'pixelated',
+          width: "20%",
+          height: "20%",
+          fontSize: "1.5rem",
+          imageRendering: "pixelated",
         }}
       >
         {isPlaying ? "❚❚" : "▷"}
@@ -72,8 +73,8 @@ const AudioPlayer = () => {
         onChange={handleSeek}
         className="w-3/4 appearance-none bg-gray-300 rounded-lg outline-none"
         style={{
-          width: '70%',
-          height: '10px',
+          width: "70%",
+          height: "10px",
           background: `linear-gradient(to right, #E4007F ${progress}%, #ccc ${progress}%)`,
         }}
       />
@@ -82,28 +83,28 @@ const AudioPlayer = () => {
       <Button
         className="absolute bottom-4 right-4   p-4 rounded-full "
         onClick={() => {
-          alert('ダウンロードボタンがクリックされました');
+          alert("ダウンロードボタンがクリックされました");
         }}
       >
         ↓ダウンロード
       </Button>
 
       <style jsx>{`
-        input[type='range']::-webkit-slider-thumb {
+        input[type="range"]::-webkit-slider-thumb {
           -webkit-appearance: none;
           appearance: none;
           width: 32px;
           height: 32px;
-          background: url('/images/hart_item.png') no-repeat center;
+          background: url("/images/hart_item.png") no-repeat center;
           background-size: contain;
           cursor: pointer;
           image-rendering: pixelated;
           transform: translateY(-50%);
         }
-        input[type='range']::-moz-range-thumb {
+        input[type="range"]::-moz-range-thumb {
           width: 32px;
           height: 32px;
-          background: url('/images/hart_item.png') no-repeat center;
+          background: url("/images/hart_item.png") no-repeat center;
           background-size: contain;
           cursor: pointer;
           image-rendering: pixelated;
