@@ -39,6 +39,20 @@ func (tc *TweetCreate) SetTweetCreatedAt(t time.Time) *TweetCreate {
 	return tc
 }
 
+// SetReplyTwitterUserID sets the "reply_twitter_user_id" field.
+func (tc *TweetCreate) SetReplyTwitterUserID(i int) *TweetCreate {
+	tc.mutation.SetReplyTwitterUserID(i)
+	return tc
+}
+
+// SetNillableReplyTwitterUserID sets the "reply_twitter_user_id" field if the given value is not nil.
+func (tc *TweetCreate) SetNillableReplyTwitterUserID(i *int) *TweetCreate {
+	if i != nil {
+		tc.SetReplyTwitterUserID(*i)
+	}
+	return tc
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (tc *TweetCreate) SetCreatedAt(t time.Time) *TweetCreate {
 	tc.mutation.SetCreatedAt(t)
@@ -53,23 +67,23 @@ func (tc *TweetCreate) SetNillableCreatedAt(t *time.Time) *TweetCreate {
 	return tc
 }
 
-// SetReplyUserID sets the "reply_user" edge to the TwitterUser entity by ID.
-func (tc *TweetCreate) SetReplyUserID(id int) *TweetCreate {
-	tc.mutation.SetReplyUserID(id)
+// SetUserID sets the "user" edge to the TwitterUser entity by ID.
+func (tc *TweetCreate) SetUserID(id int) *TweetCreate {
+	tc.mutation.SetUserID(id)
 	return tc
 }
 
-// SetNillableReplyUserID sets the "reply_user" edge to the TwitterUser entity by ID if the given value is not nil.
-func (tc *TweetCreate) SetNillableReplyUserID(id *int) *TweetCreate {
+// SetNillableUserID sets the "user" edge to the TwitterUser entity by ID if the given value is not nil.
+func (tc *TweetCreate) SetNillableUserID(id *int) *TweetCreate {
 	if id != nil {
-		tc = tc.SetReplyUserID(*id)
+		tc = tc.SetUserID(*id)
 	}
 	return tc
 }
 
-// SetReplyUser sets the "reply_user" edge to the TwitterUser entity.
-func (tc *TweetCreate) SetReplyUser(t *TwitterUser) *TweetCreate {
-	return tc.SetReplyUserID(t.ID)
+// SetUser sets the "user" edge to the TwitterUser entity.
+func (tc *TweetCreate) SetUser(t *TwitterUser) *TweetCreate {
+	return tc.SetUserID(t.ID)
 }
 
 // Mutation returns the TweetMutation object of the builder.
@@ -169,12 +183,12 @@ func (tc *TweetCreate) createSpec() (*Tweet, *sqlgraph.CreateSpec) {
 		_spec.SetField(tweet.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
 	}
-	if nodes := tc.mutation.ReplyUserIDs(); len(nodes) > 0 {
+	if nodes := tc.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   tweet.ReplyUserTable,
-			Columns: []string{tweet.ReplyUserColumn},
+			Table:   tweet.UserTable,
+			Columns: []string{tweet.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(twitteruser.FieldID, field.TypeInt),
@@ -183,7 +197,7 @@ func (tc *TweetCreate) createSpec() (*Tweet, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.twitter_user_replies = &nodes[0]
+		_node.ReplyTwitterUserID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

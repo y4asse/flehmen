@@ -1803,20 +1803,20 @@ func (m *SukipiMutation) ResetEdge(name string) error {
 // TweetMutation represents an operation that mutates the Tweet nodes in the graph.
 type TweetMutation struct {
 	config
-	op                Op
-	typ               string
-	id                *int
-	text              *string
-	tweet_id          *int
-	addtweet_id       *int
-	tweet_created_at  *time.Time
-	created_at        *time.Time
-	clearedFields     map[string]struct{}
-	reply_user        *int
-	clearedreply_user bool
-	done              bool
-	oldValue          func(context.Context) (*Tweet, error)
-	predicates        []predicate.Tweet
+	op               Op
+	typ              string
+	id               *int
+	text             *string
+	tweet_id         *int
+	addtweet_id      *int
+	tweet_created_at *time.Time
+	created_at       *time.Time
+	clearedFields    map[string]struct{}
+	user             *int
+	cleareduser      bool
+	done             bool
+	oldValue         func(context.Context) (*Tweet, error)
+	predicates       []predicate.Tweet
 }
 
 var _ ent.Mutation = (*TweetMutation)(nil)
@@ -2045,6 +2045,55 @@ func (m *TweetMutation) ResetTweetCreatedAt() {
 	m.tweet_created_at = nil
 }
 
+// SetReplyTwitterUserID sets the "reply_twitter_user_id" field.
+func (m *TweetMutation) SetReplyTwitterUserID(i int) {
+	m.user = &i
+}
+
+// ReplyTwitterUserID returns the value of the "reply_twitter_user_id" field in the mutation.
+func (m *TweetMutation) ReplyTwitterUserID() (r int, exists bool) {
+	v := m.user
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldReplyTwitterUserID returns the old "reply_twitter_user_id" field's value of the Tweet entity.
+// If the Tweet object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TweetMutation) OldReplyTwitterUserID(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldReplyTwitterUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldReplyTwitterUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldReplyTwitterUserID: %w", err)
+	}
+	return oldValue.ReplyTwitterUserID, nil
+}
+
+// ClearReplyTwitterUserID clears the value of the "reply_twitter_user_id" field.
+func (m *TweetMutation) ClearReplyTwitterUserID() {
+	m.user = nil
+	m.clearedFields[tweet.FieldReplyTwitterUserID] = struct{}{}
+}
+
+// ReplyTwitterUserIDCleared returns if the "reply_twitter_user_id" field was cleared in this mutation.
+func (m *TweetMutation) ReplyTwitterUserIDCleared() bool {
+	_, ok := m.clearedFields[tweet.FieldReplyTwitterUserID]
+	return ok
+}
+
+// ResetReplyTwitterUserID resets all changes to the "reply_twitter_user_id" field.
+func (m *TweetMutation) ResetReplyTwitterUserID() {
+	m.user = nil
+	delete(m.clearedFields, tweet.FieldReplyTwitterUserID)
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (m *TweetMutation) SetCreatedAt(t time.Time) {
 	m.created_at = &t
@@ -2081,43 +2130,44 @@ func (m *TweetMutation) ResetCreatedAt() {
 	m.created_at = nil
 }
 
-// SetReplyUserID sets the "reply_user" edge to the TwitterUser entity by id.
-func (m *TweetMutation) SetReplyUserID(id int) {
-	m.reply_user = &id
+// SetUserID sets the "user" edge to the TwitterUser entity by id.
+func (m *TweetMutation) SetUserID(id int) {
+	m.user = &id
 }
 
-// ClearReplyUser clears the "reply_user" edge to the TwitterUser entity.
-func (m *TweetMutation) ClearReplyUser() {
-	m.clearedreply_user = true
+// ClearUser clears the "user" edge to the TwitterUser entity.
+func (m *TweetMutation) ClearUser() {
+	m.cleareduser = true
+	m.clearedFields[tweet.FieldReplyTwitterUserID] = struct{}{}
 }
 
-// ReplyUserCleared reports if the "reply_user" edge to the TwitterUser entity was cleared.
-func (m *TweetMutation) ReplyUserCleared() bool {
-	return m.clearedreply_user
+// UserCleared reports if the "user" edge to the TwitterUser entity was cleared.
+func (m *TweetMutation) UserCleared() bool {
+	return m.ReplyTwitterUserIDCleared() || m.cleareduser
 }
 
-// ReplyUserID returns the "reply_user" edge ID in the mutation.
-func (m *TweetMutation) ReplyUserID() (id int, exists bool) {
-	if m.reply_user != nil {
-		return *m.reply_user, true
+// UserID returns the "user" edge ID in the mutation.
+func (m *TweetMutation) UserID() (id int, exists bool) {
+	if m.user != nil {
+		return *m.user, true
 	}
 	return
 }
 
-// ReplyUserIDs returns the "reply_user" edge IDs in the mutation.
+// UserIDs returns the "user" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// ReplyUserID instead. It exists only for internal usage by the builders.
-func (m *TweetMutation) ReplyUserIDs() (ids []int) {
-	if id := m.reply_user; id != nil {
+// UserID instead. It exists only for internal usage by the builders.
+func (m *TweetMutation) UserIDs() (ids []int) {
+	if id := m.user; id != nil {
 		ids = append(ids, *id)
 	}
 	return
 }
 
-// ResetReplyUser resets all changes to the "reply_user" edge.
-func (m *TweetMutation) ResetReplyUser() {
-	m.reply_user = nil
-	m.clearedreply_user = false
+// ResetUser resets all changes to the "user" edge.
+func (m *TweetMutation) ResetUser() {
+	m.user = nil
+	m.cleareduser = false
 }
 
 // Where appends a list predicates to the TweetMutation builder.
@@ -2154,7 +2204,7 @@ func (m *TweetMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TweetMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
 	if m.text != nil {
 		fields = append(fields, tweet.FieldText)
 	}
@@ -2163,6 +2213,9 @@ func (m *TweetMutation) Fields() []string {
 	}
 	if m.tweet_created_at != nil {
 		fields = append(fields, tweet.FieldTweetCreatedAt)
+	}
+	if m.user != nil {
+		fields = append(fields, tweet.FieldReplyTwitterUserID)
 	}
 	if m.created_at != nil {
 		fields = append(fields, tweet.FieldCreatedAt)
@@ -2181,6 +2234,8 @@ func (m *TweetMutation) Field(name string) (ent.Value, bool) {
 		return m.TweetID()
 	case tweet.FieldTweetCreatedAt:
 		return m.TweetCreatedAt()
+	case tweet.FieldReplyTwitterUserID:
+		return m.ReplyTwitterUserID()
 	case tweet.FieldCreatedAt:
 		return m.CreatedAt()
 	}
@@ -2198,6 +2253,8 @@ func (m *TweetMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldTweetID(ctx)
 	case tweet.FieldTweetCreatedAt:
 		return m.OldTweetCreatedAt(ctx)
+	case tweet.FieldReplyTwitterUserID:
+		return m.OldReplyTwitterUserID(ctx)
 	case tweet.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	}
@@ -2229,6 +2286,13 @@ func (m *TweetMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetTweetCreatedAt(v)
+		return nil
+	case tweet.FieldReplyTwitterUserID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetReplyTwitterUserID(v)
 		return nil
 	case tweet.FieldCreatedAt:
 		v, ok := value.(time.Time)
@@ -2281,7 +2345,11 @@ func (m *TweetMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *TweetMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(tweet.FieldReplyTwitterUserID) {
+		fields = append(fields, tweet.FieldReplyTwitterUserID)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -2294,6 +2362,11 @@ func (m *TweetMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *TweetMutation) ClearField(name string) error {
+	switch name {
+	case tweet.FieldReplyTwitterUserID:
+		m.ClearReplyTwitterUserID()
+		return nil
+	}
 	return fmt.Errorf("unknown Tweet nullable field %s", name)
 }
 
@@ -2310,6 +2383,9 @@ func (m *TweetMutation) ResetField(name string) error {
 	case tweet.FieldTweetCreatedAt:
 		m.ResetTweetCreatedAt()
 		return nil
+	case tweet.FieldReplyTwitterUserID:
+		m.ResetReplyTwitterUserID()
+		return nil
 	case tweet.FieldCreatedAt:
 		m.ResetCreatedAt()
 		return nil
@@ -2320,8 +2396,8 @@ func (m *TweetMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *TweetMutation) AddedEdges() []string {
 	edges := make([]string, 0, 1)
-	if m.reply_user != nil {
-		edges = append(edges, tweet.EdgeReplyUser)
+	if m.user != nil {
+		edges = append(edges, tweet.EdgeUser)
 	}
 	return edges
 }
@@ -2330,8 +2406,8 @@ func (m *TweetMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *TweetMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case tweet.EdgeReplyUser:
-		if id := m.reply_user; id != nil {
+	case tweet.EdgeUser:
+		if id := m.user; id != nil {
 			return []ent.Value{*id}
 		}
 	}
@@ -2353,8 +2429,8 @@ func (m *TweetMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *TweetMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 1)
-	if m.clearedreply_user {
-		edges = append(edges, tweet.EdgeReplyUser)
+	if m.cleareduser {
+		edges = append(edges, tweet.EdgeUser)
 	}
 	return edges
 }
@@ -2363,8 +2439,8 @@ func (m *TweetMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *TweetMutation) EdgeCleared(name string) bool {
 	switch name {
-	case tweet.EdgeReplyUser:
-		return m.clearedreply_user
+	case tweet.EdgeUser:
+		return m.cleareduser
 	}
 	return false
 }
@@ -2373,8 +2449,8 @@ func (m *TweetMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *TweetMutation) ClearEdge(name string) error {
 	switch name {
-	case tweet.EdgeReplyUser:
-		m.ClearReplyUser()
+	case tweet.EdgeUser:
+		m.ClearUser()
 		return nil
 	}
 	return fmt.Errorf("unknown Tweet unique edge %s", name)
@@ -2384,8 +2460,8 @@ func (m *TweetMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *TweetMutation) ResetEdge(name string) error {
 	switch name {
-	case tweet.EdgeReplyUser:
-		m.ResetReplyUser()
+	case tweet.EdgeUser:
+		m.ResetUser()
 		return nil
 	}
 	return fmt.Errorf("unknown Tweet edge %s", name)

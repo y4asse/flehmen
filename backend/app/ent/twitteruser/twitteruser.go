@@ -30,7 +30,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "tweet" package.
 	RepliesInverseTable = "tweets"
 	// RepliesColumn is the table column denoting the replies relation/edge.
-	RepliesColumn = "twitter_user_replies"
+	RepliesColumn = "reply_twitter_user_id"
 )
 
 // Columns holds all SQL columns for twitteruser fields.

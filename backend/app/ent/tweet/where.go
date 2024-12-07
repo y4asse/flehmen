@@ -70,6 +70,11 @@ func TweetCreatedAt(v time.Time) predicate.Tweet {
 	return predicate.Tweet(sql.FieldEQ(FieldTweetCreatedAt, v))
 }
 
+// ReplyTwitterUserID applies equality check predicate on the "reply_twitter_user_id" field. It's identical to ReplyTwitterUserIDEQ.
+func ReplyTwitterUserID(v int) predicate.Tweet {
+	return predicate.Tweet(sql.FieldEQ(FieldReplyTwitterUserID, v))
+}
+
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
 func CreatedAt(v time.Time) predicate.Tweet {
 	return predicate.Tweet(sql.FieldEQ(FieldCreatedAt, v))
@@ -220,6 +225,36 @@ func TweetCreatedAtLTE(v time.Time) predicate.Tweet {
 	return predicate.Tweet(sql.FieldLTE(FieldTweetCreatedAt, v))
 }
 
+// ReplyTwitterUserIDEQ applies the EQ predicate on the "reply_twitter_user_id" field.
+func ReplyTwitterUserIDEQ(v int) predicate.Tweet {
+	return predicate.Tweet(sql.FieldEQ(FieldReplyTwitterUserID, v))
+}
+
+// ReplyTwitterUserIDNEQ applies the NEQ predicate on the "reply_twitter_user_id" field.
+func ReplyTwitterUserIDNEQ(v int) predicate.Tweet {
+	return predicate.Tweet(sql.FieldNEQ(FieldReplyTwitterUserID, v))
+}
+
+// ReplyTwitterUserIDIn applies the In predicate on the "reply_twitter_user_id" field.
+func ReplyTwitterUserIDIn(vs ...int) predicate.Tweet {
+	return predicate.Tweet(sql.FieldIn(FieldReplyTwitterUserID, vs...))
+}
+
+// ReplyTwitterUserIDNotIn applies the NotIn predicate on the "reply_twitter_user_id" field.
+func ReplyTwitterUserIDNotIn(vs ...int) predicate.Tweet {
+	return predicate.Tweet(sql.FieldNotIn(FieldReplyTwitterUserID, vs...))
+}
+
+// ReplyTwitterUserIDIsNil applies the IsNil predicate on the "reply_twitter_user_id" field.
+func ReplyTwitterUserIDIsNil() predicate.Tweet {
+	return predicate.Tweet(sql.FieldIsNull(FieldReplyTwitterUserID))
+}
+
+// ReplyTwitterUserIDNotNil applies the NotNil predicate on the "reply_twitter_user_id" field.
+func ReplyTwitterUserIDNotNil() predicate.Tweet {
+	return predicate.Tweet(sql.FieldNotNull(FieldReplyTwitterUserID))
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.Tweet {
 	return predicate.Tweet(sql.FieldEQ(FieldCreatedAt, v))
@@ -260,21 +295,21 @@ func CreatedAtLTE(v time.Time) predicate.Tweet {
 	return predicate.Tweet(sql.FieldLTE(FieldCreatedAt, v))
 }
 
-// HasReplyUser applies the HasEdge predicate on the "reply_user" edge.
-func HasReplyUser() predicate.Tweet {
+// HasUser applies the HasEdge predicate on the "user" edge.
+func HasUser() predicate.Tweet {
 	return predicate.Tweet(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, ReplyUserTable, ReplyUserColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, UserTable, UserColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasReplyUserWith applies the HasEdge predicate on the "reply_user" edge with a given conditions (other predicates).
-func HasReplyUserWith(preds ...predicate.TwitterUser) predicate.Tweet {
+// HasUserWith applies the HasEdge predicate on the "user" edge with a given conditions (other predicates).
+func HasUserWith(preds ...predicate.TwitterUser) predicate.Tweet {
 	return predicate.Tweet(func(s *sql.Selector) {
-		step := newReplyUserStep()
+		step := newUserStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

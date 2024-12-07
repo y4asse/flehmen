@@ -77,7 +77,7 @@ var (
 		{Name: "tweet_created_at", Type: field.TypeTime},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "sukipi_tweets", Type: field.TypeInt, Nullable: true},
-		{Name: "twitter_user_replies", Type: field.TypeInt, Nullable: true},
+		{Name: "reply_twitter_user_id", Type: field.TypeInt, Nullable: true},
 	}
 	// TweetsTable holds the schema information for the "tweets" table.
 	TweetsTable = &schema.Table{

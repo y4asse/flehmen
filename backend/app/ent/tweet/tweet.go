@@ -20,19 +20,21 @@ const (
 	FieldTweetID = "tweet_id"
 	// FieldTweetCreatedAt holds the string denoting the tweet_created_at field in the database.
 	FieldTweetCreatedAt = "tweet_created_at"
+	// FieldReplyTwitterUserID holds the string denoting the reply_twitter_user_id field in the database.
+	FieldReplyTwitterUserID = "reply_twitter_user_id"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
-	// EdgeReplyUser holds the string denoting the reply_user edge name in mutations.
-	EdgeReplyUser = "reply_user"
+	// EdgeUser holds the string denoting the user edge name in mutations.
+	EdgeUser = "user"
 	// Table holds the table name of the tweet in the database.
 	Table = "tweets"
-	// ReplyUserTable is the table that holds the reply_user relation/edge.
-	ReplyUserTable = "tweets"
-	// ReplyUserInverseTable is the table name for the TwitterUser entity.
+	// UserTable is the table that holds the user relation/edge.
+	UserTable = "tweets"
+	// UserInverseTable is the table name for the TwitterUser entity.
 	// It exists in this package in order to avoid circular dependency with the "twitteruser" package.
-	ReplyUserInverseTable = "twitter_users"
-	// ReplyUserColumn is the table column denoting the reply_user relation/edge.
-	ReplyUserColumn = "twitter_user_replies"
+	UserInverseTable = "twitter_users"
+	// UserColumn is the table column denoting the user relation/edge.
+	UserColumn = "reply_twitter_user_id"
 )
 
 // Columns holds all SQL columns for tweet fields.
@@ -41,6 +43,7 @@ var Columns = []string{
 	FieldText,
 	FieldTweetID,
 	FieldTweetCreatedAt,
+	FieldReplyTwitterUserID,
 	FieldCreatedAt,
 }
 
@@ -48,7 +51,6 @@ var Columns = []string{
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
 	"sukipi_tweets",
-	"twitter_user_replies",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -94,21 +96,26 @@ func ByTweetCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldTweetCreatedAt, opts...).ToFunc()
 }
 
+// ByReplyTwitterUserID orders the results by the reply_twitter_user_id field.
+func ByReplyTwitterUserID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldReplyTwitterUserID, opts...).ToFunc()
+}
+
 // ByCreatedAt orders the results by the created_at field.
 func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
 }
 
-// ByReplyUserField orders the results by reply_user field.
-func ByReplyUserField(field string, opts ...sql.OrderTermOption) OrderOption {
+// ByUserField orders the results by user field.
+func ByUserField(field string, opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newReplyUserStep(), sql.OrderByField(field, opts...))
+		sqlgraph.OrderByNeighborTerms(s, newUserStep(), sql.OrderByField(field, opts...))
 	}
 }
-func newReplyUserStep() *sqlgraph.Step {
+func newUserStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(ReplyUserInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2O, true, ReplyUserTable, ReplyUserColumn),
+		sqlgraph.To(UserInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, UserTable, UserColumn),
 	)
 }

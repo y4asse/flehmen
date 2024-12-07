@@ -24,34 +24,35 @@ type Tweet struct {
 	TweetID int `json:"tweet_id,omitempty"`
 	// TweetCreatedAt holds the value of the "tweet_created_at" field.
 	TweetCreatedAt time.Time `json:"tweet_created_at,omitempty"`
+	// ReplyTwitterUserID holds the value of the "reply_twitter_user_id" field.
+	ReplyTwitterUserID int `json:"reply_twitter_user_id,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the TweetQuery when eager-loading is set.
-	Edges                TweetEdges `json:"edges"`
-	sukipi_tweets        *int
-	twitter_user_replies *int
-	selectValues         sql.SelectValues
+	Edges         TweetEdges `json:"edges"`
+	sukipi_tweets *int
+	selectValues  sql.SelectValues
 }
 
 // TweetEdges holds the relations/edges for other nodes in the graph.
 type TweetEdges struct {
-	// ReplyUser holds the value of the reply_user edge.
-	ReplyUser *TwitterUser `json:"reply_user,omitempty"`
+	// User holds the value of the user edge.
+	User *TwitterUser `json:"user,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
 }
 
-// ReplyUserOrErr returns the ReplyUser value or an error if the edge
+// UserOrErr returns the User value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e TweetEdges) ReplyUserOrErr() (*TwitterUser, error) {
-	if e.ReplyUser != nil {
-		return e.ReplyUser, nil
+func (e TweetEdges) UserOrErr() (*TwitterUser, error) {
+	if e.User != nil {
+		return e.User, nil
 	} else if e.loadedTypes[0] {
 		return nil, &NotFoundError{label: twitteruser.Label}
 	}
-	return nil, &NotLoadedError{edge: "reply_user"}
+	return nil, &NotLoadedError{edge: "user"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -59,15 +60,13 @@ func (*Tweet) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case tweet.FieldID, tweet.FieldTweetID:
+		case tweet.FieldID, tweet.FieldTweetID, tweet.FieldReplyTwitterUserID:
 			values[i] = new(sql.NullInt64)
 		case tweet.FieldText:
 			values[i] = new(sql.NullString)
 		case tweet.FieldTweetCreatedAt, tweet.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
 		case tweet.ForeignKeys[0]: // sukipi_tweets
-			values[i] = new(sql.NullInt64)
-		case tweet.ForeignKeys[1]: // twitter_user_replies
 			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -108,6 +107,12 @@ func (t *Tweet) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				t.TweetCreatedAt = value.Time
 			}
+		case tweet.FieldReplyTwitterUserID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field reply_twitter_user_id", values[i])
+			} else if value.Valid {
+				t.ReplyTwitterUserID = int(value.Int64)
+			}
 		case tweet.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
@@ -120,13 +125,6 @@ func (t *Tweet) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				t.sukipi_tweets = new(int)
 				*t.sukipi_tweets = int(value.Int64)
-			}
-		case tweet.ForeignKeys[1]:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for edge-field twitter_user_replies", value)
-			} else if value.Valid {
-				t.twitter_user_replies = new(int)
-				*t.twitter_user_replies = int(value.Int64)
 			}
 		default:
 			t.selectValues.Set(columns[i], values[i])
@@ -141,9 +139,9 @@ func (t *Tweet) Value(name string) (ent.Value, error) {
 	return t.selectValues.Get(name)
 }
 
-// QueryReplyUser queries the "reply_user" edge of the Tweet entity.
-func (t *Tweet) QueryReplyUser() *TwitterUserQuery {
-	return NewTweetClient(t.config).QueryReplyUser(t)
+// QueryUser queries the "user" edge of the Tweet entity.
+func (t *Tweet) QueryUser() *TwitterUserQuery {
+	return NewTweetClient(t.config).QueryUser(t)
 }
 
 // Update returns a builder for updating this Tweet.
@@ -177,6 +175,9 @@ func (t *Tweet) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("tweet_created_at=")
 	builder.WriteString(t.TweetCreatedAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("reply_twitter_user_id=")
+	builder.WriteString(fmt.Sprintf("%v", t.ReplyTwitterUserID))
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(t.CreatedAt.Format(time.ANSIC))

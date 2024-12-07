@@ -32,7 +32,7 @@ func init() {
 	tweetFields := schema.Tweet{}.Fields()
 	_ = tweetFields
 	// tweetDescCreatedAt is the schema descriptor for created_at field.
-	tweetDescCreatedAt := tweetFields[3].Descriptor()
+	tweetDescCreatedAt := tweetFields[4].Descriptor()
 	// tweet.DefaultCreatedAt holds the default value on creation for the created_at field.
 	tweet.DefaultCreatedAt = tweetDescCreatedAt.Default.(func() time.Time)
 	twitteruserFields := schema.TwitterUser{}.Fields()

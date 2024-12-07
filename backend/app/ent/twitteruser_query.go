@@ -414,6 +414,9 @@ func (tuq *TwitterUserQuery) loadReplies(ctx context.Context, query *TweetQuery,
 		}
 	}
 	query.withFKs = true
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(tweet.FieldReplyTwitterUserID)
+	}
 	query.Where(predicate.Tweet(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(twitteruser.RepliesColumn), fks...))
 	}))
@@ -422,13 +425,10 @@ func (tuq *TwitterUserQuery) loadReplies(ctx context.Context, query *TweetQuery,
 		return err
 	}
 	for _, n := range neighbors {
-		fk := n.twitter_user_replies
-		if fk == nil {
-			return fmt.Errorf(`foreign-key "twitter_user_replies" is nil for node %v`, n.ID)
-		}
-		node, ok := nodeids[*fk]
+		fk := n.ReplyTwitterUserID
+		node, ok := nodeids[fk]
 		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "twitter_user_replies" returned %v for node %v`, *fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "reply_twitter_user_id" returned %v for node %v`, fk, n.ID)
 		}
 		assign(node, n)
 	}

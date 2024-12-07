@@ -793,15 +793,15 @@ func (c *TweetClient) GetX(ctx context.Context, id int) *Tweet {
 	return obj
 }
 
-// QueryReplyUser queries the reply_user edge of a Tweet.
-func (c *TweetClient) QueryReplyUser(t *Tweet) *TwitterUserQuery {
+// QueryUser queries the user edge of a Tweet.
+func (c *TweetClient) QueryUser(t *Tweet) *TwitterUserQuery {
 	query := (&TwitterUserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := t.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(tweet.Table, tweet.FieldID, id),
 			sqlgraph.To(twitteruser.Table, twitteruser.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, tweet.ReplyUserTable, tweet.ReplyUserColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, tweet.UserTable, tweet.UserColumn),
 		)
 		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
 		return fromV, nil

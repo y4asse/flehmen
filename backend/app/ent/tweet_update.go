@@ -78,6 +78,26 @@ func (tu *TweetUpdate) SetNillableTweetCreatedAt(t *time.Time) *TweetUpdate {
 	return tu
 }
 
+// SetReplyTwitterUserID sets the "reply_twitter_user_id" field.
+func (tu *TweetUpdate) SetReplyTwitterUserID(i int) *TweetUpdate {
+	tu.mutation.SetReplyTwitterUserID(i)
+	return tu
+}
+
+// SetNillableReplyTwitterUserID sets the "reply_twitter_user_id" field if the given value is not nil.
+func (tu *TweetUpdate) SetNillableReplyTwitterUserID(i *int) *TweetUpdate {
+	if i != nil {
+		tu.SetReplyTwitterUserID(*i)
+	}
+	return tu
+}
+
+// ClearReplyTwitterUserID clears the value of the "reply_twitter_user_id" field.
+func (tu *TweetUpdate) ClearReplyTwitterUserID() *TweetUpdate {
+	tu.mutation.ClearReplyTwitterUserID()
+	return tu
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (tu *TweetUpdate) SetCreatedAt(t time.Time) *TweetUpdate {
 	tu.mutation.SetCreatedAt(t)
@@ -92,23 +112,23 @@ func (tu *TweetUpdate) SetNillableCreatedAt(t *time.Time) *TweetUpdate {
 	return tu
 }
 
-// SetReplyUserID sets the "reply_user" edge to the TwitterUser entity by ID.
-func (tu *TweetUpdate) SetReplyUserID(id int) *TweetUpdate {
-	tu.mutation.SetReplyUserID(id)
+// SetUserID sets the "user" edge to the TwitterUser entity by ID.
+func (tu *TweetUpdate) SetUserID(id int) *TweetUpdate {
+	tu.mutation.SetUserID(id)
 	return tu
 }
 
-// SetNillableReplyUserID sets the "reply_user" edge to the TwitterUser entity by ID if the given value is not nil.
-func (tu *TweetUpdate) SetNillableReplyUserID(id *int) *TweetUpdate {
+// SetNillableUserID sets the "user" edge to the TwitterUser entity by ID if the given value is not nil.
+func (tu *TweetUpdate) SetNillableUserID(id *int) *TweetUpdate {
 	if id != nil {
-		tu = tu.SetReplyUserID(*id)
+		tu = tu.SetUserID(*id)
 	}
 	return tu
 }
 
-// SetReplyUser sets the "reply_user" edge to the TwitterUser entity.
-func (tu *TweetUpdate) SetReplyUser(t *TwitterUser) *TweetUpdate {
-	return tu.SetReplyUserID(t.ID)
+// SetUser sets the "user" edge to the TwitterUser entity.
+func (tu *TweetUpdate) SetUser(t *TwitterUser) *TweetUpdate {
+	return tu.SetUserID(t.ID)
 }
 
 // Mutation returns the TweetMutation object of the builder.
@@ -116,9 +136,9 @@ func (tu *TweetUpdate) Mutation() *TweetMutation {
 	return tu.mutation
 }
 
-// ClearReplyUser clears the "reply_user" edge to the TwitterUser entity.
-func (tu *TweetUpdate) ClearReplyUser() *TweetUpdate {
-	tu.mutation.ClearReplyUser()
+// ClearUser clears the "user" edge to the TwitterUser entity.
+func (tu *TweetUpdate) ClearUser() *TweetUpdate {
+	tu.mutation.ClearUser()
 	return tu
 }
 
@@ -173,12 +193,12 @@ func (tu *TweetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := tu.mutation.CreatedAt(); ok {
 		_spec.SetField(tweet.FieldCreatedAt, field.TypeTime, value)
 	}
-	if tu.mutation.ReplyUserCleared() {
+	if tu.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   tweet.ReplyUserTable,
-			Columns: []string{tweet.ReplyUserColumn},
+			Table:   tweet.UserTable,
+			Columns: []string{tweet.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(twitteruser.FieldID, field.TypeInt),
@@ -186,12 +206,12 @@ func (tu *TweetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tu.mutation.ReplyUserIDs(); len(nodes) > 0 {
+	if nodes := tu.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   tweet.ReplyUserTable,
-			Columns: []string{tweet.ReplyUserColumn},
+			Table:   tweet.UserTable,
+			Columns: []string{tweet.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(twitteruser.FieldID, field.TypeInt),
@@ -271,6 +291,26 @@ func (tuo *TweetUpdateOne) SetNillableTweetCreatedAt(t *time.Time) *TweetUpdateO
 	return tuo
 }
 
+// SetReplyTwitterUserID sets the "reply_twitter_user_id" field.
+func (tuo *TweetUpdateOne) SetReplyTwitterUserID(i int) *TweetUpdateOne {
+	tuo.mutation.SetReplyTwitterUserID(i)
+	return tuo
+}
+
+// SetNillableReplyTwitterUserID sets the "reply_twitter_user_id" field if the given value is not nil.
+func (tuo *TweetUpdateOne) SetNillableReplyTwitterUserID(i *int) *TweetUpdateOne {
+	if i != nil {
+		tuo.SetReplyTwitterUserID(*i)
+	}
+	return tuo
+}
+
+// ClearReplyTwitterUserID clears the value of the "reply_twitter_user_id" field.
+func (tuo *TweetUpdateOne) ClearReplyTwitterUserID() *TweetUpdateOne {
+	tuo.mutation.ClearReplyTwitterUserID()
+	return tuo
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (tuo *TweetUpdateOne) SetCreatedAt(t time.Time) *TweetUpdateOne {
 	tuo.mutation.SetCreatedAt(t)
@@ -285,23 +325,23 @@ func (tuo *TweetUpdateOne) SetNillableCreatedAt(t *time.Time) *TweetUpdateOne {
 	return tuo
 }
 
-// SetReplyUserID sets the "reply_user" edge to the TwitterUser entity by ID.
-func (tuo *TweetUpdateOne) SetReplyUserID(id int) *TweetUpdateOne {
-	tuo.mutation.SetReplyUserID(id)
+// SetUserID sets the "user" edge to the TwitterUser entity by ID.
+func (tuo *TweetUpdateOne) SetUserID(id int) *TweetUpdateOne {
+	tuo.mutation.SetUserID(id)
 	return tuo
 }
 
-// SetNillableReplyUserID sets the "reply_user" edge to the TwitterUser entity by ID if the given value is not nil.
-func (tuo *TweetUpdateOne) SetNillableReplyUserID(id *int) *TweetUpdateOne {
+// SetNillableUserID sets the "user" edge to the TwitterUser entity by ID if the given value is not nil.
+func (tuo *TweetUpdateOne) SetNillableUserID(id *int) *TweetUpdateOne {
 	if id != nil {
-		tuo = tuo.SetReplyUserID(*id)
+		tuo = tuo.SetUserID(*id)
 	}
 	return tuo
 }
 
-// SetReplyUser sets the "reply_user" edge to the TwitterUser entity.
-func (tuo *TweetUpdateOne) SetReplyUser(t *TwitterUser) *TweetUpdateOne {
-	return tuo.SetReplyUserID(t.ID)
+// SetUser sets the "user" edge to the TwitterUser entity.
+func (tuo *TweetUpdateOne) SetUser(t *TwitterUser) *TweetUpdateOne {
+	return tuo.SetUserID(t.ID)
 }
 
 // Mutation returns the TweetMutation object of the builder.
@@ -309,9 +349,9 @@ func (tuo *TweetUpdateOne) Mutation() *TweetMutation {
 	return tuo.mutation
 }
 
-// ClearReplyUser clears the "reply_user" edge to the TwitterUser entity.
-func (tuo *TweetUpdateOne) ClearReplyUser() *TweetUpdateOne {
-	tuo.mutation.ClearReplyUser()
+// ClearUser clears the "user" edge to the TwitterUser entity.
+func (tuo *TweetUpdateOne) ClearUser() *TweetUpdateOne {
+	tuo.mutation.ClearUser()
 	return tuo
 }
 
@@ -396,12 +436,12 @@ func (tuo *TweetUpdateOne) sqlSave(ctx context.Context) (_node *Tweet, err error
 	if value, ok := tuo.mutation.CreatedAt(); ok {
 		_spec.SetField(tweet.FieldCreatedAt, field.TypeTime, value)
 	}
-	if tuo.mutation.ReplyUserCleared() {
+	if tuo.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   tweet.ReplyUserTable,
-			Columns: []string{tweet.ReplyUserColumn},
+			Table:   tweet.UserTable,
+			Columns: []string{tweet.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(twitteruser.FieldID, field.TypeInt),
@@ -409,12 +449,12 @@ func (tuo *TweetUpdateOne) sqlSave(ctx context.Context) (_node *Tweet, err error
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tuo.mutation.ReplyUserIDs(); len(nodes) > 0 {
+	if nodes := tuo.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   tweet.ReplyUserTable,
-			Columns: []string{tweet.ReplyUserColumn},
+			Table:   tweet.UserTable,
+			Columns: []string{tweet.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(twitteruser.FieldID, field.TypeInt),

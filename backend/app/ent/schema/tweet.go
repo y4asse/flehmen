@@ -19,6 +19,7 @@ func (Tweet) Fields() []ent.Field {
 		field.String("text"),
 		field.Int("tweet_id").Unique(),
 		field.Time("tweet_created_at"),
+		field.Int("reply_twitter_user_id").Optional(),
 		field.Time("created_at").Default(time.Now),
 	}
 }
@@ -26,9 +27,10 @@ func (Tweet) Fields() []ent.Field {
 // Edges of the Tweet.
 func (Tweet) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("reply_user", TwitterUser.Type).
+		edge.From("user", TwitterUser.Type).
 			Ref("replies").
-			Unique(),
+			Unique().
+			Field("reply_twitter_user_id"),
 	}
 
 }
