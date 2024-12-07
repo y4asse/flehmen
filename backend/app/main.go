@@ -16,6 +16,7 @@ import (
 	"entgo.io/ent/dialect"
 	"github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type Controller struct {
@@ -63,6 +64,7 @@ func (controller *Controller) GetSukipiById(c echo.Context) error {
 func (controller *Controller) SaveSukipi(c echo.Context) error {
 	req := new(SukipiRequest)
 	if err := c.Bind(req); err != nil {
+		fmt.Println(err)
 		return c.JSON(http.StatusBadRequest, err)
 	}
 	sukipi, err := controller.entClient.Sukipi.
@@ -80,6 +82,7 @@ func (controller *Controller) SaveSukipi(c echo.Context) error {
 		SetNillableNearlyStation(req.NearStation).
 		Save(c.Request().Context())
 	if err != nil {
+		fmt.Println(err)
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 	return c.JSON(http.StatusOK, sukipi)
@@ -184,6 +187,11 @@ func (controller *Controller) CreateSukipiVoice(c echo.Context) error {
 
 func main() {
 	e := echo.New()
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:3000"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
+	e.Use(middleware.Logger())
 	c := mysql.Config{
 		DBName:    os.Getenv("DB_NAME"),
 		User:      os.Getenv("DB_USER"),
