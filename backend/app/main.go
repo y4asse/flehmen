@@ -28,37 +28,38 @@ func (controller *Controller) GetUniversities(c echo.Context) error {
 	return c.JSON(http.StatusOK, universities)
 }
 
-type Sukipi struct {
-	Name        string    `json:"name"`
-	Birthday    time.Time `json:"birthday"`
-	Family      string    `json:"family"`
-	Height      int       `json:"height"`
-	Weight      int       `json:"weight"`
-	Hobby       string    `json:"hobby"`
-	Mbti        string    `json:"mbti"`
-	LikedAt     time.Time `json:"liked_at"`
-	NearStation string    `json:"near_station"`
-	ShoesSize   int       `json:"shoes_size"`
-	TwitterId   string    `json:"twitter_id"`
+type SukipiRequest struct {
+	Name        string     `json:"name" validate:"required"`
+	Weight      *float64   `json:"weight"`
+	Height      *float64   `json:"height"`
+	XID         *string    `json:"x_id"`
+	InstagramID *string    `json:"instagram_id"`
+	Hobby       *string    `json:"hobby"`
+	Birthday    *time.Time `json:"birthday"`
+	Family      *string    `json:"family"`
+	IsMale      bool       `json:"is_male" validate:"required"`
+	StartAt     time.Time  `json:"start_at" validate:"required"`
+	MbtiId      *int       `json:"mbti_id"`
 }
 
 func (controller *Controller) SaveSukipi(c echo.Context) error {
-	sukipi := new(Sukipi)
-	if err := c.Bind(sukipi); err != nil {
+	req := new(SukipiRequest)
+	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	sukipi, err := controller.entClient.Sukipi.Create().
-		SetName(sukipi.Name).
-		SetBirthday(sukipi.Birthday).
-		SetFamily(sukipi.Family).
-		SetHeight(sukipi.Height).
-		SetWeight(sukipi.Weight).
-		SetHobby(sukipi.Hobby).
-		SetMbti(sukipi.Mbti).
-		SetLikedAt(sukipi.LikedAt).
-		SetNearStation(sukipi.NearStation).
-		SetShoesSize(sukipi.ShoesSize).
-		SetTwitterId(sukipi.TwitterId).
+	sukipi, err := controller.entClient.Sukipi.
+		Create().
+		SetName(req.Name).
+		SetNillableWeight(req.Weight).
+		SetNillableHeight(req.Height).
+		SetNillableXID(req.XID).
+		SetNillableInstagramID(req.InstagramID).
+		SetNillableHobby(req.Hobby).
+		SetNillableBirthday(req.Birthday).
+		SetNillableFamily(req.Family).
+		SetIsMale(req.IsMale).
+		SetStartAt(req.StartAt).
+		SetNillableMbtiID(req.MbtiId).
 		Save(c.Request().Context())
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
