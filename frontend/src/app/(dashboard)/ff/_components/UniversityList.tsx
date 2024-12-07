@@ -20,9 +20,9 @@ const UniversityList = async (props: Props) => {
 
   const searchResult = DbResult.filter(
     (university) =>
-      university.abbreviation.includes(query) ||
-      university.name.includes(query) ||
-      university.abbreviation.toLowerCase().includes(query)
+      university.abbreviation===query ||
+      university.name===query ||
+      university.abbreviation.toLowerCase()==query
   );
 
   return (

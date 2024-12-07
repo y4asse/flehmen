@@ -1,7 +1,8 @@
-'use client'; // クライアントコンポーネントとしてマーク
+"use client"; // クライアントコンポーネントとしてマーク
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const Load = () => {
   const router = useRouter(); // Next.jsのルーターを使用
@@ -9,7 +10,7 @@ const Load = () => {
   useEffect(() => {
     // 4秒後にホーム画面へ遷移
     const timer = setTimeout(() => {
-      router.push('/');
+      router.push("/");
     }, 2000);
 
     // クリーンアップ関数
@@ -20,10 +21,12 @@ const Load = () => {
     <div className="relative w-screen h-screen bg-black flex items-center justify-center overflow-hidden">
       {/* ロゴ表示 */}
       <div className="z-10 animate-pulse ">
-        <img
+        <Image
+          width={200}
+          height={200}
           src="/images/logo.gif"
           alt="Loading Logo"
-          className="w-90 h-auto"
+          className="w-[80%] h-auto"
         />
       </div>
 
@@ -35,17 +38,27 @@ const Load = () => {
       {/* カスタムスタイル */}
       <style jsx>{`
         .noise-bg {
-          background-image: url('/images/noise.png'); // ノイズ画像を適用
+          background-image: url("/images/noise.png"); // ノイズ画像を適用
           background-size: cover;
           animation: noiseAnimation 0.2s infinite;
         }
 
         @keyframes noiseAnimation {
-          0% { transform: translate(0, 0); }
-          25% { transform: translate(-5%, 5%); }
-          50% { transform: translate(5%, -5%); }
-          75% { transform: translate(-5%, -5%); }
-          100% { transform: translate(5%, 5%); }
+          0% {
+            transform: translate(0, 0);
+          }
+          25% {
+            transform: translate(-5%, 5%);
+          }
+          50% {
+            transform: translate(5%, -5%);
+          }
+          75% {
+            transform: translate(-5%, -5%);
+          }
+          100% {
+            transform: translate(5%, 5%);
+          }
         }
       `}</style>
     </div>

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Sukipi } from "../page";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 type Props = {
   sukipi: Sukipi;
   onUpdate: (updatedSukipi: Sukipi) => void;
 };
 
-// メインコンポーネント
 export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Sukipi>(sukipi);
@@ -22,113 +22,103 @@ export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
     setIsEditing(false);
   };
 
-  // Sukipiオブジェクトから情報もらう
   const infoItems = [
-    { title: "なまえ", content: sukipi.name },
+    { key: "name", title: "なまえ", content: sukipi.name },
     {
+      key: "height",
       title: "身長",
       content: sukipi.height ? `${sukipi.height} cm` : "?まだわからない?",
     },
     {
+      key: "weight",
       title: "体重",
       content: sukipi.weight ? `${sukipi.weight} kg` : "?まだわからない?",
     },
-    { title: "MBTI", content: sukipi.mbti || "?まだわからない?" },
-    { title: "誕生日", content: sukipi.birthday || "?まだわからない?" },
-    { title: "趣味", content: sukipi.hobby || "?まだわからない?" },
+    { key: "mbti", title: "MBTI", content: sukipi.mbti || "?まだわからない?" },
     {
+      key: "birthday",
+      title: "誕生日",
+      content: sukipi.birthday || "?まだわからない?",
+    },
+    {
+      key: "hobby",
+      title: "趣味",
+      content: sukipi.hobby || "?まだわからない?",
+    },
+    {
+      key: "shoesSize",
       title: "くつのサイズ",
       content: sukipi.shoesSize ? `${sukipi.shoesSize} cm` : "?まだわからない?",
     },
-    { title: "かぞく", content: sukipi.family || "?まだわからない?" },
-    { title: "最寄駅", content: sukipi.nearlyStation || "?まだわからない?" },
+    {
+      key: "family",
+      title: "かぞく",
+      content: sukipi.family || "?まだわからない?",
+    },
+    {
+      key: "nearlyStation",
+      title: "最寄駅",
+      content: sukipi.nearlyStation || "?まだわからない?",
+    },
   ];
 
   if (isEditing) {
     return (
-      <div>
-        <div style={styles.editor}>
-          <div>
-            {infoItems.map((item) => (
-              <div key={item.title} style={styles.title}>
-                {item.title}
+      <div className="flex flex-col p-4 pt-10 w-4/5 mx-auto mt-[10rem]">
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          {infoItems.map((item) => (
+            <div key={item.key} className="flex flex-col">
+              <div className="text-white font-bold">{item.title}</div>
+              <div className="text-white text-sm mb-2">
+                元の値: <span className="opacity-70">{item.content}</span>
               </div>
-            ))}
-          </div>
-          <div>
-            {Object.keys(formData).map((key) => (
-              <div key={key} style={styles.content}>
-                <input
-                  type="text"
-                  name={key}
-                  value={(formData as never)[key] || ""}
-                  onChange={handleInputChange}
-                  style={styles.editInput}
-                />
-              </div>
-            ))}
-          </div>
+              <Input
+                name={item.key}
+                value={(formData as never)[item.key] || ""}
+                onChange={handleInputChange}
+                className="text-white"
+              />
+            </div>
+          ))}
         </div>
-        <button onClick={() => setIsEditing(false)} style={styles.cancel}>
-          もどる
-        </button>
-        <Button onClick={handleSave}>保存</Button>
+        <div className="flex justify-end gap-4">
+          <Button
+            className="text-white border border-white hover:bg-white hover:text-black"
+            onClick={() => setIsEditing(false)}
+          >
+            もどる
+          </Button>
+          <Button
+            className="text-white border border-white hover:bg-white hover:text-black"
+            onClick={handleSave}
+          >
+            保存
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div>
-      {infoItems.map((item) => (
-        <InfoItem key={item.title} title={item.title} content={item.content} />
-      ))}
-      <Button onClick={() => setIsEditing(true)}>編集</Button>
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="flex flex-col gap-4 p-4 pt-10 w-4/5 max-w-lg mx-auto">
+        {infoItems.map((item) => (
+          <div key={item.key} className="grid grid-cols-[6rem_1fr] gap-2">
+            <div className="text-white font-bold text-left">{item.title}</div>
+            <div className="text-white text-left w-40">{item.content}</div>
+          </div>
+        ))}
+        <div className="flex justify-end">
+          <Button
+            className="text-white border border-white hover:bg-white hover:text-black"
+            onClick={() => setIsEditing(true)}
+          >
+            編集
+          </Button>
+        </div>
+      </div>
     </div>
   );
-};
-
-// 情報項目コンポーネント
-type InfoItemProps = {
-  title: string;
-  content: string;
-};
-
-const InfoItem = ({ title, content }: InfoItemProps) => {
-  return (
-    <p style={styles.infoItem}>
-      <span style={styles.title}>{title}</span>
-      <span style={styles.content}>{content}</span>
-    </p>
-  );
-};
-
-// スタイルの定義
-const styles: { [key: string]: React.CSSProperties } = {
-  infoItem: {
-    display: "flex",
-    margin: "10px 0",
-    color: "white",
-  },
-  editor: {
-    display: "flex",
-    margin: "10px 0",
-    fontSize: "0.8em",
-    fontWeight: "bold",
-    color: "white",
-  },
-  title: {
-    width: "100px",
-  },
-  content: {
-    marginLeft: "10px",
-  },
-  cancel: {
-    color: "white",
-    backgroundColor: "black",
-  },
-  editInput: {
-    background: "transparent",
-  },
 };
 
 export default SukipiInfo;
