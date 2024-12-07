@@ -1,8 +1,13 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"flehmen-api/ent"
+	"fmt"
+	"io"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"strconv"
@@ -80,6 +85,103 @@ func (controller *Controller) SaveSukipi(c echo.Context) error {
 	return c.JSON(http.StatusOK, sukipi)
 }
 
+type SukipiVoiceResponse struct {
+	VoiceID              string `json:"voice_id"`
+	RequiresVerification bool   `json:"requires_verification"`
+}
+
+func (controller *Controller) CreateSukipiVoice(c echo.Context) error {
+	voiceFile, err := c.FormFile("voice")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "voice file is required"})
+	}
+
+	file, err := voiceFile.Open()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to open the file"})
+	}
+	defer file.Close()
+
+	url := "https://api.elevenlabs.io/v1/voices/add"
+
+	var buffer bytes.Buffer
+	writer := multipart.NewWriter(&buffer)
+
+	now := time.Now().Format("2006-01-02 15:04:05")
+	_ = writer.WriteField("name", now)
+	_ = writer.WriteField("description", "from flehmen-api")
+	_ = writer.WriteField("remove_background_noise", "true")
+
+	part, err := writer.CreateFormFile("files", voiceFile.Filename)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to create form file"})
+	}
+	_, err = io.Copy(part, file)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to copy file content"})
+	}
+
+	err = writer.Close()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to close writer"})
+	}
+
+	req, err := http.NewRequest("POST", url, &buffer)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to create request"})
+	}
+
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	req.Header.Set("xi-api-key", os.Getenv("ELEVENLABS_API_KEY"))
+
+	client := &http.Client{}
+	res, err := client.Do(req)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to send request"})
+	}
+	defer res.Body.Close()
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to read response"})
+	}
+
+	voiceResponse := new(SukipiVoiceResponse)
+	err = json.Unmarshal(body, &voiceResponse)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(voiceResponse)
+
+	url = fmt.Sprintf("https://api.elevenlabs.io/v1/text-to-speech/%s", voiceResponse.VoiceID)
+
+	data := map[string]string{
+		"text":     "やせ、今日もいちにちお疲れ様。今日もがんばったね。おやすみ",
+		"model_id": "eleven_multilingual_v2",
+	}
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to marshal json"})
+	}
+	req, _ = http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Set("xi-api-key", os.Getenv("ELEVENLABS_API_KEY"))
+
+	res, err = client.Do(req)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to send request"})
+	}
+	defer res.Body.Close()
+
+	body, err = io.ReadAll(res.Body)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to read response"})
+	}
+
+	return c.Blob(http.StatusOK, "audio/mpeg", body)
+}
+
 func main() {
 	e := echo.New()
 	c := mysql.Config{
@@ -92,18 +194,19 @@ func main() {
 		Collation: "utf8mb4_unicode_ci",
 	}
 
-	client, err := ent.Open(dialect.MySQL, c.FormatDSN())
+	entClient, err := ent.Open(dialect.MySQL, c.FormatDSN())
 	if err != nil {
 		log.Fatalf("failed opening connection to sqlite: %v", err)
 	}
-	defer client.Close()
+	defer entClient.Close()
 
-	controller := &Controller{entClient: client}
+	controller := &Controller{entClient: entClient}
 
 	e.GET("/ok", controller.Ok)
 	e.GET("/universities", controller.GetUniversities)
 	e.GET("/sukipi/:id", controller.GetSukipiById)
 	e.POST("/sukipi", controller.SaveSukipi)
+	e.POST("/sukipi_voice", controller.CreateSukipiVoice)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
