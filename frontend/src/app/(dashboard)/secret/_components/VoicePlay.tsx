@@ -45,6 +45,10 @@ const AudioPlayer = (props: Props) => {
     setProgress(0);
   };
 
+  const handleDownload = () => {
+    if (!url) return;
+  }
+
   return (
     <Flex className="relative flex flex-col items-center space-y-4 p-4 w-full h-[400px]">
       {isLoading ? (
@@ -93,14 +97,15 @@ const AudioPlayer = (props: Props) => {
       />
 
       {/* ダウンロードボタン */}
-      <Button
+      {url && <Button
+        asChild
         className="absolute bottom-4 right-4   p-4 rounded-full "
-        onClick={() => {
-          alert("ダウンロードボタンがクリックされました");
-        }}
+        onClick={handleDownload}
       >
-        ↓ダウンロード
-      </Button>
+        <a href={url} download>
+          ↓ダウンロード
+        </a>
+      </Button>}
 
       <style jsx>{`
         input[type="range"]::-webkit-slider-thumb {
