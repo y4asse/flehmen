@@ -7,11 +7,14 @@ import { Textarea } from "@/components/ui/textarea";
 type Props = {
   handleSetLoading: () => void;
   handleStopLoading: () => void;
+  setUrl: React.Dispatch<React.SetStateAction<string | null>>
 };
 
 export const InputVoice = (props: Props) => {
-  const { handleSetLoading, handleStopLoading } = props;
+  const { handleSetLoading, handleStopLoading, setUrl } = props;
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [text, setText] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleStartLoading = () => {
@@ -44,24 +47,30 @@ export const InputVoice = (props: Props) => {
     if (!selectedFile) {
       return;
     }
+    setLoading(true);
     handleStartLoading();
-    setTimeout(() => {
-      // ローディング終了処理
-      stopLoading(); // setIsLoading(false)を含む関数
-    }, 5000);
 
     // FormData オブジェクトを作成
-    // const formData = new FormData();
-    // formData.append("voice", selectedFile); // "file" はサーバーで受け取るキー名に合わせる
+    const formData = new FormData();
+    formData.append("voice", selectedFile); // "file" はサーバーで受け取るキー名に合わせる
+    formData.append("text", text);
 
     // fetch リクエストを送信
-    // const response = await fetch(`http://localhost:8080/sukipi_voice`, {
-    //   method: "POST",
-    //   body: formData,
-    // });
-
-    // const result = await response.json();
-    // console.log(result);
+    const response = await fetch(`http://localhost:8080/sukipi_voice`, {
+      method: "POST",
+      body: formData,
+    });
+    if (!response.ok) {
+      console.error("Error:", response.statusText);
+      setLoading(false);
+      return;
+    }
+    const blob = await response.blob();
+    console.log(blob);
+    const url = URL.createObjectURL(blob);
+    setUrl(url);
+    stopLoading();
+    setLoading(false);
   };
 
   return (
@@ -95,6 +104,8 @@ export const InputVoice = (props: Props) => {
         <Textarea
           placeholder="ここに文章を入力..."
           className={`w-[80%] h-[10vw] p-2 rounded-md border `}
+          value={text}
+          onChange={(event) => setText(event.target.value)}
         />
       </Flex>
 
@@ -106,7 +117,7 @@ export const InputVoice = (props: Props) => {
       </p>
 
       {/* 右下：作成ボタン */}
-      <Button className="my-3 float-right">作成</Button>
+      <Button className="my-3 float-right" disabled={loading}>作成</Button>
     </form>
   );
 };

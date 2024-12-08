@@ -1,6 +1,6 @@
 "use client";
 import { Windows } from "@/components/common/Windows";
-import React from "react";
+import React, { useState } from "react";
 import InputVoice from "./_components/InputVoice";
 import VoicePlay from "./_components/VoicePlay";
 
@@ -12,12 +12,13 @@ const Page = () => {
   const handleStopLoading = () => {
     setIsLoading(false);
   };
+  const [url, setUrl] = useState<string | null>(null);
 
   const windows = [
     {
       ...timeGraphWindow,
       title: "聞く❤︎",
-      children: <VoicePlay isLoading={isLoading} />,
+      children: <VoicePlay isLoading={isLoading} url={url} />,
     },
     {
       ...weekGraphWindow,
@@ -26,6 +27,7 @@ const Page = () => {
         <InputVoice
           handleSetLoading={handleSetLoading}
           handleStopLoading={handleStopLoading}
+          setUrl={setUrl}
         />
       ),
     },

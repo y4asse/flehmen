@@ -6,9 +6,10 @@ import Image from "next/image";
 
 type Props = {
   isLoading: boolean;
+  url: string | null;
 };
 const AudioPlayer = (props: Props) => {
-  const { isLoading } = props;
+  const { isLoading, url } = props;
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -43,6 +44,10 @@ const AudioPlayer = (props: Props) => {
     setIsPlaying(false);
     setProgress(0);
   };
+
+  const handleDownload = () => {
+    if (!url) return;
+  }
 
   return (
     <Flex className="relative flex flex-col items-center space-y-4 p-4 w-full h-[400px]">
@@ -92,14 +97,15 @@ const AudioPlayer = (props: Props) => {
       />
 
       {/* ダウンロードボタン */}
-      <Button
+      {url && <Button
+        asChild
         className="absolute bottom-4 right-4   p-4 rounded-full "
-        onClick={() => {
-          alert("ダウンロードボタンがクリックされました");
-        }}
+        onClick={handleDownload}
       >
-        ↓ダウンロード
-      </Button>
+        <a href={url} download>
+          ↓ダウンロード
+        </a>
+      </Button>}
 
       <style jsx>{`
         input[type="range"]::-webkit-slider-thumb {
@@ -123,12 +129,12 @@ const AudioPlayer = (props: Props) => {
         }
       `}</style>
 
-      <audio
+      {url && <audio
         ref={audioRef}
-        src="./voice/yase_voice.mp3"
+        src={url}
         onTimeUpdate={updateProgress}
         onEnded={handleEnd}
-      />
+      />}
     </Flex>
   );
 };
