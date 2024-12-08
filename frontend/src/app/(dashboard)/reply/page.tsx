@@ -137,15 +137,15 @@ const contents = {
   initSize: { width: 600, height: 400 },
   initPosition: {
     x: 650,
-    y: 400,
+    y: 500,
     z: 3,
   },
 };
 
 const monthlRep = {
-  initSize: { width: 800, height: 600 },
+  initSize: { width: 800, height: 400 },
   initPosition: {
-    x: 800,
+    x: 700,
     y: 40,
     z: 1,
   },

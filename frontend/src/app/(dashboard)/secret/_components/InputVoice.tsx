@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 import { Flex } from "@/components/ui/flex";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 
 export const InputVoice = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -30,7 +31,7 @@ export const InputVoice = () => {
         <span className="mr-4">今日は何で寝落ちする？</span>
         <Button onClick={openFileSelector}>サンプルボイス入力</Button>
         {/* ファイル選択用の非表示input */}
-        <input
+        <Input
           ref={fileInputRef}
           type="file"
           accept="audio/*"

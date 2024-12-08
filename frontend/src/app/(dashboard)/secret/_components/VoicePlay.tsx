@@ -2,6 +2,7 @@
 import React, { useState, useRef } from "react";
 import { Flex } from "@/components/ui/flex";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import Image from "next/image";
 
 const AudioPlayer = () => {
@@ -65,7 +66,7 @@ const AudioPlayer = () => {
         {isPlaying ? "❚❚" : "▷"}
       </Button>
 
-      <input
+      <Input
         type="range"
         min="0"
         max="100"
