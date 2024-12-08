@@ -4,16 +4,32 @@ import { Flex } from "@/components/ui/flex";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-export const InputVoice = () => {
+type Props = {
+  handleSetLoading: () => void;
+  handleStopLoading: () => void;
+};
+
+export const InputVoice = (props: Props) => {
+  const { handleSetLoading, handleStopLoading } = props;
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleStartLoading = () => {
+    if (selectedFile) {
+      handleSetLoading();
+    }
+  };
+
+  const stopLoading = () => {
+    setSelectedFile(null);
+    handleStopLoading();
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
       const file = files[0];
       setSelectedFile(file);
-      alert(`選択したファイル: ${file.name}`);
     }
   };
 
@@ -23,10 +39,45 @@ export const InputVoice = () => {
     }
   };
 
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!selectedFile) {
+      return;
+    }
+    handleStartLoading();
+    setTimeout(() => {
+      // ローディング終了処理
+      stopLoading(); // setIsLoading(false)を含む関数
+    }, 5000);
+
+    // FormData オブジェクトを作成
+    // const formData = new FormData();
+    // formData.append("voice", selectedFile); // "file" はサーバーで受け取るキー名に合わせる
+
+    // fetch リクエストを送信
+    // const response = await fetch(`http://localhost:8080/sukipi_voice`, {
+    //   method: "POST",
+    //   body: formData,
+    // });
+
+    // const result = await response.json();
+    // console.log(result);
+  };
+
   return (
-    <div className="text-[#FFF] w-full h-full relative p-4">
+    <form
+      className="text-[#FFF] w-full h-full relative p-4"
+      method="POST"
+      encType="multipart/form-data"
+      onSubmit={onSubmit}
+    >
       {/* 上部：質問とサンプルボイス入力ボタン */}
-      <Flex direction="row" align="center" justify="center" className="w-full mb-4">
+      <Flex
+        direction="row"
+        align="center"
+        justify="center"
+        className="w-full mb-4"
+      >
         <span className="mr-4">今日は何で寝落ちする？</span>
         <Button onClick={openFileSelector}>サンプルボイス入力</Button>
         {/* ファイル選択用の非表示input */}
@@ -48,15 +99,15 @@ export const InputVoice = () => {
       </Flex>
 
       {/* 選択されたファイルの名前を表示 */}
-      {selectedFile && (
-        <p className="text-center mt-2">
-          選択されたファイル: <strong>{selectedFile.name}</strong>
-        </p>
-      )}
+
+      <p className="text-center mt-2">
+        選択されたファイル:
+        {selectedFile && <strong>{selectedFile.name}</strong>}
+      </p>
 
       {/* 右下：作成ボタン */}
-      <Button className="absolute bottom-4 right-4">作成</Button>
-    </div>
+      <Button className="my-3 float-right">作成</Button>
+    </form>
   );
 };
 
