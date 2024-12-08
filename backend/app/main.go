@@ -98,6 +98,7 @@ func (controller *Controller) CreateSukipiVoice(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "voice file is required"})
 	}
+	text := c.FormValue("text")
 
 	file, err := voiceFile.Open()
 	if err != nil {
@@ -144,6 +145,13 @@ func (controller *Controller) CreateSukipiVoice(c echo.Context) error {
 	}
 	defer res.Body.Close()
 
+	if res.StatusCode != http.StatusOK {
+		// jsonの内容を返す
+		body, _ := io.ReadAll(res.Body)
+		fmt.Println(string(body))
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "音声ファイルのアップロードに失敗しました"})
+	}
+
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to read response"})
@@ -157,10 +165,11 @@ func (controller *Controller) CreateSukipiVoice(c echo.Context) error {
 
 	fmt.Println(voiceResponse)
 
+	// ここから音声合成
 	url = fmt.Sprintf("https://api.elevenlabs.io/v1/text-to-speech/%s", voiceResponse.VoiceID)
 
 	data := map[string]string{
-		"text":     "やせ、今日もいちにちお疲れ様。今日もがんばったね。おやすみ",
+		"text":     text,
 		"model_id": "eleven_multilingual_v2",
 	}
 	jsonData, err := json.Marshal(data)
@@ -177,11 +186,37 @@ func (controller *Controller) CreateSukipiVoice(c echo.Context) error {
 	}
 	defer res.Body.Close()
 
+	if res.StatusCode != http.StatusOK {
+		fmt.Println(res.Status)
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "音声合成に失敗しました"})
+	}
+
 	body, err = io.ReadAll(res.Body)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to read response"})
 	}
 
+	// 音声ファイルを消す
+	url = fmt.Sprintf("https://api.elevenlabs.io/v1/voices/%s", voiceResponse.VoiceID)
+
+	req, err = http.NewRequest("DELETE", url, nil)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to create request"})
+	}
+
+	req.Header.Set("xi-api-key", os.Getenv("ELEVENLABS_API_KEY"))
+
+	res, err = http.DefaultClient.Do(req)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to send request"})
+	}
+
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		fmt.Println(res.Status)
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "音声ファイルの削除に失敗しました"})
+	}
 	return c.Blob(http.StatusOK, "audio/mpeg", body)
 }
 
