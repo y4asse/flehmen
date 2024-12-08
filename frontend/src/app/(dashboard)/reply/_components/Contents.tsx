@@ -1,20 +1,50 @@
 import React from "react";
 import { content } from "../page";
+import { Flex } from "@/components/ui/flex";
+import Image from "next/image";
 
 type Props = {
-  repContents?: content[];
+  repContents: content[][];
+  userIndex: number;
 };
 
-const Contents = ({ repContents = [] }: Props) => {
+const Contents = ({ repContents, userIndex }: Props) => {
+  const contents = repContents[userIndex];
   return (
-    <div>
-      {repContents.map((contents) => (
-        <div className="my-4 max-w-lg" key={contents.id}>
-          <p className="text-white">□@ {contents.id}</p>
-          <p className="text-white">{contents.content}</p>
-        </div>
+    <Flex
+      direction={"column"}
+      className="gap-8 h-full py-8 mb-2"
+      justify={"start"}
+      align={"start"}
+    >
+      {contents.map((content) => (
+        <a
+          href={`https://twitter.com/${content.userId}`}
+          target="_blank"
+          key={content.id}
+        >
+          <Flex
+            className="gap-3"
+            direction={"column"}
+            justify={"start"}
+            align={"start"}
+          >
+            <Flex className="gap-2 w-full" justify={"start"}>
+              <Image
+                src={content.icon}
+                alt={content.name}
+                width={50}
+                height={50}
+                className="rounded-full"
+              />
+              <p className="text-white">{content.name}</p>
+              <p className="text-[#aaa]">@{content.userId}</p>
+            </Flex>
+            <p className="text-white">{content.value}</p>
+          </Flex>
+        </a>
       ))}
-    </div>
+    </Flex>
   );
 };
 
