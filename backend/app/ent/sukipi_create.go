@@ -70,20 +70,6 @@ func (sc *SukipiCreate) SetNillableXID(s *string) *SukipiCreate {
 	return sc
 }
 
-// SetInstagramID sets the "instagram_id" field.
-func (sc *SukipiCreate) SetInstagramID(s string) *SukipiCreate {
-	sc.mutation.SetInstagramID(s)
-	return sc
-}
-
-// SetNillableInstagramID sets the "instagram_id" field if the given value is not nil.
-func (sc *SukipiCreate) SetNillableInstagramID(s *string) *SukipiCreate {
-	if s != nil {
-		sc.SetInstagramID(*s)
-	}
-	return sc
-}
-
 // SetHobby sets the "hobby" field.
 func (sc *SukipiCreate) SetHobby(s string) *SukipiCreate {
 	sc.mutation.SetHobby(s)
@@ -112,6 +98,20 @@ func (sc *SukipiCreate) SetNillableBirthday(t *time.Time) *SukipiCreate {
 	return sc
 }
 
+// SetShoesSize sets the "shoesSize" field.
+func (sc *SukipiCreate) SetShoesSize(f float64) *SukipiCreate {
+	sc.mutation.SetShoesSize(f)
+	return sc
+}
+
+// SetNillableShoesSize sets the "shoesSize" field if the given value is not nil.
+func (sc *SukipiCreate) SetNillableShoesSize(f *float64) *SukipiCreate {
+	if f != nil {
+		sc.SetShoesSize(*f)
+	}
+	return sc
+}
+
 // SetFamily sets the "family" field.
 func (sc *SukipiCreate) SetFamily(s string) *SukipiCreate {
 	sc.mutation.SetFamily(s)
@@ -126,15 +126,23 @@ func (sc *SukipiCreate) SetNillableFamily(s *string) *SukipiCreate {
 	return sc
 }
 
-// SetIsMale sets the "is_male" field.
-func (sc *SukipiCreate) SetIsMale(b bool) *SukipiCreate {
-	sc.mutation.SetIsMale(b)
+// SetNearlyStation sets the "nearly_station" field.
+func (sc *SukipiCreate) SetNearlyStation(s string) *SukipiCreate {
+	sc.mutation.SetNearlyStation(s)
 	return sc
 }
 
-// SetStartAt sets the "start_at" field.
-func (sc *SukipiCreate) SetStartAt(t time.Time) *SukipiCreate {
-	sc.mutation.SetStartAt(t)
+// SetNillableNearlyStation sets the "nearly_station" field if the given value is not nil.
+func (sc *SukipiCreate) SetNillableNearlyStation(s *string) *SukipiCreate {
+	if s != nil {
+		sc.SetNearlyStation(*s)
+	}
+	return sc
+}
+
+// SetLikedAt sets the "liked_at" field.
+func (sc *SukipiCreate) SetLikedAt(t time.Time) *SukipiCreate {
+	sc.mutation.SetLikedAt(t)
 	return sc
 }
 
@@ -232,11 +240,8 @@ func (sc *SukipiCreate) check() error {
 	if _, ok := sc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Sukipi.name"`)}
 	}
-	if _, ok := sc.mutation.IsMale(); !ok {
-		return &ValidationError{Name: "is_male", err: errors.New(`ent: missing required field "Sukipi.is_male"`)}
-	}
-	if _, ok := sc.mutation.StartAt(); !ok {
-		return &ValidationError{Name: "start_at", err: errors.New(`ent: missing required field "Sukipi.start_at"`)}
+	if _, ok := sc.mutation.LikedAt(); !ok {
+		return &ValidationError{Name: "liked_at", err: errors.New(`ent: missing required field "Sukipi.liked_at"`)}
 	}
 	if _, ok := sc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Sukipi.created_at"`)}
@@ -283,10 +288,6 @@ func (sc *SukipiCreate) createSpec() (*Sukipi, *sqlgraph.CreateSpec) {
 		_spec.SetField(sukipi.FieldXID, field.TypeString, value)
 		_node.XID = &value
 	}
-	if value, ok := sc.mutation.InstagramID(); ok {
-		_spec.SetField(sukipi.FieldInstagramID, field.TypeString, value)
-		_node.InstagramID = &value
-	}
 	if value, ok := sc.mutation.Hobby(); ok {
 		_spec.SetField(sukipi.FieldHobby, field.TypeString, value)
 		_node.Hobby = &value
@@ -295,17 +296,21 @@ func (sc *SukipiCreate) createSpec() (*Sukipi, *sqlgraph.CreateSpec) {
 		_spec.SetField(sukipi.FieldBirthday, field.TypeTime, value)
 		_node.Birthday = &value
 	}
+	if value, ok := sc.mutation.ShoesSize(); ok {
+		_spec.SetField(sukipi.FieldShoesSize, field.TypeFloat64, value)
+		_node.ShoesSize = &value
+	}
 	if value, ok := sc.mutation.Family(); ok {
 		_spec.SetField(sukipi.FieldFamily, field.TypeString, value)
 		_node.Family = &value
 	}
-	if value, ok := sc.mutation.IsMale(); ok {
-		_spec.SetField(sukipi.FieldIsMale, field.TypeBool, value)
-		_node.IsMale = value
+	if value, ok := sc.mutation.NearlyStation(); ok {
+		_spec.SetField(sukipi.FieldNearlyStation, field.TypeString, value)
+		_node.NearlyStation = &value
 	}
-	if value, ok := sc.mutation.StartAt(); ok {
-		_spec.SetField(sukipi.FieldStartAt, field.TypeTime, value)
-		_node.StartAt = value
+	if value, ok := sc.mutation.LikedAt(); ok {
+		_spec.SetField(sukipi.FieldLikedAt, field.TypeTime, value)
+		_node.LikedAt = value
 	}
 	if value, ok := sc.mutation.CreatedAt(); ok {
 		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)

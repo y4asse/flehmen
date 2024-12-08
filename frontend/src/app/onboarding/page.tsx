@@ -116,9 +116,9 @@ const Page = () => {
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newResponses = [...responses];
-    newResponses[currentIndex] = e.target.value;
-    setResponses(newResponses);
+    const newResponses = [...responses]; // 配列をコピー
+    newResponses[currentIndex] = e.target.value; // 現在のインデックスだけを更新
+    setResponses(newResponses); // 状態を更新
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -180,8 +180,9 @@ const Page = () => {
       },
       {} as RequestBody // 型定義を更新
     );
-    const result = await fetchPost("/sukipi", data);
+    // const result = await fetchPost("/sukipi", data);
     router.push("/loading");
+
   };
 
   return (
@@ -233,7 +234,7 @@ const Page = () => {
                     type={input.type}
                     name={input.name}
                     id={input.name}
-                    value={responses[index]}
+                    value={responses[index] || ""}
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
                     autoFocus

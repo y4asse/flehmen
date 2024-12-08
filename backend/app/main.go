@@ -16,6 +16,7 @@ import (
 	"entgo.io/ent/dialect"
 	"github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type Controller struct {
@@ -38,14 +39,14 @@ type SukipiRequest struct {
 	Name        string     `json:"name" validate:"required"`
 	Weight      *float64   `json:"weight"`
 	Height      *float64   `json:"height"`
-	XID         *string    `json:"x_id"`
-	InstagramID *string    `json:"instagram_id"`
+	XID         *string    `json:"twitterId"`
 	Hobby       *string    `json:"hobby"`
 	Birthday    *time.Time `json:"birthday"`
+	ShoesSize   *float64   `json:"shoesSize"`
 	Family      *string    `json:"family"`
-	IsMale      bool       `json:"is_male" validate:"required"`
-	StartAt     time.Time  `json:"start_at" validate:"required"`
-	MbtiId      *int       `json:"mbti_id"`
+	LikedAt     time.Time  `json:"likedAt"`
+	MbtiId      *int       `json:"mbtiId"`
+	NearStation *string    `json:"nearStation"`
 }
 
 func (controller *Controller) GetSukipiById(c echo.Context) error {
@@ -63,6 +64,7 @@ func (controller *Controller) GetSukipiById(c echo.Context) error {
 func (controller *Controller) SaveSukipi(c echo.Context) error {
 	req := new(SukipiRequest)
 	if err := c.Bind(req); err != nil {
+		fmt.Println(err)
 		return c.JSON(http.StatusBadRequest, err)
 	}
 	sukipi, err := controller.entClient.Sukipi.
@@ -71,15 +73,16 @@ func (controller *Controller) SaveSukipi(c echo.Context) error {
 		SetNillableWeight(req.Weight).
 		SetNillableHeight(req.Height).
 		SetNillableXID(req.XID).
-		SetNillableInstagramID(req.InstagramID).
 		SetNillableHobby(req.Hobby).
 		SetNillableBirthday(req.Birthday).
+		SetNillableShoesSize(req.ShoesSize).
 		SetNillableFamily(req.Family).
-		SetIsMale(req.IsMale).
-		SetStartAt(req.StartAt).
+		SetLikedAt(req.LikedAt).
 		SetNillableMbtiID(req.MbtiId).
+		SetNillableNearlyStation(req.NearStation).
 		Save(c.Request().Context())
 	if err != nil {
+		fmt.Println(err)
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 	return c.JSON(http.StatusOK, sukipi)
@@ -149,7 +152,7 @@ func (controller *Controller) CreateSukipiVoice(c echo.Context) error {
 	voiceResponse := new(SukipiVoiceResponse)
 	err = json.Unmarshal(body, &voiceResponse)
 	if err != nil {
-		log.Fatal(err)
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to parse ElevenLabs response"})
 	}
 
 	fmt.Println(voiceResponse)
@@ -184,6 +187,12 @@ func (controller *Controller) CreateSukipiVoice(c echo.Context) error {
 
 func main() {
 	e := echo.New()
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"}, // 全オリジンを許可
+		AllowHeaders: []string{"*"}, // 全ヘッダーを許可
+		AllowMethods: []string{"*"}, // 全HTTPメソッドを許可
+	}))
+	e.Use(middleware.Logger())
 	c := mysql.Config{
 		DBName:    os.Getenv("DB_NAME"),
 		User:      os.Getenv("DB_USER"),

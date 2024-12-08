@@ -4,7 +4,11 @@ import { Flex } from "@/components/ui/flex";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
-const AudioPlayer = () => {
+type Props = {
+  isLoading: boolean;
+};
+const AudioPlayer = (props: Props) => {
+  const { isLoading } = props;
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -42,28 +46,36 @@ const AudioPlayer = () => {
 
   return (
     <Flex className="relative flex flex-col items-center space-y-4 p-4 w-full h-[400px]">
-      <div className="relative inline-block">
-        <Image
-          src="/images/mic.svg"
-          alt="Mic"
-          width={100}
-          height={100}
-          className="transition-transform duration-300 hover:scale-110"
-        />
-      </div>
+      {isLoading ? (
+        <div className="text-white">読み込み中...</div>
+      ) : (
+        <>
+          <div className="relative inline-block">
+            <Image
+              src="/images/mic.svg"
+              alt="Mic"
+              width={100}
+              height={100}
+              className="transition-transform duration-300 hover:scale-110"
+            />
+          </div>
 
-      <Button
-        onClick={handlePlayPause}
-        className="text-white p-4 rounded-full bg-gray-800"
-        style={{
-          width: "20%",
-          height: "20%",
-          fontSize: "1.5rem",
-          imageRendering: "pixelated",
-        }}
-      >
-        {isPlaying ? "❚❚" : "▷"}
-      </Button>
+          <Button
+            onClick={handlePlayPause}
+            className="text-white p-4 rounded-full bg-gray-800"
+            style={{
+              width: "20%",
+              height: "20%",
+              fontSize: "1.5rem",
+              imageRendering: "pixelated",
+            }}
+          >
+            {isPlaying ? "❚❚" : "▷"}
+          </Button>
+        </>
+      )}
+
+      {/* シークバー */}
 
       <input
         type="range"
