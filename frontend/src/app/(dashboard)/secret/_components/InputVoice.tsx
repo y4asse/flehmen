@@ -12,6 +12,7 @@ type Props = {
 export const InputVoice = (props: Props) => {
   const { handleSetLoading, handleStopLoading } = props;
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [url, setUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleStartLoading = () => {
@@ -51,17 +52,18 @@ export const InputVoice = (props: Props) => {
     }, 5000);
 
     // FormData オブジェクトを作成
-    // const formData = new FormData();
-    // formData.append("voice", selectedFile); // "file" はサーバーで受け取るキー名に合わせる
+    const formData = new FormData();
+    formData.append("voice", selectedFile); // "file" はサーバーで受け取るキー名に合わせる
 
     // fetch リクエストを送信
-    // const response = await fetch(`http://localhost:8080/sukipi_voice`, {
-    //   method: "POST",
-    //   body: formData,
-    // });
-
-    // const result = await response.json();
-    // console.log(result);
+    const response = await fetch(`http://localhost:8080/sukipi_voice`, {
+      method: "POST",
+      body: formData,
+    });
+    const blob = await response.blob();
+    console.log(blob);
+    const url = URL.createObjectURL(blob);
+    setUrl(url);
   };
 
   return (
@@ -107,6 +109,10 @@ export const InputVoice = (props: Props) => {
 
       {/* 右下：作成ボタン */}
       <Button className="my-3 float-right">作成</Button>
+
+      {url && (
+        <audio src={url} controls className="w-full mt-4" />
+      )}
     </form>
   );
 };
