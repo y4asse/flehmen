@@ -181,7 +181,7 @@ const Page = () => {
       {} as RequestBody // 型定義を更新
     );
     await fetchPost("/sukipi", data);
-    router.push("/loading?redirect=home");
+    router.push("/loading");
   };
 
   return (
