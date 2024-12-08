@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"flehmen-api/ent"
+	"flehmen-api/ent/tweet"
 	"fmt"
 	"io"
 	"log"
@@ -185,6 +186,31 @@ func (controller *Controller) CreateSukipiVoice(c echo.Context) error {
 	return c.Blob(http.StatusOK, "audio/mpeg", body)
 }
 
+func (controller *Controller) TweetAnalysis(c echo.Context) error {
+	sukipiID, err := strconv.Atoi(c.Param("sukipi_id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	sukipi, err := controller.entClient.Sukipi.Get(c.Request().Context(), sukipiID)
+	if err != nil {
+		fmt.Println(err)
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	// skipi_idに紐づくツイートを取得
+	tweets, err := controller.entClient.Tweet.Query().
+		Where(tweet.HasUser()).
+		All(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	fmt.Println(tweets)
+
+	return c.JSON(http.StatusOK, sukipi)
+}
+
 func main() {
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -215,6 +241,7 @@ func main() {
 	e.GET("/sukipi/:id", controller.GetSukipiById)
 	e.POST("/sukipi", controller.SaveSukipi)
 	e.POST("/sukipi_voice", controller.CreateSukipiVoice)
+	e.GET("/tweet-analysis/:sukipi_id", controller.TweetAnalysis)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
