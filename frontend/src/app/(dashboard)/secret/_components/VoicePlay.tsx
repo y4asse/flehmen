@@ -6,9 +6,10 @@ import Image from "next/image";
 
 type Props = {
   isLoading: boolean;
+  url: string | null;
 };
 const AudioPlayer = (props: Props) => {
-  const { isLoading } = props;
+  const { isLoading, url } = props;
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -123,12 +124,12 @@ const AudioPlayer = (props: Props) => {
         }
       `}</style>
 
-      <audio
+      {url && <audio
         ref={audioRef}
-        src="./voice/yase_voice.mp3"
+        src={url}
         onTimeUpdate={updateProgress}
         onEnded={handleEnd}
-      />
+      />}
     </Flex>
   );
 };
