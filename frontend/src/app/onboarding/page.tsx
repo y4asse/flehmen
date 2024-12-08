@@ -180,9 +180,8 @@ const Page = () => {
       },
       {} as RequestBody // 型定義を更新
     );
-    // const result = await fetchPost("/sukipi", data);
+    await fetchPost("/sukipi", data);
     router.push("/loading");
-
   };
 
   return (
