@@ -1,8 +1,9 @@
 "use client";
+
 import React, { useState, useRef } from "react";
-import { Flex } from "@/components/ui/flex";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Flex } from "@/components/ui/flex"; // 必要に応じて調整
+import { Button } from "@/components/ui/button"; // 必要に応じて調整
+import { Input } from "@/components/ui/input"; // 必要に応じて調整
 import Image from "next/image";
 
 const AudioPlayer = () => {
@@ -43,6 +44,7 @@ const AudioPlayer = () => {
 
   return (
     <Flex className="relative flex flex-col items-center space-y-4 p-4 w-full h-[400px]">
+      {/* マイクの画像 */}
       <div className="relative inline-block">
         <Image
           src="/images/mic.svg"
@@ -53,6 +55,7 @@ const AudioPlayer = () => {
         />
       </div>
 
+      {/* 再生/一時停止ボタン */}
       <Button
         onClick={handlePlayPause}
         className="text-white p-4 rounded-full bg-gray-800"
@@ -60,12 +63,12 @@ const AudioPlayer = () => {
           width: "20%",
           height: "20%",
           fontSize: "1.5rem",
-          imageRendering: "pixelated",
         }}
       >
         {isPlaying ? "❚❚" : "▷"}
       </Button>
 
+      {/* スライダー */}
       <Input
         type="range"
         min="0"
@@ -82,7 +85,7 @@ const AudioPlayer = () => {
 
       {/* ダウンロードボタン */}
       <Button
-        className="absolute bottom-4 right-4   p-4 rounded-full "
+        className="absolute bottom-4 right-4 p-4 rounded-full"
         onClick={() => {
           alert("ダウンロードボタンがクリックされました");
         }}
@@ -90,31 +93,31 @@ const AudioPlayer = () => {
         ↓ダウンロード
       </Button>
 
+      {/* カスタムCSS */}
       <style jsx>{`
         input[type="range"]::-webkit-slider-thumb {
           -webkit-appearance: none;
           appearance: none;
           width: 32px;
           height: 32px;
-          background: url("/images/hart_item.png") no-repeat center;
+          background: url("/images/hart_item.svg") no-repeat center;
           background-size: contain;
           cursor: pointer;
-          image-rendering: pixelated;
           transform: translateY(-50%);
         }
         input[type="range"]::-moz-range-thumb {
           width: 32px;
           height: 32px;
-          background: url("/images/hart_item.png") no-repeat center;
+          background: url("/images/hart_item.svg") no-repeat center;
           background-size: contain;
           cursor: pointer;
-          image-rendering: pixelated;
         }
       `}</style>
 
+      {/* オーディオ要素 */}
       <audio
         ref={audioRef}
-        src="./voice/yase_voice.mp3"
+        src="/voice/yase_voice.mp3"
         onTimeUpdate={updateProgress}
         onEnded={handleEnd}
       />
