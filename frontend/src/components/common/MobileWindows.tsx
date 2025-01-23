@@ -12,5 +12,24 @@ type Window = {
 export const MobileWindows = (props: WindowsProps) => {
   const { windows } = props;
 
-  return <div>MobileWindows</div>;
+  return (
+    <div className="flex flex-col gap-4">
+      {windows.map((window, index) => (
+        <div
+          key={index}
+          className="flex flex-col gap-4"
+          style={{
+            width: window.initSize.width,
+            height: window.initSize.height,
+            position: "absolute",
+            left: window.initPosition.x,
+            top: window.initPosition.y,
+            zIndex: window.initPosition.z,
+          }}
+        >
+          {window.children}
+        </div>
+      ))}
+    </div>
+  );
 };
