@@ -3,6 +3,7 @@ import React from "react";
 import { MonthlyGraph } from "./_components/MonthlyGraph";
 import { WeeklyGraph } from "./_components/WeeklyGraph";
 import { Habit } from "./_components/Habit";
+import { MobileWindows } from "@/components/common/MobileWindows";
 // import * as $axios from "@/lib/axios";
 
 export type DateTweetCount = {
@@ -54,7 +55,14 @@ const Page = () => {
 
   return (
     <div>
-      <Windows windows={windows} />
+      {/* PC用 */}
+      <div className="hidden md:block">
+        <Windows windows={windows} />
+      </div>
+      {/* スマホ用 */}
+      <div className="block md:hidden ">
+        <MobileWindows windows={windows} />
+      </div>
     </div>
   );
 };
