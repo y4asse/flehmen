@@ -9,8 +9,8 @@ export const MobileBackGround = () => {
       <Image
         src="/images/cat_bg.svg"
         alt="background"
-        width={300} // 画像の幅を指定
-        height={300} // 画像の高さを指定
+        width={300}
+        height={300}
         className="z-0"
         style={{ opacity: 0.3 }}
       />

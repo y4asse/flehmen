@@ -14,20 +14,20 @@ export const MobileWindows = (props: WindowsProps) => {
 
   return (
     <div className="flex flex-col gap-4">
-      {windows.map((window, index) => (
+      {windows.map((mobile, index) => (
         <div
           key={index}
           className="flex flex-col gap-4"
           style={{
-            width: window.initSize.width,
-            height: window.initSize.height,
+            width: mobile.initSize.width,
+            height: mobile.initSize.height,
             position: "absolute",
-            left: window.initPosition.x,
-            top: window.initPosition.y,
-            zIndex: window.initPosition.z,
+            left: mobile.initPosition.x,
+            top: mobile.initPosition.y,
+            zIndex: mobile.initPosition.z,
           }}
         >
-          {window.children}
+          {mobile.children}
         </div>
       ))}
     </div>
