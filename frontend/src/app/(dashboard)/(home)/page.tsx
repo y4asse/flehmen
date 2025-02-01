@@ -1,6 +1,5 @@
 "use client";
 import { Windows } from "@/components/common/Windows";
-import React, { createContext } from "react";
 import { MonthlyGraph } from "./_components/MonthlyGraph";
 import { WeeklyGraph } from "./_components/WeeklyGraph";
 import { Habit } from "./_components/Habit";
@@ -8,7 +7,6 @@ import { Habit } from "./_components/Habit";
 import { HomeIcon } from "./_components/HomeIcon";
 // import * as $axios from "@/lib/axios";
 
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
