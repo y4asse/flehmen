@@ -17,14 +17,11 @@ export type University = {
 const UniversityList = async (props: Props) => {
   const { query } = props;
   const DbResult = await fetchGet<University[]>("/universities");
-
   const searchResult = DbResult.filter(
     (university) =>
-      university.abbreviation === query ||
-      university.name === query ||
-      university.abbreviation.toLowerCase() == query
+      university.abbreviation.toLowerCase().includes(query.toLowerCase()) ||
+      university.name.toLowerCase().includes(query.toLowerCase())
   );
-
   return (
     <Flex className="gap-4 mb-4" direction={"column"}>
       {searchResult.map((university) => (
