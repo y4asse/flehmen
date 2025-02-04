@@ -20,6 +20,7 @@
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "recharts": "^2.13.3",
+    "swiper": "^11.2.2",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "type-fest": "^4.30.0",

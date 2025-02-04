@@ -1,34 +1,56 @@
 import React from "react";
-export type WindowsProps = {
-  windows: Window[];
+import { MobileWindow } from "./MobileWindow";
+export type MobileProps = {
+  windows: Mobile[];
 };
 
-type Window = {
+type Mobile = {
   title?: string;
   initSize: { width: number; height: number };
   initPosition: { x: number; y: number; z: number };
   children: React.ReactNode;
 };
-export const MobileWindows = (props: WindowsProps) => {
+export const MobileWindows = (props: MobileProps) => {
   const { windows } = props;
 
   return (
-    <div className="flex flex-col gap-4">
-      {windows.map((window, index) => (
-        <div
+    <div
+      style={{
+        position: "absolute",
+        top: "0",
+        left: "0",
+        width: "100vw",
+        maxHeight: "100vh",
+        // height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        // justifyContent: "center",
+        alignItems: "center",
+        marginTop: "50px",
+      }}
+    >
+      {windows.map((mobile, index) => (
+        // <div
+        //   key={index}
+        //   // className="flex flex-col gap-4"
+        //   style={{
+        //     width: mobile.initSize.width,
+        //     height: mobile.initSize.height,
+        //     // position: "absolute",
+        //     // left: mobile.initPosition.x,
+        //     // top: mobile.initPosition.y,
+        //     // zIndex: mobile.initPosition.z,
+        //   }}
+        // >
+        //   {mobile.children}
+        // </div>
+        <MobileWindow
           key={index}
-          className="flex flex-col gap-4"
-          style={{
-            width: window.initSize.width,
-            height: window.initSize.height,
-            position: "absolute",
-            left: window.initPosition.x,
-            top: window.initPosition.y,
-            zIndex: window.initPosition.z,
-          }}
+          initSize={mobile.initSize}
+          title={mobile.title}
         >
-          {window.children}
-        </div>
+          {mobile.children}
+        </MobileWindow>
       ))}
     </div>
   );

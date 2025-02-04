@@ -1,10 +1,16 @@
+"use client";
 import { Windows } from "@/components/common/Windows";
-import React from "react";
 import { MonthlyGraph } from "./_components/MonthlyGraph";
 import { WeeklyGraph } from "./_components/WeeklyGraph";
 import { Habit } from "./_components/Habit";
-import { MobileWindows } from "@/components/common/MobileWindows";
+// import { MobileWindows } from "@/components/common/MobileWindows";
+import { HomeIcon } from "./_components/HomeIcon";
 // import * as $axios from "@/lib/axios";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 export type DateTweetCount = {
   date: string;
@@ -19,6 +25,12 @@ export type TweetDayCount = {
 export type WeeklyTweetCount = {
   day: "げつ" | "にち" | "どー" | "きん" | "もく" | "すい" | "かー";
   count: number;
+};
+
+export type Icon = {
+  name: string;
+  image: string;
+  href: string;
 };
 
 const Page = () => {
@@ -53,15 +65,74 @@ const Page = () => {
     },
   ];
 
+  const mobile = [
+    {
+      title: "生息時間",
+      children: <Habit busy_color_index_list={busy_color_index_list} />,
+    },
+    {
+      title: "いつひまだったの",
+      children: <MonthlyGraph monthlyTweetCounts={monthlyTweetCounts} />,
+    },
+    {
+      title: "なんようにひまなんだろ",
+      children: (
+        <WeeklyGraph
+          weeklyAllTweetCounts={weeklyAllTweetCounts}
+          nameKey="day"
+          dataKey="count"
+        />
+      ),
+    },
+  ];
+
   return (
     <div>
       {/* PC用 */}
       <div className="hidden md:block">
         <Windows windows={windows} />
       </div>
+
       {/* スマホ用 */}
       <div className="block md:hidden ">
-        <MobileWindows windows={windows} />
+        {/* アイコン */}
+        <HomeIcon Icon={Icon} />
+        {/* グラフ */}
+        <Swiper
+          style={{
+            position: "absolute",
+            bottom: "100px",
+            left: "0",
+            width: "100%",
+            height: "300px",
+          }}
+          // modules={[Autoplay, Navigation, Pagination]}
+          // navigation
+          // pagination
+        >
+          {mobile.map((mobile, index) => (
+            <SwiperSlide
+              key={index}
+              style={{
+                width: "100%",
+                height: "300px",
+                padding: "0 50px",
+              }}
+            >
+              {mobile.children}
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        {/* <div
+          className="flex flex-col gap-4"
+          style={{ width: "300px", height: "300px" }}
+        >
+          <WeeklyGraph
+            weeklyAllTweetCounts={weeklyAllTweetCounts}
+            nameKey="day"
+            dataKey="count"
+          />
+        </div> */}
       </div>
     </div>
   );
@@ -176,5 +247,33 @@ const habitWindow = {
     z: 3,
   },
 };
+
+const Icon: Icon[] = [
+  {
+    name: "プロフィール",
+    image: "/images/file.svg",
+    href: "/profile",
+  },
+  {
+    name: "FF",
+    image: "/images/file.svg",
+    href: "/ff",
+  },
+  {
+    name: "リプ",
+    image: "/images/file.svg",
+    href: "/reply",
+  },
+  {
+    name: "ひみつ",
+    image: "/images/file.svg",
+    href: "/secret",
+  },
+  {
+    name: "会話",
+    image: "/images/file.svg",
+    href: "/",
+  },
+];
 
 export default Page;
