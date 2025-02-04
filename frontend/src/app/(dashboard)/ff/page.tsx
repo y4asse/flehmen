@@ -3,6 +3,7 @@ import { FollowLog } from "./_components/FollowLog";
 import { FollowerLog } from "./_components/FollowerLog";
 import { UniversitySearch } from "./_components/UniversitySearch";
 import { Windows } from "@/components/common/Windows";
+import { MobileWindows } from "@/components/common/MobileWindows";
 
 export type Follow = {
   id: string;
@@ -30,11 +31,6 @@ const Page = async (props: {
 
   const windows = [
     {
-      ...universityWindow,
-      title: "大学どこだろ",
-      children: <UniversitySearch query={query} />,
-    },
-    {
       ...followWindow,
       title: "あたらしいフォロー",
       children: <FollowLog followList={followList} />,
@@ -44,8 +40,23 @@ const Page = async (props: {
       title: "あたらしいフォロワー",
       children: <FollowerLog followerList={followerList} />,
     },
+    {
+      ...universityWindow,
+      title: "大学どこだろ",
+      children: <UniversitySearch query={query} />,
+    },
   ];
-  return <Windows windows={windows} />;
+  return (
+    <div>
+      <div className="hidden md:block">
+        <Windows windows={windows} />;
+      </div>
+
+      <div className="block md:hidden ">
+        <MobileWindows windows={windows} />
+      </div>
+    </div>
+  );
 };
 
 const followerList: Follower[] = [

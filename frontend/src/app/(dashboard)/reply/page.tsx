@@ -5,6 +5,7 @@ import ReplyList from "./_components/ReplyList";
 import { Sukipi } from "../profile/page";
 import Contents from "./_components/Contents";
 import { MonthlyRep } from "./_components/MonthlyRep";
+import { MobileWindows } from "@/components/common/MobileWindows";
 
 export type reply = {
   id: number;
@@ -58,7 +59,13 @@ const Page = () => {
 
   return (
     <div>
-      <Windows windows={windows} />
+      <div className="hidden md:block">
+        <Windows windows={windows} />
+      </div>
+
+      <div className="block md:hidden ">
+        <MobileWindows windows={windows} />
+      </div>
     </div>
   );
 };
