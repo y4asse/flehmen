@@ -8,7 +8,7 @@ type WindowProps = {
 };
 
 export const MobileWindow = (props: WindowProps) => {
-  const { title, children, initSize } = props;
+  const { children, initSize } = props;
   //   const { width, height } = initSize;
 
   console.log(initSize);
