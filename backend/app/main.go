@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
+	"context"
 	"encoding/json"
 	"flehmen-api/ent"
 	"fmt"
@@ -11,12 +13,15 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"entgo.io/ent/dialect"
 	"github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/openai/openai-go"
+	"github.com/openai/openai-go/option"
 )
 
 type Controller struct {
@@ -220,6 +225,120 @@ func (controller *Controller) CreateSukipiVoice(c echo.Context) error {
 	return c.Blob(http.StatusOK, "audio/mpeg", body)
 }
 
+// 親密度スコア
+type ClosenessScore struct {
+	Time    int `json:"time"`
+	Balance int `json:"balance"`
+	Rhythm  int `json:"rhythm"`
+	Type    int `json:"type"`
+	Words   int `json:"words"`
+	Total   int `json:"total"`
+}
+
+// LINEのチャット履歴を読み込む関数
+func ReadRecentChat(filename string, maxLines int) (string, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	var lines []string
+	scanner := bufio.NewScanner(file)
+
+	// ファイルの行をすべて読み込む
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		return "", err
+	}
+
+	// 直近 maxLines 行を取得
+	start := 0
+	if len(lines) > maxLines {
+		start = len(lines) - maxLines
+	}
+	recentChat := strings.Join(lines[start:], "\n")
+
+	return recentChat, nil
+}
+
+// OpenAI API に送信して親密度を評価する
+func GetClosenessScore(chatText string) (*ClosenessScore, error) {
+	apiKey := "sk-xxxxxx" // APIキーは適宜設定
+
+	prompt := fmt.Sprintf(`
+		以下の会話ログを基に、親密度を5つの観点で評価してください。  
+		各項目は20点満点で、合計100点とします。評価結果はJSON形式で出力してください。  
+
+		### 評価項目:
+		1. **時間帯 (time)**  
+		- 昼・夜などの時間帯による親密度の影響  
+		- 深夜の会話が多いほど親密度が高い傾向がある  
+
+		2. **バランス (balance)**  
+		- どちらか一方が話しすぎていないか  
+		- 双方が均等に会話しているか  
+
+		3. **テンポ (rhythm)**  
+		- メッセージのやりとりの間隔が短いか  
+		- リアルタイムな会話が多いほどスコアが高い  
+
+		4. **タイプ (type)**  
+		- 会話の種類（相談、冗談、情報共有など）  
+		- 相談や深い話が多いほど親密度が高い  
+
+		5. **言葉 (words)**  
+		- 使われる言葉の親密度（愛称、タメ口、感情表現）  
+		- 「ありがとう」「好き」「嬉しい」などのポジティブ表現が多いほどスコアが高い  
+
+		### 会話ログ:
+		%s
+	`, chatText)
+
+	client := openai.NewClient(
+		option.WithAPIKey(apiKey),
+	)
+
+	resp, err := client.Chat.Completions.New(context.TODO(), openai.ChatCompletionNewParams{
+		Messages: openai.F([]openai.ChatCompletionMessageParamUnion{
+			openai.UserMessage(prompt),
+		}),
+		Model: openai.F(openai.ChatModelGPT3_5Turbo),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// レスポンスをパース
+	var score ClosenessScore
+	err = json.Unmarshal([]byte(resp.Choices[0].Message.Content), &score)
+	if err != nil {
+		return nil, err
+	}
+
+	return &score, nil
+}
+
+// 親密度スコアを取得するエンドポイントの関数
+func (controller *Controller) GetBetween(c echo.Context) error {
+	// LINEの会話データを読み込む
+	lineText, err := ReadRecentChat("line.txt", 50) // 直近50行を取得
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to read file"})
+	}
+
+	// AIで親密度スコアを取得
+	score, err := GetClosenessScore(lineText)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to get closeness score"})
+	}
+
+	return c.JSON(http.StatusOK, score)
+}
+
 func main() {
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -251,6 +370,7 @@ func main() {
 	e.GET("/sukipi/:id", controller.GetSukipiById)
 	e.POST("/sukipi", controller.SaveSukipi)
 	e.POST("/sukipi_voice", controller.CreateSukipiVoice)
+	e.POST("/between", controller.GetBetween)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
