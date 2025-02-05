@@ -44,6 +44,20 @@ func (su *SukipiUpdate) SetNillableName(s *string) *SukipiUpdate {
 	return su
 }
 
+// SetUserID sets the "user_id" field.
+func (su *SukipiUpdate) SetUserID(s string) *SukipiUpdate {
+	su.mutation.SetUserID(s)
+	return su
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (su *SukipiUpdate) SetNillableUserID(s *string) *SukipiUpdate {
+	if s != nil {
+		su.SetUserID(*s)
+	}
+	return su
+}
+
 // SetWeight sets the "weight" field.
 func (su *SukipiUpdate) SetWeight(f float64) *SukipiUpdate {
 	su.mutation.ResetWeight()
@@ -358,6 +372,9 @@ func (su *SukipiUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := su.mutation.Name(); ok {
 		_spec.SetField(sukipi.FieldName, field.TypeString, value)
 	}
+	if value, ok := su.mutation.UserID(); ok {
+		_spec.SetField(sukipi.FieldUserID, field.TypeString, value)
+	}
 	if value, ok := su.mutation.Weight(); ok {
 		_spec.SetField(sukipi.FieldWeight, field.TypeFloat64, value)
 	}
@@ -525,6 +542,20 @@ func (suo *SukipiUpdateOne) SetName(s string) *SukipiUpdateOne {
 func (suo *SukipiUpdateOne) SetNillableName(s *string) *SukipiUpdateOne {
 	if s != nil {
 		suo.SetName(*s)
+	}
+	return suo
+}
+
+// SetUserID sets the "user_id" field.
+func (suo *SukipiUpdateOne) SetUserID(s string) *SukipiUpdateOne {
+	suo.mutation.SetUserID(s)
+	return suo
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (suo *SukipiUpdateOne) SetNillableUserID(s *string) *SukipiUpdateOne {
+	if s != nil {
+		suo.SetUserID(*s)
 	}
 	return suo
 }
@@ -872,6 +903,9 @@ func (suo *SukipiUpdateOne) sqlSave(ctx context.Context) (_node *Sukipi, err err
 	}
 	if value, ok := suo.mutation.Name(); ok {
 		_spec.SetField(sukipi.FieldName, field.TypeString, value)
+	}
+	if value, ok := suo.mutation.UserID(); ok {
+		_spec.SetField(sukipi.FieldUserID, field.TypeString, value)
 	}
 	if value, ok := suo.mutation.Weight(); ok {
 		_spec.SetField(sukipi.FieldWeight, field.TypeFloat64, value)

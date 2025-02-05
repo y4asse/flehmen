@@ -860,6 +860,7 @@ type SukipiMutation struct {
 	typ            string
 	id             *int
 	name           *string
+	user_id        *string
 	weight         *float64
 	addweight      *float64
 	height         *float64
@@ -1016,6 +1017,42 @@ func (m *SukipiMutation) OldName(ctx context.Context) (v string, err error) {
 // ResetName resets all changes to the "name" field.
 func (m *SukipiMutation) ResetName() {
 	m.name = nil
+}
+
+// SetUserID sets the "user_id" field.
+func (m *SukipiMutation) SetUserID(s string) {
+	m.user_id = &s
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *SukipiMutation) UserID() (r string, exists bool) {
+	v := m.user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the Sukipi entity.
+// If the Sukipi object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SukipiMutation) OldUserID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *SukipiMutation) ResetUserID() {
+	m.user_id = nil
 }
 
 // SetWeight sets the "weight" field.
@@ -1672,9 +1709,12 @@ func (m *SukipiMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *SukipiMutation) Fields() []string {
-	fields := make([]string, 0, 11)
+	fields := make([]string, 0, 12)
 	if m.name != nil {
 		fields = append(fields, sukipi.FieldName)
+	}
+	if m.user_id != nil {
+		fields = append(fields, sukipi.FieldUserID)
 	}
 	if m.weight != nil {
 		fields = append(fields, sukipi.FieldWeight)
@@ -1716,6 +1756,8 @@ func (m *SukipiMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case sukipi.FieldName:
 		return m.Name()
+	case sukipi.FieldUserID:
+		return m.UserID()
 	case sukipi.FieldWeight:
 		return m.Weight()
 	case sukipi.FieldHeight:
@@ -1747,6 +1789,8 @@ func (m *SukipiMutation) OldField(ctx context.Context, name string) (ent.Value, 
 	switch name {
 	case sukipi.FieldName:
 		return m.OldName(ctx)
+	case sukipi.FieldUserID:
+		return m.OldUserID(ctx)
 	case sukipi.FieldWeight:
 		return m.OldWeight(ctx)
 	case sukipi.FieldHeight:
@@ -1782,6 +1826,13 @@ func (m *SukipiMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetName(v)
+		return nil
+	case sukipi.FieldUserID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
 		return nil
 	case sukipi.FieldWeight:
 		v, ok := value.(float64)
@@ -1994,6 +2045,9 @@ func (m *SukipiMutation) ResetField(name string) error {
 	switch name {
 	case sukipi.FieldName:
 		m.ResetName()
+		return nil
+	case sukipi.FieldUserID:
+		m.ResetUserID()
 		return nil
 	case sukipi.FieldWeight:
 		m.ResetWeight()

@@ -16,6 +16,8 @@ const (
 	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
+	// FieldUserID holds the string denoting the user_id field in the database.
+	FieldUserID = "user_id"
 	// FieldWeight holds the string denoting the weight field in the database.
 	FieldWeight = "weight"
 	// FieldHeight holds the string denoting the height field in the database.
@@ -62,6 +64,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldName,
+	FieldUserID,
 	FieldWeight,
 	FieldHeight,
 	FieldXID,
@@ -111,6 +114,11 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 // ByName orders the results by the name field.
 func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
+}
+
+// ByUserID orders the results by the user_id field.
+func ByUserID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUserID, opts...).ToFunc()
 }
 
 // ByWeight orders the results by the weight field.

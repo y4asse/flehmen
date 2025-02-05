@@ -26,7 +26,7 @@ func init() {
 	sukipiFields := schema.Sukipi{}.Fields()
 	_ = sukipiFields
 	// sukipiDescCreatedAt is the schema descriptor for created_at field.
-	sukipiDescCreatedAt := sukipiFields[10].Descriptor()
+	sukipiDescCreatedAt := sukipiFields[11].Descriptor()
 	// sukipi.DefaultCreatedAt holds the default value on creation for the created_at field.
 	sukipi.DefaultCreatedAt = sukipiDescCreatedAt.Default.(func() time.Time)
 	tweetFields := schema.Tweet{}.Fields()

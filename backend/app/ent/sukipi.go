@@ -20,6 +20,8 @@ type Sukipi struct {
 	ID int `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
+	// UserID holds the value of the "user_id" field.
+	UserID string `json:"user_id,omitempty"`
 	// Weight holds the value of the "weight" field.
 	Weight *float64 `json:"weight,omitempty"`
 	// Height holds the value of the "height" field.
@@ -87,7 +89,7 @@ func (*Sukipi) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullFloat64)
 		case sukipi.FieldID:
 			values[i] = new(sql.NullInt64)
-		case sukipi.FieldName, sukipi.FieldXID, sukipi.FieldHobby, sukipi.FieldFamily, sukipi.FieldNearlyStation:
+		case sukipi.FieldName, sukipi.FieldUserID, sukipi.FieldXID, sukipi.FieldHobby, sukipi.FieldFamily, sukipi.FieldNearlyStation:
 			values[i] = new(sql.NullString)
 		case sukipi.FieldBirthday, sukipi.FieldLikedAt, sukipi.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
@@ -119,6 +121,12 @@ func (s *Sukipi) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
 				s.Name = value.String
+			}
+		case sukipi.FieldUserID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field user_id", values[i])
+			} else if value.Valid {
+				s.UserID = value.String
 			}
 		case sukipi.FieldWeight:
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
@@ -243,6 +251,9 @@ func (s *Sukipi) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v, ", s.ID))
 	builder.WriteString("name=")
 	builder.WriteString(s.Name)
+	builder.WriteString(", ")
+	builder.WriteString("user_id=")
+	builder.WriteString(s.UserID)
 	builder.WriteString(", ")
 	if v := s.Weight; v != nil {
 		builder.WriteString("weight=")

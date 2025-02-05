@@ -28,6 +28,12 @@ func (sc *SukipiCreate) SetName(s string) *SukipiCreate {
 	return sc
 }
 
+// SetUserID sets the "user_id" field.
+func (sc *SukipiCreate) SetUserID(s string) *SukipiCreate {
+	sc.mutation.SetUserID(s)
+	return sc
+}
+
 // SetWeight sets the "weight" field.
 func (sc *SukipiCreate) SetWeight(f float64) *SukipiCreate {
 	sc.mutation.SetWeight(f)
@@ -240,6 +246,9 @@ func (sc *SukipiCreate) check() error {
 	if _, ok := sc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Sukipi.name"`)}
 	}
+	if _, ok := sc.mutation.UserID(); !ok {
+		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Sukipi.user_id"`)}
+	}
 	if _, ok := sc.mutation.LikedAt(); !ok {
 		return &ValidationError{Name: "liked_at", err: errors.New(`ent: missing required field "Sukipi.liked_at"`)}
 	}
@@ -275,6 +284,10 @@ func (sc *SukipiCreate) createSpec() (*Sukipi, *sqlgraph.CreateSpec) {
 	if value, ok := sc.mutation.Name(); ok {
 		_spec.SetField(sukipi.FieldName, field.TypeString, value)
 		_node.Name = value
+	}
+	if value, ok := sc.mutation.UserID(); ok {
+		_spec.SetField(sukipi.FieldUserID, field.TypeString, value)
+		_node.UserID = value
 	}
 	if value, ok := sc.mutation.Weight(); ok {
 		_spec.SetField(sukipi.FieldWeight, field.TypeFloat64, value)

@@ -46,6 +46,7 @@ var (
 	SukipisColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString},
+		{Name: "user_id", Type: field.TypeString},
 		{Name: "weight", Type: field.TypeFloat64, Nullable: true},
 		{Name: "height", Type: field.TypeFloat64, Nullable: true},
 		{Name: "x_id", Type: field.TypeString, Nullable: true},
@@ -66,7 +67,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sukipis_mbtis_mbti",
-				Columns:    []*schema.Column{SukipisColumns[12]},
+				Columns:    []*schema.Column{SukipisColumns[13]},
 				RefColumns: []*schema.Column{MbtisColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
