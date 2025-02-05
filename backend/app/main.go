@@ -430,6 +430,21 @@ func GetClosenessScore(chatText string) (*ClosenessScore, error) {
 	return &score, nil
 }
 
+func GetNextAction(total int) (string, error) {
+	switch {
+	case total >= 80:
+		return "親密度が非常に高い！次は、一緒に遊ぶ計画を立てたり、直接会う約束をしよう。", nil
+	case total >= 60:
+		return "かなり親密な関係！もっと深い話をしたり、通話を試みるのがおすすめ。", nil
+	case total >= 40:
+		return "普通の親しさ。会話の話題を増やし、相手に質問を多く投げかけよう。", nil
+	case total >= 20:
+		return "まだ距離があるかも。ポジティブな話題を増やして、相手の興味を引こう！", nil
+	default:
+		return "距離が遠い状態。無理に距離を詰めず、相手のペースに合わせてゆっくり関係を築こう。", nil
+	}
+}
+
 func (controller *Controller) GetBetween(c echo.Context) error {
 
 	// LINEの会話データを読み込む
@@ -448,7 +463,20 @@ func (controller *Controller) GetBetween(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, score)
+	//スコアからnextactionを決定
+	nextaction, err := GetNextAction(score.Total)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+
+	response := struct {
+		Score      *ClosenessScore `json:"score"`
+		NextAction string          `json:"next_action"`
+	}{
+		Score:      score,
+		NextAction: nextaction,
+	}
+	return c.JSON(http.StatusOK, response)
 }
 
 func main() {
