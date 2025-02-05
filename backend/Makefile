@@ -6,26 +6,26 @@ up:
 down:
 	${DC} down
 
-docker_db_cli:
+db/cli:
 	${DC} exec -it db mysql -u root -p -D flehmen
 
-docker_db_clear:
+db/clear:
 	${DC} exec db mysql -u root -p -e "DROP DATABASE flehmen; CREATE DATABASE flehmen;"
 
-docker_api_cli:
+api/cli:
 	${DC} exec -it api bash
 
-docker_batch_cli:
+batch/cli:
 	${DC} exec -it batch bash
 
-db_migrate:
-	make -C app db_migrate
+db/migrate:
+	make -C app db/migrate
 
-db_status:
-	make -C app db_status
+db/status:
+	make -C app db/status
 
-db_seed:
-	${DC} exec api make db_seed
+db/seed:
+	${DC} exec api make db/seed
 
 deploy:
 	gcloud builds submit --region=asia-east1
