@@ -17,6 +17,7 @@ type Sukipi struct {
 func (Sukipi) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
+		field.String("user_id"),
 		field.Float("weight").Nillable().Optional(),
 		field.Float("height").Nillable().Optional(),
 		field.String("x_id").Nillable().Optional(),
