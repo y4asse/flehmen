@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
+	"context"
 	"encoding/json"
 	"flehmen-api/ent"
 	"fmt"
@@ -11,12 +13,15 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"entgo.io/ent/dialect"
 	"github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/openai/openai-go"
+	"github.com/openai/openai-go/option"
 )
 
 type Controller struct {
@@ -218,6 +223,141 @@ func (controller *Controller) CreateSukipiVoice(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "音声ファイルの削除に失敗しました"})
 	}
 	return c.Blob(http.StatusOK, "audio/mpeg", body)
+}
+
+type ClosenessScore struct {
+	Time    int `json:"time"`
+	Balance int `json:"balance"`
+	Rhythm  int `json:"rhythm"`
+	Type    int `json:"type"`
+	Words   int `json:"words"`
+	Total   int `json:"total"`
+}
+
+func ReadRecentChat(chatFile *multipart.FileHeader) (string, error) {
+	file, err := chatFile.Open()
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	lines := []string{}
+
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+
+	rowCount := 50
+
+	recentChat := strings.Join(lines[len(lines)-rowCount:], "\n")
+	fmt.Println("recentChat: ")
+
+	return recentChat, nil
+}
+
+func GetClosenessScore(chatText string) (*ClosenessScore, error) {
+	apiKey := os.Getenv("OPENAI_API_KEY")
+
+	prompt := fmt.Sprintf(`
+		以下の会話ログを基に、親密度を5つの観点で評価してください。  
+		各項目は20点満点で、合計100点とします。評価結果はJSON形式で出力してください。  JSON以外は出力しないでください．
+
+		{
+			"time": number,
+			"balance": number,
+			"rhythm": number,
+			"type": number,
+			"words": number,
+		}
+
+		### 評価項目:
+		1. **時間帯 (time)**  
+		- 昼・夜などの時間帯による親密度の影響  
+		- 深夜の会話が多いほど親密度が高い傾向がある  
+
+		2. **バランス (balance)**  
+		- どちらか一方が話しすぎていないか  
+		- 双方が均等に会話しているか  
+
+		3. **テンポ (rhythm)**  
+		- メッセージのやりとりの間隔が短いか  
+		- リアルタイムな会話が多いほどスコアが高い  
+
+		4. **タイプ (type)**  
+		- 会話の種類（相談、冗談、情報共有など）  
+		- 相談や深い話が多いほど親密度が高い  
+
+		5. **言葉 (words)**  
+		- 使われる言葉の親密度（愛称、タメ口、感情表現）  
+		- 「ありがとう」「好き」「嬉しい」などのポジティブ表現が多いほどスコアが高い  
+
+		### 会話ログ:
+		%s
+	`, chatText)
+
+	client := openai.NewClient(
+		option.WithAPIKey(apiKey),
+	)
+
+	// var HistoricalComputerResponseSchema = GenerateSchema[HistoricalComputer]()
+
+	// schemaParam := openai.ResponseFormatJSONSchemaJSONSchemaParam{
+	// 	Name:        openai.F("biography"),
+	// 	Description: openai.F("Notable information about a person"),
+	// 	Schema:      openai.F(HistoricalComputerResponseSchema),
+	// 	Strict:      openai.Bool(true),
+	// }
+
+	resp, err := client.Chat.Completions.New(context.TODO(), openai.ChatCompletionNewParams{
+		Messages: openai.F([]openai.ChatCompletionMessageParamUnion{
+			openai.UserMessage(prompt),
+		}),
+		Model: openai.F(openai.ChatModelGPT4o),
+		// ResponseFormat: openai.F[openai.ChatCompletionNewParamsResponseFormatUnion](
+		// 	openai.ResponseFormatJSONSchemaParam{
+		// 		Type:       openai.F(openai.ResponseFormatJSONSchemaTypeJSONSchema),
+		// 		JSONSchema: openai.F(schemaParam),
+		// 	},
+		// ),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println(resp.Choices[0].Message.Content)
+	// ```jsonを削除する
+	validResult := strings.ReplaceAll(resp.Choices[0].Message.Content, "```json", "")
+	validResult = strings.ReplaceAll(validResult, "```", "")
+	// レスポンスをパース
+	var score ClosenessScore
+	err = json.Unmarshal([]byte(validResult), &score)
+	if err != nil {
+		return nil, err
+	}
+
+	return &score, nil
+}
+
+func (controller *Controller) GetBetween(c echo.Context) error {
+
+	// LINEの会話データを読み込む
+	chatFile, err := c.FormFile("text")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "text file is required"})
+	}
+	lineText, err := ReadRecentChat(chatFile) // 直近50行を取得
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to read chat file"})
+	}
+
+	// AIで親密度スコアを取得
+	score, err := GetClosenessScore(lineText)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, score)
 }
 
 func main() {
