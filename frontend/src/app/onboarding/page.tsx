@@ -4,7 +4,9 @@ import React, { useState } from "react";
 import { Flex } from "@/components/ui/flex";
 import Typewriter from "@/components/common/Typewriter";
 import { useRouter } from "next/navigation";
-import { fetchPost } from "@/lib/fetcher";
+import { completeOnboarding } from "./_action";
+import { useUser } from "@clerk/nextjs";
+import { SukipiInfo } from "@/types/sukipiInfo";
 
 type SukipiInput = {
   title: string;
@@ -114,6 +116,7 @@ const Page = () => {
   const [topIndex, setTopIndex] = useState(0);
   const [checkMessage, setCheckMessage] = useState("Press Enter");
   const router = useRouter();
+  const { user } = useUser()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newResponses = [...responses]; // 配列をコピー
@@ -180,8 +183,14 @@ const Page = () => {
       },
       {} as RequestBody // 型定義を更新
     );
-    await fetchPost("/sukipi", data);
-    router.push("/loading");
+    console.log("aaaaaaaaaaaa")
+    const { error } = await completeOnboarding(data as SukipiInfo)
+    if (error) {
+      alert("エラーが発生しました")
+      return
+    }
+    // await user?.reload()
+    // router.push('/loading')
   };
 
   return (
