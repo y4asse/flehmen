@@ -1,17 +1,17 @@
 ATLAS = atlas
 
-db_migrate:
+db/migrate:
 	${ATLAS} migrate apply \
 	--dir "file://ent/migrate/migrations" \
 	--url "mysql://root:password@localhost:3306/flehmen"
 
-db_status:
+db/status:
 	${ATLAS} migrate status \
 	--dir "file://ent/migrate/migrations" \
 	--url "mysql://root:password@localhost:3306/flehmen"
 
-ent_generate:
+ent/generate:
 	go generate ./ent
 
-db_seed:
+db/seed:
 	go run seeds/main.go
