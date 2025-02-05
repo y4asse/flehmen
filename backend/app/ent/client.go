@@ -12,6 +12,7 @@ import (
 	"flehmen-api/ent/migrate"
 
 	"flehmen-api/ent/mbti"
+	"flehmen-api/ent/nextaction"
 	"flehmen-api/ent/specialevent"
 	"flehmen-api/ent/sukipi"
 	"flehmen-api/ent/tweet"
@@ -32,6 +33,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// Mbti is the client for interacting with the Mbti builders.
 	Mbti *MbtiClient
+	// NextAction is the client for interacting with the NextAction builders.
+	NextAction *NextActionClient
 	// SpecialEvent is the client for interacting with the SpecialEvent builders.
 	SpecialEvent *SpecialEventClient
 	// Sukipi is the client for interacting with the Sukipi builders.
@@ -56,6 +59,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Mbti = NewMbtiClient(c.config)
+	c.NextAction = NewNextActionClient(c.config)
 	c.SpecialEvent = NewSpecialEventClient(c.config)
 	c.Sukipi = NewSukipiClient(c.config)
 	c.Tweet = NewTweetClient(c.config)
@@ -155,6 +159,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ctx:          ctx,
 		config:       cfg,
 		Mbti:         NewMbtiClient(cfg),
+		NextAction:   NewNextActionClient(cfg),
 		SpecialEvent: NewSpecialEventClient(cfg),
 		Sukipi:       NewSukipiClient(cfg),
 		Tweet:        NewTweetClient(cfg),
@@ -181,6 +186,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		ctx:          ctx,
 		config:       cfg,
 		Mbti:         NewMbtiClient(cfg),
+		NextAction:   NewNextActionClient(cfg),
 		SpecialEvent: NewSpecialEventClient(cfg),
 		Sukipi:       NewSukipiClient(cfg),
 		Tweet:        NewTweetClient(cfg),
@@ -216,7 +222,8 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Mbti, c.SpecialEvent, c.Sukipi, c.Tweet, c.TwitterUser, c.University, c.User,
+		c.Mbti, c.NextAction, c.SpecialEvent, c.Sukipi, c.Tweet, c.TwitterUser,
+		c.University, c.User,
 	} {
 		n.Use(hooks...)
 	}
@@ -226,7 +233,8 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Mbti, c.SpecialEvent, c.Sukipi, c.Tweet, c.TwitterUser, c.University, c.User,
+		c.Mbti, c.NextAction, c.SpecialEvent, c.Sukipi, c.Tweet, c.TwitterUser,
+		c.University, c.User,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -237,6 +245,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
 	case *MbtiMutation:
 		return c.Mbti.mutate(ctx, m)
+	case *NextActionMutation:
+		return c.NextAction.mutate(ctx, m)
 	case *SpecialEventMutation:
 		return c.SpecialEvent.mutate(ctx, m)
 	case *SukipiMutation:
@@ -384,6 +394,139 @@ func (c *MbtiClient) mutate(ctx context.Context, m *MbtiMutation) (Value, error)
 		return (&MbtiDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Mbti mutation op: %q", m.Op())
+	}
+}
+
+// NextActionClient is a client for the NextAction schema.
+type NextActionClient struct {
+	config
+}
+
+// NewNextActionClient returns a client for the NextAction from the given config.
+func NewNextActionClient(c config) *NextActionClient {
+	return &NextActionClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `nextaction.Hooks(f(g(h())))`.
+func (c *NextActionClient) Use(hooks ...Hook) {
+	c.hooks.NextAction = append(c.hooks.NextAction, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `nextaction.Intercept(f(g(h())))`.
+func (c *NextActionClient) Intercept(interceptors ...Interceptor) {
+	c.inters.NextAction = append(c.inters.NextAction, interceptors...)
+}
+
+// Create returns a builder for creating a NextAction entity.
+func (c *NextActionClient) Create() *NextActionCreate {
+	mutation := newNextActionMutation(c.config, OpCreate)
+	return &NextActionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of NextAction entities.
+func (c *NextActionClient) CreateBulk(builders ...*NextActionCreate) *NextActionCreateBulk {
+	return &NextActionCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *NextActionClient) MapCreateBulk(slice any, setFunc func(*NextActionCreate, int)) *NextActionCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &NextActionCreateBulk{err: fmt.Errorf("calling to NextActionClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*NextActionCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &NextActionCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for NextAction.
+func (c *NextActionClient) Update() *NextActionUpdate {
+	mutation := newNextActionMutation(c.config, OpUpdate)
+	return &NextActionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *NextActionClient) UpdateOne(na *NextAction) *NextActionUpdateOne {
+	mutation := newNextActionMutation(c.config, OpUpdateOne, withNextAction(na))
+	return &NextActionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *NextActionClient) UpdateOneID(id int) *NextActionUpdateOne {
+	mutation := newNextActionMutation(c.config, OpUpdateOne, withNextActionID(id))
+	return &NextActionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for NextAction.
+func (c *NextActionClient) Delete() *NextActionDelete {
+	mutation := newNextActionMutation(c.config, OpDelete)
+	return &NextActionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *NextActionClient) DeleteOne(na *NextAction) *NextActionDeleteOne {
+	return c.DeleteOneID(na.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *NextActionClient) DeleteOneID(id int) *NextActionDeleteOne {
+	builder := c.Delete().Where(nextaction.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &NextActionDeleteOne{builder}
+}
+
+// Query returns a query builder for NextAction.
+func (c *NextActionClient) Query() *NextActionQuery {
+	return &NextActionQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeNextAction},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a NextAction entity by its id.
+func (c *NextActionClient) Get(ctx context.Context, id int) (*NextAction, error) {
+	return c.Query().Where(nextaction.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *NextActionClient) GetX(ctx context.Context, id int) *NextAction {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *NextActionClient) Hooks() []Hook {
+	return c.hooks.NextAction
+}
+
+// Interceptors returns the client interceptors.
+func (c *NextActionClient) Interceptors() []Interceptor {
+	return c.inters.NextAction
+}
+
+func (c *NextActionClient) mutate(ctx context.Context, m *NextActionMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&NextActionCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&NextActionUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&NextActionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&NextActionDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown NextAction mutation op: %q", m.Op())
 	}
 }
 
@@ -1284,10 +1427,11 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Mbti, SpecialEvent, Sukipi, Tweet, TwitterUser, University, User []ent.Hook
+		Mbti, NextAction, SpecialEvent, Sukipi, Tweet, TwitterUser, University,
+		User []ent.Hook
 	}
 	inters struct {
-		Mbti, SpecialEvent, Sukipi, Tweet, TwitterUser, University,
+		Mbti, NextAction, SpecialEvent, Sukipi, Tweet, TwitterUser, University,
 		User []ent.Interceptor
 	}
 )
