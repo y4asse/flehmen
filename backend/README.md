@@ -25,3 +25,8 @@ $ make db_migrate
 ```
 $ make db_seed
 ```
+
+データベースの差分を検出
+```
+$ atlas migrate diff {migration_name} --dir "file://ent/migrate/migrations" --to "ent://ent/schema" --dev-url "docker://mysql/8/ent"
+```
