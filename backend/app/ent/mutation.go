@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"flehmen-api/ent/mbti"
+	"flehmen-api/ent/nextaction"
 	"flehmen-api/ent/predicate"
 	"flehmen-api/ent/specialevent"
 	"flehmen-api/ent/sukipi"
@@ -31,6 +32,7 @@ const (
 
 	// Node types.
 	TypeMbti         = "Mbti"
+	TypeNextAction   = "NextAction"
 	TypeSpecialEvent = "SpecialEvent"
 	TypeSukipi       = "Sukipi"
 	TypeTweet        = "Tweet"
@@ -417,6 +419,509 @@ func (m *MbtiMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *MbtiMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Mbti edge %s", name)
+}
+
+// NextActionMutation represents an operation that mutates the NextAction nodes in the graph.
+type NextActionMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	score_min     *int
+	addscore_min  *int
+	score_max     *int
+	addscore_max  *int
+	action        *string
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*NextAction, error)
+	predicates    []predicate.NextAction
+}
+
+var _ ent.Mutation = (*NextActionMutation)(nil)
+
+// nextactionOption allows management of the mutation configuration using functional options.
+type nextactionOption func(*NextActionMutation)
+
+// newNextActionMutation creates new mutation for the NextAction entity.
+func newNextActionMutation(c config, op Op, opts ...nextactionOption) *NextActionMutation {
+	m := &NextActionMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeNextAction,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withNextActionID sets the ID field of the mutation.
+func withNextActionID(id int) nextactionOption {
+	return func(m *NextActionMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *NextAction
+		)
+		m.oldValue = func(ctx context.Context) (*NextAction, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().NextAction.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withNextAction sets the old NextAction of the mutation.
+func withNextAction(node *NextAction) nextactionOption {
+	return func(m *NextActionMutation) {
+		m.oldValue = func(context.Context) (*NextAction, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m NextActionMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m NextActionMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *NextActionMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *NextActionMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().NextAction.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetScoreMin sets the "score_min" field.
+func (m *NextActionMutation) SetScoreMin(i int) {
+	m.score_min = &i
+	m.addscore_min = nil
+}
+
+// ScoreMin returns the value of the "score_min" field in the mutation.
+func (m *NextActionMutation) ScoreMin() (r int, exists bool) {
+	v := m.score_min
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldScoreMin returns the old "score_min" field's value of the NextAction entity.
+// If the NextAction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *NextActionMutation) OldScoreMin(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldScoreMin is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldScoreMin requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldScoreMin: %w", err)
+	}
+	return oldValue.ScoreMin, nil
+}
+
+// AddScoreMin adds i to the "score_min" field.
+func (m *NextActionMutation) AddScoreMin(i int) {
+	if m.addscore_min != nil {
+		*m.addscore_min += i
+	} else {
+		m.addscore_min = &i
+	}
+}
+
+// AddedScoreMin returns the value that was added to the "score_min" field in this mutation.
+func (m *NextActionMutation) AddedScoreMin() (r int, exists bool) {
+	v := m.addscore_min
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetScoreMin resets all changes to the "score_min" field.
+func (m *NextActionMutation) ResetScoreMin() {
+	m.score_min = nil
+	m.addscore_min = nil
+}
+
+// SetScoreMax sets the "score_max" field.
+func (m *NextActionMutation) SetScoreMax(i int) {
+	m.score_max = &i
+	m.addscore_max = nil
+}
+
+// ScoreMax returns the value of the "score_max" field in the mutation.
+func (m *NextActionMutation) ScoreMax() (r int, exists bool) {
+	v := m.score_max
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldScoreMax returns the old "score_max" field's value of the NextAction entity.
+// If the NextAction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *NextActionMutation) OldScoreMax(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldScoreMax is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldScoreMax requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldScoreMax: %w", err)
+	}
+	return oldValue.ScoreMax, nil
+}
+
+// AddScoreMax adds i to the "score_max" field.
+func (m *NextActionMutation) AddScoreMax(i int) {
+	if m.addscore_max != nil {
+		*m.addscore_max += i
+	} else {
+		m.addscore_max = &i
+	}
+}
+
+// AddedScoreMax returns the value that was added to the "score_max" field in this mutation.
+func (m *NextActionMutation) AddedScoreMax() (r int, exists bool) {
+	v := m.addscore_max
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetScoreMax resets all changes to the "score_max" field.
+func (m *NextActionMutation) ResetScoreMax() {
+	m.score_max = nil
+	m.addscore_max = nil
+}
+
+// SetAction sets the "action" field.
+func (m *NextActionMutation) SetAction(s string) {
+	m.action = &s
+}
+
+// Action returns the value of the "action" field in the mutation.
+func (m *NextActionMutation) Action() (r string, exists bool) {
+	v := m.action
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAction returns the old "action" field's value of the NextAction entity.
+// If the NextAction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *NextActionMutation) OldAction(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAction is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAction requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAction: %w", err)
+	}
+	return oldValue.Action, nil
+}
+
+// ResetAction resets all changes to the "action" field.
+func (m *NextActionMutation) ResetAction() {
+	m.action = nil
+}
+
+// Where appends a list predicates to the NextActionMutation builder.
+func (m *NextActionMutation) Where(ps ...predicate.NextAction) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the NextActionMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *NextActionMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.NextAction, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *NextActionMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *NextActionMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (NextAction).
+func (m *NextActionMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *NextActionMutation) Fields() []string {
+	fields := make([]string, 0, 3)
+	if m.score_min != nil {
+		fields = append(fields, nextaction.FieldScoreMin)
+	}
+	if m.score_max != nil {
+		fields = append(fields, nextaction.FieldScoreMax)
+	}
+	if m.action != nil {
+		fields = append(fields, nextaction.FieldAction)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *NextActionMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case nextaction.FieldScoreMin:
+		return m.ScoreMin()
+	case nextaction.FieldScoreMax:
+		return m.ScoreMax()
+	case nextaction.FieldAction:
+		return m.Action()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *NextActionMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case nextaction.FieldScoreMin:
+		return m.OldScoreMin(ctx)
+	case nextaction.FieldScoreMax:
+		return m.OldScoreMax(ctx)
+	case nextaction.FieldAction:
+		return m.OldAction(ctx)
+	}
+	return nil, fmt.Errorf("unknown NextAction field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *NextActionMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case nextaction.FieldScoreMin:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetScoreMin(v)
+		return nil
+	case nextaction.FieldScoreMax:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetScoreMax(v)
+		return nil
+	case nextaction.FieldAction:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAction(v)
+		return nil
+	}
+	return fmt.Errorf("unknown NextAction field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *NextActionMutation) AddedFields() []string {
+	var fields []string
+	if m.addscore_min != nil {
+		fields = append(fields, nextaction.FieldScoreMin)
+	}
+	if m.addscore_max != nil {
+		fields = append(fields, nextaction.FieldScoreMax)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *NextActionMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case nextaction.FieldScoreMin:
+		return m.AddedScoreMin()
+	case nextaction.FieldScoreMax:
+		return m.AddedScoreMax()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *NextActionMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case nextaction.FieldScoreMin:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddScoreMin(v)
+		return nil
+	case nextaction.FieldScoreMax:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddScoreMax(v)
+		return nil
+	}
+	return fmt.Errorf("unknown NextAction numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *NextActionMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *NextActionMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *NextActionMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown NextAction nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *NextActionMutation) ResetField(name string) error {
+	switch name {
+	case nextaction.FieldScoreMin:
+		m.ResetScoreMin()
+		return nil
+	case nextaction.FieldScoreMax:
+		m.ResetScoreMax()
+		return nil
+	case nextaction.FieldAction:
+		m.ResetAction()
+		return nil
+	}
+	return fmt.Errorf("unknown NextAction field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *NextActionMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *NextActionMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *NextActionMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *NextActionMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *NextActionMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *NextActionMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *NextActionMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown NextAction unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *NextActionMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown NextAction edge %s", name)
 }
 
 // SpecialEventMutation represents an operation that mutates the SpecialEvent nodes in the graph.

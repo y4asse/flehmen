@@ -9,6 +9,9 @@ import (
 // Mbti is the predicate function for mbti builders.
 type Mbti func(*sql.Selector)
 
+// NextAction is the predicate function for nextaction builders.
+type NextAction func(*sql.Selector)
+
 // SpecialEvent is the predicate function for specialevent builders.
 type SpecialEvent func(*sql.Selector)
 
