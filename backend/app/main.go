@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"context"
 	"encoding/json"
 	"flehmen-api/ent"
 	"fmt"
@@ -16,12 +15,16 @@ import (
 	"strings"
 	"time"
 
+	"context"
+
 	"entgo.io/ent/dialect"
 	"github.com/go-sql-driver/mysql"
+	"github.com/google/generative-ai-go/genai"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/openai/openai-go"
-	"github.com/openai/openai-go/option"
+
+	// "github.com/openai/openai-go/option"
+	"google.golang.org/api/option"
 )
 
 type Controller struct {
@@ -256,85 +259,173 @@ func ReadRecentChat(chatFile *multipart.FileHeader) (string, error) {
 	return recentChat, nil
 }
 
-func GetClosenessScore(chatText string) (*ClosenessScore, error) {
-	apiKey := os.Getenv("OPENAI_API_KEY")
+// func GetClosenessScore(chatText string) (*ClosenessScore, error) {
+// 	apiKey := os.Getenv("OPENAI_API_KEY")
 
+// 	prompt := fmt.Sprintf(`
+// 		以下の会話ログを基に、親密度を5つの観点で評価してください。
+// 		各項目は20点満点で、合計100点とします。評価結果はJSON形式で出力してください。  JSON以外は出力しないでください．
+
+// 		{
+// 			"time": number,
+// 			"balance": number,
+// 			"rhythm": number,
+// 			"type": number,
+// 			"words": number,
+// 		}
+
+// 		### 評価項目:
+// 		1. **時間帯 (time)**
+// 		- 昼・夜などの時間帯による親密度の影響
+// 		- 深夜の会話が多いほど親密度が高い傾向がある
+
+// 		2. **バランス (balance)**
+// 		- どちらか一方が話しすぎていないか
+// 		- 双方が均等に会話しているか
+
+// 		3. **テンポ (rhythm)**
+// 		- メッセージのやりとりの間隔が短いか
+// 		- リアルタイムな会話が多いほどスコアが高い
+
+// 		4. **タイプ (type)**
+// 		- 会話の種類（相談、冗談、情報共有など）
+// 		- 相談や深い話が多いほど親密度が高い
+
+// 		5. **言葉 (words)**
+// 		- 使われる言葉の親密度（愛称、タメ口、感情表現）
+// 		- 「ありがとう」「好き」「嬉しい」などのポジティブ表現が多いほどスコアが高い
+
+// 		### 会話ログ:
+// 		%s
+// 	`, chatText)
+
+// 	client := openai.NewClient(
+// 		option.WithAPIKey(apiKey),
+// 	)
+
+// 	// var HistoricalComputerResponseSchema = GenerateSchema[HistoricalComputer]()
+
+// 	// schemaParam := openai.ResponseFormatJSONSchemaJSONSchemaParam{
+// 	// 	Name:        openai.F("biography"),
+// 	// 	Description: openai.F("Notable information about a person"),
+// 	// 	Schema:      openai.F(HistoricalComputerResponseSchema),
+// 	// 	Strict:      openai.Bool(true),
+// 	// }
+
+// 	resp, err := client.Chat.Completions.New(context.TODO(), openai.ChatCompletionNewParams{
+// 		Messages: openai.F([]openai.ChatCompletionMessageParamUnion{
+// 			openai.UserMessage(prompt),
+// 		}),
+// 		Model: openai.F(openai.ChatModelGPT4o),
+// 		// ResponseFormat: openai.F[openai.ChatCompletionNewParamsResponseFormatUnion](
+// 		// 	openai.ResponseFormatJSONSchemaParam{
+// 		// 		Type:       openai.F(openai.ResponseFormatJSONSchemaTypeJSONSchema),
+// 		// 		JSONSchema: openai.F(schemaParam),
+// 		// 	},
+// 		// ),
+// 	})
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	fmt.Println(resp.Choices[0].Message.Content)
+// 	// ```jsonを削除する
+// 	validResult := strings.ReplaceAll(resp.Choices[0].Message.Content, "```json", "")
+// 	validResult = strings.ReplaceAll(validResult, "```", "")
+// 	// レスポンスをパース
+// 	var score ClosenessScore
+// 	err = json.Unmarshal([]byte(validResult), &score)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	return &score, nil
+// }
+
+func GetClosenessScore(chatText string) (*ClosenessScore, error) {
 	prompt := fmt.Sprintf(`
-		以下の会話ログを基に、親密度を5つの観点で評価してください。  
+		以下の会話ログを基に、親密度を5つの観点で評価してください。
 		各項目は20点満点で、合計100点とします。評価結果はJSON形式で出力してください。  JSON以外は出力しないでください．
 
-		{
-			"time": number,
-			"balance": number,
-			"rhythm": number,
-			"type": number,
-			"words": number,
-		}
 
 		### 評価項目:
-		1. **時間帯 (time)**  
-		- 昼・夜などの時間帯による親密度の影響  
-		- 深夜の会話が多いほど親密度が高い傾向がある  
+		1. **時間帯 (time)**
+		- 昼・夜などの時間帯による親密度の影響
+		- 深夜の会話が多いほど親密度が高い傾向がある
 
-		2. **バランス (balance)**  
-		- どちらか一方が話しすぎていないか  
-		- 双方が均等に会話しているか  
+		2. **バランス (balance)**
+		- どちらか一方が話しすぎていないか
+		- 双方が均等に会話しているか
 
-		3. **テンポ (rhythm)**  
-		- メッセージのやりとりの間隔が短いか  
-		- リアルタイムな会話が多いほどスコアが高い  
+		3. **テンポ (rhythm)**
+		- メッセージのやりとりの間隔が短いか
+		- リアルタイムな会話が多いほどスコアが高い
 
-		4. **タイプ (type)**  
-		- 会話の種類（相談、冗談、情報共有など）  
-		- 相談や深い話が多いほど親密度が高い  
+		4. **タイプ (type)**
+		- 会話の種類（相談、冗談、情報共有など）
+		- 相談や深い話が多いほど親密度が高い
 
-		5. **言葉 (words)**  
-		- 使われる言葉の親密度（愛称、タメ口、感情表現）  
-		- 「ありがとう」「好き」「嬉しい」などのポジティブ表現が多いほどスコアが高い  
+		5. **言葉 (words)**
+		- 使われる言葉の親密度（愛称、タメ口、感情表現）
+		- 「ありがとう」「好き」「嬉しい」などのポジティブ表現が多いほどスコアが高い
+
+		
 
 		### 会話ログ:
 		%s
 	`, chatText)
 
-	client := openai.NewClient(
-		option.WithAPIKey(apiKey),
-	)
+	fmt.Println(prompt)
 
-	// var HistoricalComputerResponseSchema = GenerateSchema[HistoricalComputer]()
-
-	// schemaParam := openai.ResponseFormatJSONSchemaJSONSchemaParam{
-	// 	Name:        openai.F("biography"),
-	// 	Description: openai.F("Notable information about a person"),
-	// 	Schema:      openai.F(HistoricalComputerResponseSchema),
-	// 	Strict:      openai.Bool(true),
-	// }
-
-	resp, err := client.Chat.Completions.New(context.TODO(), openai.ChatCompletionNewParams{
-		Messages: openai.F([]openai.ChatCompletionMessageParamUnion{
-			openai.UserMessage(prompt),
-		}),
-		Model: openai.F(openai.ChatModelGPT4o),
-		// ResponseFormat: openai.F[openai.ChatCompletionNewParamsResponseFormatUnion](
-		// 	openai.ResponseFormatJSONSchemaParam{
-		// 		Type:       openai.F(openai.ResponseFormatJSONSchemaTypeJSONSchema),
-		// 		JSONSchema: openai.F(schemaParam),
-		// 	},
-		// ),
-	})
+	ctx := context.Background()
+	client, err := genai.NewClient(ctx, option.WithAPIKey(os.Getenv("GEMINI_API_KEY")))
 	if err != nil {
+		fmt.Println(err.Error())
 		return nil, err
 	}
+	defer client.Close()
 
-	fmt.Println(resp.Choices[0].Message.Content)
-	// ```jsonを削除する
-	validResult := strings.ReplaceAll(resp.Choices[0].Message.Content, "```json", "")
-	validResult = strings.ReplaceAll(validResult, "```", "")
-	// レスポンスをパース
+	schema := &genai.Schema{
+		Type: genai.TypeObject,
+		Properties: map[string]*genai.Schema{
+			"time": {
+				Type:        genai.TypeInteger,
+				Description: "昼・夜などの時間帯による親密度の影響",
+			},
+			"balance": {
+				Type:        genai.TypeInteger,
+				Description: "どちらか一方が話しすぎていないか",
+			},
+			"rhythm": {
+				Type:        genai.TypeInteger,
+				Description: "メッセージのやりとりの間隔が短いか",
+			},
+			"type": {
+				Type:        genai.TypeInteger,
+				Description: "会話の種類（相談、冗談、情報共有など）",
+			},
+			"words": {
+				Type:        genai.TypeInteger,
+				Description: "使われる言葉の親密度（愛称、タメ口、感情表現）",
+			},
+		},
+	}
+
+	model := client.GenerativeModel("gemini-1.5-flash")
+	model.ResponseMIMEType = "application/json"
+	model.ResponseSchema = schema
+	resp, err := model.GenerateContent(ctx, genai.Text(prompt))
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
 	var score ClosenessScore
-	err = json.Unmarshal([]byte(validResult), &score)
-	if err != nil {
+	if err := json.Unmarshal([]byte(resp.Candidates[0].Content.Parts[0].(genai.Text)), &score); err != nil {
+		fmt.Println(err.Error())
 		return nil, err
 	}
+	score.Total = score.Time + score.Balance + score.Rhythm + score.Type + score.Words
+	fmt.Println(score.Balance)
 
 	return &score, nil
 }
@@ -391,6 +482,7 @@ func main() {
 	e.GET("/sukipi/:id", controller.GetSukipiById)
 	e.POST("/sukipi", controller.SaveSukipi)
 	e.POST("/sukipi_voice", controller.CreateSukipiVoice)
+	e.POST("/between", controller.GetBetween)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
