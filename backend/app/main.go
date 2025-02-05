@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"flehmen-api/ent"
+	"flehmen-api/ent/nextaction"
 	"fmt"
 	"io"
 	"log"
@@ -430,19 +431,29 @@ func GetClosenessScore(chatText string) (*ClosenessScore, error) {
 	return &score, nil
 }
 
-func GetNextAction(total int) (string, error) {
-	switch {
-	case total >= 80:
-		return "親密度が非常に高い！次は、一緒に遊ぶ計画を立てたり、直接会う約束をしよう。", nil
-	case total >= 60:
-		return "かなり親密な関係！もっと深い話をしたり、通話を試みるのがおすすめ。", nil
-	case total >= 40:
-		return "普通の親しさ。会話の話題を増やし、相手に質問を多く投げかけよう。", nil
-	case total >= 20:
-		return "まだ距離があるかも。ポジティブな話題を増やして、相手の興味を引こう！", nil
-	default:
-		return "距離が遠い状態。無理に距離を詰めず、相手のペースに合わせてゆっくり関係を築こう。", nil
+//	func GetNextAction(total int) (string, error) {
+//		switch {
+//		case total >= 80:
+//			return "親密度が非常に高い！次は、一緒に遊ぶ計画を立てたり、直接会う約束をしよう。", nil
+//		case total >= 60:
+//			return "かなり親密な関係！もっと深い話をしたり、通話を試みるのがおすすめ。", nil
+//		case total >= 40:
+//			return "普通の親しさ。会話の話題を増やし、相手に質問を多く投げかけよう。", nil
+//		case total >= 20:
+//			return "まだ距離があるかも。ポジティブな話題を増やして、相手の興味を引こう！", nil
+//		default:
+//			return "距離が遠い状態。無理に距離を詰めず、相手のペースに合わせてゆっくり関係を築こう。", nil
+//		}
+//	}
+func GetNextAction(ctx context.Context, client *ent.Client, total int) (string, error) {
+	nextaction, err := client.NextAction.
+		Query().
+		Where(nextaction.ScoreMinLTE(total), nextaction.ScoreMaxGTE(total)).
+		Only(ctx)
+	if err != nil {
+		return "データベースから取り出せないよ", err
 	}
+	return nextaction.Action, nil
 }
 
 func (controller *Controller) GetBetween(c echo.Context) error {
@@ -464,7 +475,7 @@ func (controller *Controller) GetBetween(c echo.Context) error {
 	}
 
 	//スコアからnextactionを決定
-	nextaction, err := GetNextAction(score.Total)
+	nextaction, err := GetNextAction(c.Request().Context(), controller.entClient, score.Total)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}

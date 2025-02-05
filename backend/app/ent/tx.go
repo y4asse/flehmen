@@ -14,6 +14,8 @@ type Tx struct {
 	config
 	// Mbti is the client for interacting with the Mbti builders.
 	Mbti *MbtiClient
+	// NextAction is the client for interacting with the NextAction builders.
+	NextAction *NextActionClient
 	// SpecialEvent is the client for interacting with the SpecialEvent builders.
 	SpecialEvent *SpecialEventClient
 	// Sukipi is the client for interacting with the Sukipi builders.
@@ -158,6 +160,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Mbti = NewMbtiClient(tx.config)
+	tx.NextAction = NewNextActionClient(tx.config)
 	tx.SpecialEvent = NewSpecialEventClient(tx.config)
 	tx.Sukipi = NewSukipiClient(tx.config)
 	tx.Tweet = NewTweetClient(tx.config)

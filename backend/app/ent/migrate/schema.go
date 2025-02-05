@@ -20,6 +20,19 @@ var (
 		Columns:    MbtisColumns,
 		PrimaryKey: []*schema.Column{MbtisColumns[0]},
 	}
+	// NextActionsColumns holds the columns for the "next_actions" table.
+	NextActionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "score_min", Type: field.TypeInt},
+		{Name: "score_max", Type: field.TypeInt},
+		{Name: "action", Type: field.TypeString},
+	}
+	// NextActionsTable holds the schema information for the "next_actions" table.
+	NextActionsTable = &schema.Table{
+		Name:       "next_actions",
+		Columns:    NextActionsColumns,
+		PrimaryKey: []*schema.Column{NextActionsColumns[0]},
+	}
 	// SpecialEventsColumns holds the columns for the "special_events" table.
 	SpecialEventsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -166,6 +179,7 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		MbtisTable,
+		NextActionsTable,
 		SpecialEventsTable,
 		SukipisTable,
 		TweetsTable,

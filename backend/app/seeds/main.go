@@ -22,6 +22,12 @@ type University struct {
 	Prefecture          string `json:"prefecture"`
 }
 
+type NextAction struct {
+	MinScore   int    `json:"score_min"`
+	MaxScore   int    `json:"score_max"`
+	NextAction string `json:"next_action"`
+}
+
 type User struct {
 	ID       string `json:"id"`
 	Name     string `json:"name"`
@@ -73,6 +79,9 @@ func main() {
 	if err := seedUniversity(ctx, client); err != nil {
 		log.Fatalf("failed seeding university: %v", err)
 	}
+	if err := seedNextAction(ctx, client); err != nil {
+		log.Fatalf("failed seeding next action: %v", err)
+	}
 
 	if err := seedTweets(ctx, client); err != nil {
 		log.Fatalf("failed seeding tweets: %v", err)
@@ -103,6 +112,31 @@ func seedUniversity(ctx context.Context, client *ent.Client) error {
 		)
 	}
 	if err := client.University.CreateBulk(bulk...).Exec(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
+func seedNextAction(ctx context.Context, client *ent.Client) error {
+	file, err := os.Open("seeds/nextaction.json")
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	var nextaction []NextAction
+	if err := json.NewDecoder(file).Decode(&nextaction); err != nil {
+		return err
+	}
+	var bulk []*ent.NextActionCreate
+	for _, n := range nextaction {
+		bulk = append(bulk, client.NextAction.Create().
+			SetScoreMin(n.MinScore).
+			SetScoreMax(n.MaxScore).
+			SetAction(n.NextAction),
+		)
+	}
+	if err := client.NextAction.CreateBulk(bulk...).Exec(ctx); err != nil {
 		return err
 	}
 	return nil
