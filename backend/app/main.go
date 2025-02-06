@@ -87,7 +87,6 @@ func (controller *Controller) SaveSukipi(c echo.Context) error {
 		SetNillableShoesSize(req.ShoesSize).
 		SetNillableFamily(req.Family).
 		SetLikedAt(req.LikedAt).
-		SetNillableMbtiID(req.MbtiId).
 		SetNillableNearlyStation(req.NearStation).
 		Save(c.Request().Context())
 	if err != nil {
