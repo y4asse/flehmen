@@ -1,9 +1,10 @@
 'use server'
 
+import { sukipis, users } from '@/db/schema'
 import { SukipiInfo } from '@/types/sukipiInfo'
 import { db } from '@/utils/db'
 import { auth, clerkClient } from '@clerk/nextjs/server'
-import { sql } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 
 export const completeOnboarding = async (sukipiInfo: SukipiInfo) => {
   const { userId } = await auth()
@@ -14,11 +15,23 @@ export const completeOnboarding = async (sukipiInfo: SukipiInfo) => {
 
   const client = await clerkClient()
   try {
-    const result = await db.execute(sql`
-            INSERT INTO sukipis (name, user_id, x_id, liked_at, weight, height, mbti, birthday, hobby, shoes_size, family, near_station)
-            VALUES (${sukipiInfo.name}, ${userId}, ${sukipiInfo.twitterId}, ${sukipiInfo.likedAt}, ${sukipiInfo.weight}, ${sukipiInfo.height}, ${sukipiInfo.mbti}, ${sukipiInfo.birthday}, ${sukipiInfo.hobby}, ${sukipiInfo.shoesSize}, ${sukipiInfo.family}, ${sukipiInfo.nearStation})
-    `)
-    console.log(result)
+    const user = await db.select().from(users).where(eq(users.clerkId, userId))
+    if (!user.length) {
+      return { error: 'User Not Found', message: null }
+    }
+    await db.insert(sukipis).values({
+      name: sukipiInfo.name,
+      likedAt: sukipiInfo.likedAt || new Date(),
+      userId: user[0].id,
+      xId: sukipiInfo.twitterId,
+      weight: sukipiInfo.weight,
+      height: sukipiInfo.height,
+      mbti: sukipiInfo.mbti,
+      birthday: sukipiInfo.birthday,
+      hobby: sukipiInfo.hobby,
+      shoesSize: sukipiInfo.shoesSize,
+      family: sukipiInfo.family,
+    })
     const res = await client.users.updateUser(userId, {
         publicMetadata: {
             onboardingComplete: true,

@@ -183,14 +183,13 @@ const Page = () => {
       },
       {} as RequestBody // 型定義を更新
     );
-    console.log("aaaaaaaaaaaa")
     const { error } = await completeOnboarding(data as SukipiInfo)
     if (error) {
       alert("エラーが発生しました")
       return
     }
-    // await user?.reload()
-    // router.push('/loading')
+    await user?.reload()
+    router.push('/loading')
   };
 
   return (
