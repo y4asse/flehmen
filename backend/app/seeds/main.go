@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"time"
 
 	"entgo.io/ent/dialect"
@@ -88,10 +87,6 @@ func main() {
 		log.Fatalf("failed seeding next action: %v", err)
 	}
 
-	if err := seedTweets(ctx, client); err != nil {
-		log.Fatalf("failed seeding tweets: %v", err)
-	}
-
 	if err := seedUser(ctx, client); err != nil {
 		log.Fatalf("failed seeding user: %v", err)
 	}
@@ -152,66 +147,6 @@ func seedNextAction(ctx context.Context, client *ent.Client) error {
 	if err := client.NextAction.CreateBulk(bulk...).Exec(ctx); err != nil {
 		return err
 	}
-	return nil
-}
-
-func seedTweets(ctx context.Context, client *ent.Client) error {
-	file, err := os.Open("seeds/tweets.json")
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	var tweetData TweetData
-	if err := json.NewDecoder(file).Decode(&tweetData); err != nil {
-		return err
-	}
-
-	var bulkUsers []*ent.TwitterUserCreate
-	for _, u := range tweetData.Includes.Users {
-		userId, err := strconv.Atoi(u.ID)
-		if err != nil {
-			return err
-		}
-		bulkUsers = append(bulkUsers, client.TwitterUser.Create().
-			SetID(userId).
-			SetName(u.Name).
-			SetUsername(u.Username),
-		)
-	}
-	if err := client.TwitterUser.CreateBulk(bulkUsers...).Exec(ctx); err != nil {
-		return err
-	}
-
-	var bulk []*ent.TweetCreate
-	for _, t := range tweetData.Data {
-		tweetID, err := strconv.Atoi(t.ID)
-		if err != nil {
-			return err
-		}
-		var replyToUserID *int
-		if t.InReplyToUserID != "" {
-			id, err := strconv.Atoi(t.InReplyToUserID)
-			if err == nil {
-				replyToUserID = &id
-			}
-		}
-		createdAt, err := time.Parse(time.RFC3339, t.CreatedAt)
-		if err != nil {
-			return err
-		}
-
-		bulk = append(bulk, client.Tweet.Create().
-			SetText(t.Text).
-			SetTweetID(tweetID).
-			SetTweetCreatedAt(createdAt).
-			SetNillableReplyTwitterUserID(replyToUserID),
-		)
-	}
-	if err := client.Tweet.CreateBulk(bulk...).Exec(ctx); err != nil {
-		return err
-	}
-
 	return nil
 }
 
