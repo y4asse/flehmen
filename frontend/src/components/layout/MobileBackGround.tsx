@@ -16,7 +16,7 @@ export const MobileBackGround = () => {
       />
       <div className="fixed bottom-2  flex justify-center w-[95%] px-2 py-2 rounded-sm">
         <Link href="/">
-          <Image src="/images/logo.svg" alt="icon" width={200} height={200} />
+          <Image src="/images/logo.svg" alt="icon" width={150} height={150} />
         </Link>
       </div>
     </Flex>
