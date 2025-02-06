@@ -19,19 +19,18 @@ export const HomeIcon = (props: Props) => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        marginTop: "70px",
+        marginTop: "20px",
       }}
     >
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
-          gap: "50px",
         }}
       >
         {Icon.map((icon) => (
           <a key={icon.name} href={icon.href}>
-            <Image src={icon.image} alt={icon.name} width={140} height={100} />
+            <Image src={icon.image} alt={icon.name} width={180} height={100} />
           </a>
         ))}
       </div>
