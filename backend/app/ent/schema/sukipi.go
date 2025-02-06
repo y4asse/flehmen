@@ -34,7 +34,6 @@ func (Sukipi) Fields() []ent.Field {
 // Edges of the Sukipi.
 func (Sukipi) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("tweets", Tweet.Type),
 		edge.To("user", User.Type).Unique(),
 	}
 }
