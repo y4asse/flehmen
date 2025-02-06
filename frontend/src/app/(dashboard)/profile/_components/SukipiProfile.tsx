@@ -5,40 +5,6 @@ import { SukipiInfo } from "./SukipiInfo";
 import { SukipiLikedAt } from "./SukipiLikedAt";
 import { SukipiInfo as SukipiInfoType } from "@/types/sukipiInfo";
 
-type MBTI =
-  | "ENFP"
-  | "ENFJ"
-  | "ENTP"
-  | "ENTJ"
-  | "ESFP"
-  | "ESFJ"
-  | "ESTP"
-  | "ESTJ"
-  | "INFP"
-  | "INFJ"
-  | "INTP"
-  | "INTJ"
-  | "ISFP"
-  | "ISFJ"
-  | "ISTP"
-  | "ISTJ";
-
-export type Sukipi = {
-  name: string;
-  weight?: number;
-  height?: number;
-  mbti?: MBTI;
-  birthday?: string;
-  hobby?: string;
-  shoesSize?: number;
-  family?: string;
-  nearlyStation?: string;
-};
-
-type SukipiLikedAt = {
-  likedAt: string;
-};
-
 const SukipiProfile = ({ sukipi }: { sukipi: SukipiInfoType }) => {
   const [sukipiData, setSukipiData] = useState<SukipiInfoType>(sukipi);
 

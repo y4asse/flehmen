@@ -3,6 +3,7 @@ import SukipiProfile from "./_components/SukipiProfile";
 import { sukipis, users } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
+import { MBTI } from "@/types/mbti";
 
 const Page = async () => {
   const { userId } = await auth();
@@ -11,7 +12,7 @@ const Page = async () => {
     name: sukipi.name,
     weight: sukipi.weight,
     height: sukipi.height,
-    mbti: sukipi.mbti,
+    mbti: sukipi.mbti as MBTI,
     birthday: sukipi.birthday,
     hobby: sukipi.hobby,
     shoesSize: sukipi.shoesSize,
