@@ -345,29 +345,6 @@ func CreatedAtLTE(v time.Time) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldCreatedAt, v))
 }
 
-// HasMbti applies the HasEdge predicate on the "mbti" edge.
-func HasMbti() predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, false, MbtiTable, MbtiColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasMbtiWith applies the HasEdge predicate on the "mbti" edge with a given conditions (other predicates).
-func HasMbtiWith(preds ...predicate.Mbti) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		step := newMbtiStep()
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
-	})
-}
-
 // HasSpecialEvents applies the HasEdge predicate on the "special_events" edge.
 func HasSpecialEvents() predicate.User {
 	return predicate.User(func(s *sql.Selector) {
@@ -383,6 +360,29 @@ func HasSpecialEvents() predicate.User {
 func HasSpecialEventsWith(preds ...predicate.SpecialEvent) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		step := newSpecialEventsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasSukipis applies the HasEdge predicate on the "sukipis" edge.
+func HasSukipis() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, SukipisTable, SukipisColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasSukipisWith applies the HasEdge predicate on the "sukipis" edge with a given conditions (other predicates).
+func HasSukipisWith(preds ...predicate.Sukipi) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := newSukipisStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

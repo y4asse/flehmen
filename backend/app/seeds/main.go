@@ -58,6 +58,11 @@ type TweetData struct {
 	Metadeta Metadeta `json:"metadeta"`
 }
 
+type UserData struct {
+	ID      string `json:"id"`
+	ClerkID string `json:"clerk_id"`
+}
+
 func main() {
 	c := mysql.Config{
 		DBName:    os.Getenv("DB_NAME"),
@@ -85,6 +90,10 @@ func main() {
 
 	if err := seedTweets(ctx, client); err != nil {
 		log.Fatalf("failed seeding tweets: %v", err)
+	}
+
+	if err := seedUser(ctx, client); err != nil {
+		log.Fatalf("failed seeding user: %v", err)
 	}
 
 	fmt.Println("シーディングが完了しました")
@@ -199,5 +208,19 @@ func seedTweets(ctx context.Context, client *ent.Client) error {
 		return err
 	}
 
+	return nil
+}
+
+func seedUser(ctx context.Context, client *ent.Client) error {
+	err := client.User.Create().
+		SetClerkID("user_2sfTghKeM7uB97iqooGRkN6fAd8").
+		SetName("test").
+		SetIsMale(true).
+		SetWeight(173).
+		SetHeight(173).
+		Exec(ctx)
+	if err != nil {
+		return err
+	}
 	return nil
 }

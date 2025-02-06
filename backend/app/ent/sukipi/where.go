@@ -60,6 +60,11 @@ func Name(v string) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldEQ(FieldName, v))
 }
 
+// LikedAt applies equality check predicate on the "liked_at" field. It's identical to LikedAtEQ.
+func LikedAt(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldLikedAt, v))
+}
+
 // Weight applies equality check predicate on the "weight" field. It's identical to WeightEQ.
 func Weight(v float64) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldEQ(FieldWeight, v))
@@ -100,9 +105,9 @@ func NearlyStation(v string) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldEQ(FieldNearlyStation, v))
 }
 
-// LikedAt applies equality check predicate on the "liked_at" field. It's identical to LikedAtEQ.
-func LikedAt(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldEQ(FieldLikedAt, v))
+// Mbti applies equality check predicate on the "mbti" field. It's identical to MbtiEQ.
+func Mbti(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldMbti, v))
 }
 
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
@@ -173,6 +178,46 @@ func NameEqualFold(v string) predicate.Sukipi {
 // NameContainsFold applies the ContainsFold predicate on the "name" field.
 func NameContainsFold(v string) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldContainsFold(FieldName, v))
+}
+
+// LikedAtEQ applies the EQ predicate on the "liked_at" field.
+func LikedAtEQ(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldLikedAt, v))
+}
+
+// LikedAtNEQ applies the NEQ predicate on the "liked_at" field.
+func LikedAtNEQ(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNEQ(FieldLikedAt, v))
+}
+
+// LikedAtIn applies the In predicate on the "liked_at" field.
+func LikedAtIn(vs ...time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldIn(FieldLikedAt, vs...))
+}
+
+// LikedAtNotIn applies the NotIn predicate on the "liked_at" field.
+func LikedAtNotIn(vs ...time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNotIn(FieldLikedAt, vs...))
+}
+
+// LikedAtGT applies the GT predicate on the "liked_at" field.
+func LikedAtGT(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGT(FieldLikedAt, v))
+}
+
+// LikedAtGTE applies the GTE predicate on the "liked_at" field.
+func LikedAtGTE(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGTE(FieldLikedAt, v))
+}
+
+// LikedAtLT applies the LT predicate on the "liked_at" field.
+func LikedAtLT(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLT(FieldLikedAt, v))
+}
+
+// LikedAtLTE applies the LTE predicate on the "liked_at" field.
+func LikedAtLTE(v time.Time) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLTE(FieldLikedAt, v))
 }
 
 // WeightEQ applies the EQ predicate on the "weight" field.
@@ -675,44 +720,79 @@ func NearlyStationContainsFold(v string) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldContainsFold(FieldNearlyStation, v))
 }
 
-// LikedAtEQ applies the EQ predicate on the "liked_at" field.
-func LikedAtEQ(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldEQ(FieldLikedAt, v))
+// MbtiEQ applies the EQ predicate on the "mbti" field.
+func MbtiEQ(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEQ(FieldMbti, v))
 }
 
-// LikedAtNEQ applies the NEQ predicate on the "liked_at" field.
-func LikedAtNEQ(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldNEQ(FieldLikedAt, v))
+// MbtiNEQ applies the NEQ predicate on the "mbti" field.
+func MbtiNEQ(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNEQ(FieldMbti, v))
 }
 
-// LikedAtIn applies the In predicate on the "liked_at" field.
-func LikedAtIn(vs ...time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldIn(FieldLikedAt, vs...))
+// MbtiIn applies the In predicate on the "mbti" field.
+func MbtiIn(vs ...string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldIn(FieldMbti, vs...))
 }
 
-// LikedAtNotIn applies the NotIn predicate on the "liked_at" field.
-func LikedAtNotIn(vs ...time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldNotIn(FieldLikedAt, vs...))
+// MbtiNotIn applies the NotIn predicate on the "mbti" field.
+func MbtiNotIn(vs ...string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNotIn(FieldMbti, vs...))
 }
 
-// LikedAtGT applies the GT predicate on the "liked_at" field.
-func LikedAtGT(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldGT(FieldLikedAt, v))
+// MbtiGT applies the GT predicate on the "mbti" field.
+func MbtiGT(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGT(FieldMbti, v))
 }
 
-// LikedAtGTE applies the GTE predicate on the "liked_at" field.
-func LikedAtGTE(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldGTE(FieldLikedAt, v))
+// MbtiGTE applies the GTE predicate on the "mbti" field.
+func MbtiGTE(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldGTE(FieldMbti, v))
 }
 
-// LikedAtLT applies the LT predicate on the "liked_at" field.
-func LikedAtLT(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldLT(FieldLikedAt, v))
+// MbtiLT applies the LT predicate on the "mbti" field.
+func MbtiLT(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLT(FieldMbti, v))
 }
 
-// LikedAtLTE applies the LTE predicate on the "liked_at" field.
-func LikedAtLTE(v time.Time) predicate.Sukipi {
-	return predicate.Sukipi(sql.FieldLTE(FieldLikedAt, v))
+// MbtiLTE applies the LTE predicate on the "mbti" field.
+func MbtiLTE(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldLTE(FieldMbti, v))
+}
+
+// MbtiContains applies the Contains predicate on the "mbti" field.
+func MbtiContains(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldContains(FieldMbti, v))
+}
+
+// MbtiHasPrefix applies the HasPrefix predicate on the "mbti" field.
+func MbtiHasPrefix(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldHasPrefix(FieldMbti, v))
+}
+
+// MbtiHasSuffix applies the HasSuffix predicate on the "mbti" field.
+func MbtiHasSuffix(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldHasSuffix(FieldMbti, v))
+}
+
+// MbtiIsNil applies the IsNil predicate on the "mbti" field.
+func MbtiIsNil() predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldIsNull(FieldMbti))
+}
+
+// MbtiNotNil applies the NotNil predicate on the "mbti" field.
+func MbtiNotNil() predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldNotNull(FieldMbti))
+}
+
+// MbtiEqualFold applies the EqualFold predicate on the "mbti" field.
+func MbtiEqualFold(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldEqualFold(FieldMbti, v))
+}
+
+// MbtiContainsFold applies the ContainsFold predicate on the "mbti" field.
+func MbtiContainsFold(v string) predicate.Sukipi {
+	return predicate.Sukipi(sql.FieldContainsFold(FieldMbti, v))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
@@ -755,29 +835,6 @@ func CreatedAtLTE(v time.Time) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldLTE(FieldCreatedAt, v))
 }
 
-// HasMbti applies the HasEdge predicate on the "mbti" edge.
-func HasMbti() predicate.Sukipi {
-	return predicate.Sukipi(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, false, MbtiTable, MbtiColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasMbtiWith applies the HasEdge predicate on the "mbti" edge with a given conditions (other predicates).
-func HasMbtiWith(preds ...predicate.Mbti) predicate.Sukipi {
-	return predicate.Sukipi(func(s *sql.Selector) {
-		step := newMbtiStep()
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
-	})
-}
-
 // HasTweets applies the HasEdge predicate on the "tweets" edge.
 func HasTweets() predicate.Sukipi {
 	return predicate.Sukipi(func(s *sql.Selector) {
@@ -793,6 +850,29 @@ func HasTweets() predicate.Sukipi {
 func HasTweetsWith(preds ...predicate.Tweet) predicate.Sukipi {
 	return predicate.Sukipi(func(s *sql.Selector) {
 		step := newTweetsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasUser applies the HasEdge predicate on the "user" edge.
+func HasUser() predicate.Sukipi {
+	return predicate.Sukipi(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, UserTable, UserColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasUserWith applies the HasEdge predicate on the "user" edge with a given conditions (other predicates).
+func HasUserWith(preds ...predicate.User) predicate.Sukipi {
+	return predicate.Sukipi(func(s *sql.Selector) {
+		step := newUserStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

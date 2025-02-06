@@ -26,19 +26,12 @@ const (
 	FieldIsMale = "is_male"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
-	// EdgeMbti holds the string denoting the mbti edge name in mutations.
-	EdgeMbti = "mbti"
 	// EdgeSpecialEvents holds the string denoting the special_events edge name in mutations.
 	EdgeSpecialEvents = "special_events"
+	// EdgeSukipis holds the string denoting the sukipis edge name in mutations.
+	EdgeSukipis = "sukipis"
 	// Table holds the table name of the user in the database.
 	Table = "users"
-	// MbtiTable is the table that holds the mbti relation/edge.
-	MbtiTable = "users"
-	// MbtiInverseTable is the table name for the Mbti entity.
-	// It exists in this package in order to avoid circular dependency with the "mbti" package.
-	MbtiInverseTable = "mbtis"
-	// MbtiColumn is the table column denoting the mbti relation/edge.
-	MbtiColumn = "user_mbti"
 	// SpecialEventsTable is the table that holds the special_events relation/edge.
 	SpecialEventsTable = "special_events"
 	// SpecialEventsInverseTable is the table name for the SpecialEvent entity.
@@ -46,6 +39,13 @@ const (
 	SpecialEventsInverseTable = "special_events"
 	// SpecialEventsColumn is the table column denoting the special_events relation/edge.
 	SpecialEventsColumn = "user_special_events"
+	// SukipisTable is the table that holds the sukipis relation/edge.
+	SukipisTable = "users"
+	// SukipisInverseTable is the table name for the Sukipi entity.
+	// It exists in this package in order to avoid circular dependency with the "sukipi" package.
+	SukipisInverseTable = "sukipis"
+	// SukipisColumn is the table column denoting the sukipis relation/edge.
+	SukipisColumn = "user_sukipis"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -62,7 +62,7 @@ var Columns = []string{
 // ForeignKeys holds the SQL foreign-keys that are owned by the "users"
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
-	"user_mbti",
+	"user_sukipis",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -123,13 +123,6 @@ func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
 }
 
-// ByMbtiField orders the results by mbti field.
-func ByMbtiField(field string, opts ...sql.OrderTermOption) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newMbtiStep(), sql.OrderByField(field, opts...))
-	}
-}
-
 // BySpecialEventsCount orders the results by special_events count.
 func BySpecialEventsCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -143,17 +136,24 @@ func BySpecialEvents(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newSpecialEventsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
-func newMbtiStep() *sqlgraph.Step {
-	return sqlgraph.NewStep(
-		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(MbtiInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2O, false, MbtiTable, MbtiColumn),
-	)
+
+// BySukipisField orders the results by sukipis field.
+func BySukipisField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newSukipisStep(), sql.OrderByField(field, opts...))
+	}
 }
 func newSpecialEventsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(SpecialEventsInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, false, SpecialEventsTable, SpecialEventsColumn),
+	)
+}
+func newSukipisStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(SukipisInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, false, SukipisTable, SukipisColumn),
 	)
 }

@@ -5,7 +5,6 @@ package ent
 import (
 	"context"
 	"errors"
-	"flehmen-api/ent/mbti"
 	"flehmen-api/ent/nextaction"
 	"flehmen-api/ent/predicate"
 	"flehmen-api/ent/specialevent"
@@ -31,7 +30,6 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeMbti         = "Mbti"
 	TypeNextAction   = "NextAction"
 	TypeSpecialEvent = "SpecialEvent"
 	TypeSukipi       = "Sukipi"
@@ -40,386 +38,6 @@ const (
 	TypeUniversity   = "University"
 	TypeUser         = "User"
 )
-
-// MbtiMutation represents an operation that mutates the Mbti nodes in the graph.
-type MbtiMutation struct {
-	config
-	op            Op
-	typ           string
-	id            *int
-	_type         *string
-	created_at    *time.Time
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*Mbti, error)
-	predicates    []predicate.Mbti
-}
-
-var _ ent.Mutation = (*MbtiMutation)(nil)
-
-// mbtiOption allows management of the mutation configuration using functional options.
-type mbtiOption func(*MbtiMutation)
-
-// newMbtiMutation creates new mutation for the Mbti entity.
-func newMbtiMutation(c config, op Op, opts ...mbtiOption) *MbtiMutation {
-	m := &MbtiMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeMbti,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withMbtiID sets the ID field of the mutation.
-func withMbtiID(id int) mbtiOption {
-	return func(m *MbtiMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *Mbti
-		)
-		m.oldValue = func(ctx context.Context) (*Mbti, error) {
-			once.Do(func() {
-				if m.done {
-					err = errors.New("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().Mbti.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withMbti sets the old Mbti of the mutation.
-func withMbti(node *Mbti) mbtiOption {
-	return func(m *MbtiMutation) {
-		m.oldValue = func(context.Context) (*Mbti, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m MbtiMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m MbtiMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, errors.New("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// ID returns the ID value in the mutation. Note that the ID is only available
-// if it was provided to the builder or after it was returned from the database.
-func (m *MbtiMutation) ID() (id int, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// IDs queries the database and returns the entity ids that match the mutation's predicate.
-// That means, if the mutation is applied within a transaction with an isolation level such
-// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
-// or updated by the mutation.
-func (m *MbtiMutation) IDs(ctx context.Context) ([]int, error) {
-	switch {
-	case m.op.Is(OpUpdateOne | OpDeleteOne):
-		id, exists := m.ID()
-		if exists {
-			return []int{id}, nil
-		}
-		fallthrough
-	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().Mbti.Query().Where(m.predicates...).IDs(ctx)
-	default:
-		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
-	}
-}
-
-// SetType sets the "type" field.
-func (m *MbtiMutation) SetType(s string) {
-	m._type = &s
-}
-
-// GetType returns the value of the "type" field in the mutation.
-func (m *MbtiMutation) GetType() (r string, exists bool) {
-	v := m._type
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldType returns the old "type" field's value of the Mbti entity.
-// If the Mbti object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MbtiMutation) OldType(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldType is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldType requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldType: %w", err)
-	}
-	return oldValue.Type, nil
-}
-
-// ResetType resets all changes to the "type" field.
-func (m *MbtiMutation) ResetType() {
-	m._type = nil
-}
-
-// SetCreatedAt sets the "created_at" field.
-func (m *MbtiMutation) SetCreatedAt(t time.Time) {
-	m.created_at = &t
-}
-
-// CreatedAt returns the value of the "created_at" field in the mutation.
-func (m *MbtiMutation) CreatedAt() (r time.Time, exists bool) {
-	v := m.created_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCreatedAt returns the old "created_at" field's value of the Mbti entity.
-// If the Mbti object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MbtiMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
-	}
-	return oldValue.CreatedAt, nil
-}
-
-// ResetCreatedAt resets all changes to the "created_at" field.
-func (m *MbtiMutation) ResetCreatedAt() {
-	m.created_at = nil
-}
-
-// Where appends a list predicates to the MbtiMutation builder.
-func (m *MbtiMutation) Where(ps ...predicate.Mbti) {
-	m.predicates = append(m.predicates, ps...)
-}
-
-// WhereP appends storage-level predicates to the MbtiMutation builder. Using this method,
-// users can use type-assertion to append predicates that do not depend on any generated package.
-func (m *MbtiMutation) WhereP(ps ...func(*sql.Selector)) {
-	p := make([]predicate.Mbti, len(ps))
-	for i := range ps {
-		p[i] = ps[i]
-	}
-	m.Where(p...)
-}
-
-// Op returns the operation name.
-func (m *MbtiMutation) Op() Op {
-	return m.op
-}
-
-// SetOp allows setting the mutation operation.
-func (m *MbtiMutation) SetOp(op Op) {
-	m.op = op
-}
-
-// Type returns the node type of this mutation (Mbti).
-func (m *MbtiMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during this mutation. Note that in
-// order to get all numeric fields that were incremented/decremented, call
-// AddedFields().
-func (m *MbtiMutation) Fields() []string {
-	fields := make([]string, 0, 2)
-	if m._type != nil {
-		fields = append(fields, mbti.FieldType)
-	}
-	if m.created_at != nil {
-		fields = append(fields, mbti.FieldCreatedAt)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name. The second boolean
-// return value indicates that this field was not set, or was not defined in the
-// schema.
-func (m *MbtiMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case mbti.FieldType:
-		return m.GetType()
-	case mbti.FieldCreatedAt:
-		return m.CreatedAt()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database. An error is
-// returned if the mutation operation is not UpdateOne, or the query to the
-// database failed.
-func (m *MbtiMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case mbti.FieldType:
-		return m.OldType(ctx)
-	case mbti.FieldCreatedAt:
-		return m.OldCreatedAt(ctx)
-	}
-	return nil, fmt.Errorf("unknown Mbti field %s", name)
-}
-
-// SetField sets the value of a field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *MbtiMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case mbti.FieldType:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetType(v)
-		return nil
-	case mbti.FieldCreatedAt:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCreatedAt(v)
-		return nil
-	}
-	return fmt.Errorf("unknown Mbti field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented/decremented during
-// this mutation.
-func (m *MbtiMutation) AddedFields() []string {
-	return nil
-}
-
-// AddedField returns the numeric value that was incremented/decremented on a field
-// with the given name. The second boolean return value indicates that this field
-// was not set, or was not defined in the schema.
-func (m *MbtiMutation) AddedField(name string) (ent.Value, bool) {
-	return nil, false
-}
-
-// AddField adds the value to the field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *MbtiMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	}
-	return fmt.Errorf("unknown Mbti numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared during this
-// mutation.
-func (m *MbtiMutation) ClearedFields() []string {
-	return nil
-}
-
-// FieldCleared returns a boolean indicating if a field with the given name was
-// cleared in this mutation.
-func (m *MbtiMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value of the field with the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *MbtiMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Mbti nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation for the field with the given name.
-// It returns an error if the field is not defined in the schema.
-func (m *MbtiMutation) ResetField(name string) error {
-	switch name {
-	case mbti.FieldType:
-		m.ResetType()
-		return nil
-	case mbti.FieldCreatedAt:
-		m.ResetCreatedAt()
-		return nil
-	}
-	return fmt.Errorf("unknown Mbti field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this mutation.
-func (m *MbtiMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// AddedIDs returns all IDs (to other nodes) that were added for the given edge
-// name in this mutation.
-func (m *MbtiMutation) AddedIDs(name string) []ent.Value {
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this mutation.
-func (m *MbtiMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
-// the given name in this mutation.
-func (m *MbtiMutation) RemovedIDs(name string) []ent.Value {
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *MbtiMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// EdgeCleared returns a boolean which indicates if the edge with the given name
-// was cleared in this mutation.
-func (m *MbtiMutation) EdgeCleared(name string) bool {
-	return false
-}
-
-// ClearEdge clears the value of the edge with the given name. It returns an error
-// if that edge is not defined in the schema.
-func (m *MbtiMutation) ClearEdge(name string) error {
-	return fmt.Errorf("unknown Mbti unique edge %s", name)
-}
-
-// ResetEdge resets all changes to the edge with the given name in this mutation.
-// It returns an error if the edge is not defined in the schema.
-func (m *MbtiMutation) ResetEdge(name string) error {
-	return fmt.Errorf("unknown Mbti edge %s", name)
-}
 
 // NextActionMutation represents an operation that mutates the NextAction nodes in the graph.
 type NextActionMutation struct {
@@ -1365,6 +983,7 @@ type SukipiMutation struct {
 	typ            string
 	id             *int
 	name           *string
+	liked_at       *time.Time
 	weight         *float64
 	addweight      *float64
 	height         *float64
@@ -1376,14 +995,14 @@ type SukipiMutation struct {
 	addshoesSize   *float64
 	family         *string
 	nearly_station *string
-	liked_at       *time.Time
+	mbti           *string
 	created_at     *time.Time
 	clearedFields  map[string]struct{}
-	mbti           *int
-	clearedmbti    bool
 	tweets         map[int]struct{}
 	removedtweets  map[int]struct{}
 	clearedtweets  bool
+	user           *int
+	cleareduser    bool
 	done           bool
 	oldValue       func(context.Context) (*Sukipi, error)
 	predicates     []predicate.Sukipi
@@ -1521,6 +1140,42 @@ func (m *SukipiMutation) OldName(ctx context.Context) (v string, err error) {
 // ResetName resets all changes to the "name" field.
 func (m *SukipiMutation) ResetName() {
 	m.name = nil
+}
+
+// SetLikedAt sets the "liked_at" field.
+func (m *SukipiMutation) SetLikedAt(t time.Time) {
+	m.liked_at = &t
+}
+
+// LikedAt returns the value of the "liked_at" field in the mutation.
+func (m *SukipiMutation) LikedAt() (r time.Time, exists bool) {
+	v := m.liked_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLikedAt returns the old "liked_at" field's value of the Sukipi entity.
+// If the Sukipi object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SukipiMutation) OldLikedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLikedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLikedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLikedAt: %w", err)
+	}
+	return oldValue.LikedAt, nil
+}
+
+// ResetLikedAt resets all changes to the "liked_at" field.
+func (m *SukipiMutation) ResetLikedAt() {
+	m.liked_at = nil
 }
 
 // SetWeight sets the "weight" field.
@@ -1978,40 +1633,53 @@ func (m *SukipiMutation) ResetNearlyStation() {
 	delete(m.clearedFields, sukipi.FieldNearlyStation)
 }
 
-// SetLikedAt sets the "liked_at" field.
-func (m *SukipiMutation) SetLikedAt(t time.Time) {
-	m.liked_at = &t
+// SetMbti sets the "mbti" field.
+func (m *SukipiMutation) SetMbti(s string) {
+	m.mbti = &s
 }
 
-// LikedAt returns the value of the "liked_at" field in the mutation.
-func (m *SukipiMutation) LikedAt() (r time.Time, exists bool) {
-	v := m.liked_at
+// Mbti returns the value of the "mbti" field in the mutation.
+func (m *SukipiMutation) Mbti() (r string, exists bool) {
+	v := m.mbti
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldLikedAt returns the old "liked_at" field's value of the Sukipi entity.
+// OldMbti returns the old "mbti" field's value of the Sukipi entity.
 // If the Sukipi object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SukipiMutation) OldLikedAt(ctx context.Context) (v time.Time, err error) {
+func (m *SukipiMutation) OldMbti(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldLikedAt is only allowed on UpdateOne operations")
+		return v, errors.New("OldMbti is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldLikedAt requires an ID field in the mutation")
+		return v, errors.New("OldMbti requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldLikedAt: %w", err)
+		return v, fmt.Errorf("querying old value for OldMbti: %w", err)
 	}
-	return oldValue.LikedAt, nil
+	return oldValue.Mbti, nil
 }
 
-// ResetLikedAt resets all changes to the "liked_at" field.
-func (m *SukipiMutation) ResetLikedAt() {
-	m.liked_at = nil
+// ClearMbti clears the value of the "mbti" field.
+func (m *SukipiMutation) ClearMbti() {
+	m.mbti = nil
+	m.clearedFields[sukipi.FieldMbti] = struct{}{}
+}
+
+// MbtiCleared returns if the "mbti" field was cleared in this mutation.
+func (m *SukipiMutation) MbtiCleared() bool {
+	_, ok := m.clearedFields[sukipi.FieldMbti]
+	return ok
+}
+
+// ResetMbti resets all changes to the "mbti" field.
+func (m *SukipiMutation) ResetMbti() {
+	m.mbti = nil
+	delete(m.clearedFields, sukipi.FieldMbti)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -2048,45 +1716,6 @@ func (m *SukipiMutation) OldCreatedAt(ctx context.Context) (v time.Time, err err
 // ResetCreatedAt resets all changes to the "created_at" field.
 func (m *SukipiMutation) ResetCreatedAt() {
 	m.created_at = nil
-}
-
-// SetMbtiID sets the "mbti" edge to the Mbti entity by id.
-func (m *SukipiMutation) SetMbtiID(id int) {
-	m.mbti = &id
-}
-
-// ClearMbti clears the "mbti" edge to the Mbti entity.
-func (m *SukipiMutation) ClearMbti() {
-	m.clearedmbti = true
-}
-
-// MbtiCleared reports if the "mbti" edge to the Mbti entity was cleared.
-func (m *SukipiMutation) MbtiCleared() bool {
-	return m.clearedmbti
-}
-
-// MbtiID returns the "mbti" edge ID in the mutation.
-func (m *SukipiMutation) MbtiID() (id int, exists bool) {
-	if m.mbti != nil {
-		return *m.mbti, true
-	}
-	return
-}
-
-// MbtiIDs returns the "mbti" edge IDs in the mutation.
-// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// MbtiID instead. It exists only for internal usage by the builders.
-func (m *SukipiMutation) MbtiIDs() (ids []int) {
-	if id := m.mbti; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetMbti resets all changes to the "mbti" edge.
-func (m *SukipiMutation) ResetMbti() {
-	m.mbti = nil
-	m.clearedmbti = false
 }
 
 // AddTweetIDs adds the "tweets" edge to the Tweet entity by ids.
@@ -2143,6 +1772,45 @@ func (m *SukipiMutation) ResetTweets() {
 	m.removedtweets = nil
 }
 
+// SetUserID sets the "user" edge to the User entity by id.
+func (m *SukipiMutation) SetUserID(id int) {
+	m.user = &id
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (m *SukipiMutation) ClearUser() {
+	m.cleareduser = true
+}
+
+// UserCleared reports if the "user" edge to the User entity was cleared.
+func (m *SukipiMutation) UserCleared() bool {
+	return m.cleareduser
+}
+
+// UserID returns the "user" edge ID in the mutation.
+func (m *SukipiMutation) UserID() (id int, exists bool) {
+	if m.user != nil {
+		return *m.user, true
+	}
+	return
+}
+
+// UserIDs returns the "user" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// UserID instead. It exists only for internal usage by the builders.
+func (m *SukipiMutation) UserIDs() (ids []int) {
+	if id := m.user; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetUser resets all changes to the "user" edge.
+func (m *SukipiMutation) ResetUser() {
+	m.user = nil
+	m.cleareduser = false
+}
+
 // Where appends a list predicates to the SukipiMutation builder.
 func (m *SukipiMutation) Where(ps ...predicate.Sukipi) {
 	m.predicates = append(m.predicates, ps...)
@@ -2177,9 +1845,12 @@ func (m *SukipiMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *SukipiMutation) Fields() []string {
-	fields := make([]string, 0, 11)
+	fields := make([]string, 0, 12)
 	if m.name != nil {
 		fields = append(fields, sukipi.FieldName)
+	}
+	if m.liked_at != nil {
+		fields = append(fields, sukipi.FieldLikedAt)
 	}
 	if m.weight != nil {
 		fields = append(fields, sukipi.FieldWeight)
@@ -2205,8 +1876,8 @@ func (m *SukipiMutation) Fields() []string {
 	if m.nearly_station != nil {
 		fields = append(fields, sukipi.FieldNearlyStation)
 	}
-	if m.liked_at != nil {
-		fields = append(fields, sukipi.FieldLikedAt)
+	if m.mbti != nil {
+		fields = append(fields, sukipi.FieldMbti)
 	}
 	if m.created_at != nil {
 		fields = append(fields, sukipi.FieldCreatedAt)
@@ -2221,6 +1892,8 @@ func (m *SukipiMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case sukipi.FieldName:
 		return m.Name()
+	case sukipi.FieldLikedAt:
+		return m.LikedAt()
 	case sukipi.FieldWeight:
 		return m.Weight()
 	case sukipi.FieldHeight:
@@ -2237,8 +1910,8 @@ func (m *SukipiMutation) Field(name string) (ent.Value, bool) {
 		return m.Family()
 	case sukipi.FieldNearlyStation:
 		return m.NearlyStation()
-	case sukipi.FieldLikedAt:
-		return m.LikedAt()
+	case sukipi.FieldMbti:
+		return m.Mbti()
 	case sukipi.FieldCreatedAt:
 		return m.CreatedAt()
 	}
@@ -2252,6 +1925,8 @@ func (m *SukipiMutation) OldField(ctx context.Context, name string) (ent.Value, 
 	switch name {
 	case sukipi.FieldName:
 		return m.OldName(ctx)
+	case sukipi.FieldLikedAt:
+		return m.OldLikedAt(ctx)
 	case sukipi.FieldWeight:
 		return m.OldWeight(ctx)
 	case sukipi.FieldHeight:
@@ -2268,8 +1943,8 @@ func (m *SukipiMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldFamily(ctx)
 	case sukipi.FieldNearlyStation:
 		return m.OldNearlyStation(ctx)
-	case sukipi.FieldLikedAt:
-		return m.OldLikedAt(ctx)
+	case sukipi.FieldMbti:
+		return m.OldMbti(ctx)
 	case sukipi.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	}
@@ -2287,6 +1962,13 @@ func (m *SukipiMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetName(v)
+		return nil
+	case sukipi.FieldLikedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLikedAt(v)
 		return nil
 	case sukipi.FieldWeight:
 		v, ok := value.(float64)
@@ -2344,12 +2026,12 @@ func (m *SukipiMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetNearlyStation(v)
 		return nil
-	case sukipi.FieldLikedAt:
-		v, ok := value.(time.Time)
+	case sukipi.FieldMbti:
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetLikedAt(v)
+		m.SetMbti(v)
 		return nil
 	case sukipi.FieldCreatedAt:
 		v, ok := value.(time.Time)
@@ -2451,6 +2133,9 @@ func (m *SukipiMutation) ClearedFields() []string {
 	if m.FieldCleared(sukipi.FieldNearlyStation) {
 		fields = append(fields, sukipi.FieldNearlyStation)
 	}
+	if m.FieldCleared(sukipi.FieldMbti) {
+		fields = append(fields, sukipi.FieldMbti)
+	}
 	return fields
 }
 
@@ -2489,6 +2174,9 @@ func (m *SukipiMutation) ClearField(name string) error {
 	case sukipi.FieldNearlyStation:
 		m.ClearNearlyStation()
 		return nil
+	case sukipi.FieldMbti:
+		m.ClearMbti()
+		return nil
 	}
 	return fmt.Errorf("unknown Sukipi nullable field %s", name)
 }
@@ -2499,6 +2187,9 @@ func (m *SukipiMutation) ResetField(name string) error {
 	switch name {
 	case sukipi.FieldName:
 		m.ResetName()
+		return nil
+	case sukipi.FieldLikedAt:
+		m.ResetLikedAt()
 		return nil
 	case sukipi.FieldWeight:
 		m.ResetWeight()
@@ -2524,8 +2215,8 @@ func (m *SukipiMutation) ResetField(name string) error {
 	case sukipi.FieldNearlyStation:
 		m.ResetNearlyStation()
 		return nil
-	case sukipi.FieldLikedAt:
-		m.ResetLikedAt()
+	case sukipi.FieldMbti:
+		m.ResetMbti()
 		return nil
 	case sukipi.FieldCreatedAt:
 		m.ResetCreatedAt()
@@ -2537,11 +2228,11 @@ func (m *SukipiMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *SukipiMutation) AddedEdges() []string {
 	edges := make([]string, 0, 2)
-	if m.mbti != nil {
-		edges = append(edges, sukipi.EdgeMbti)
-	}
 	if m.tweets != nil {
 		edges = append(edges, sukipi.EdgeTweets)
+	}
+	if m.user != nil {
+		edges = append(edges, sukipi.EdgeUser)
 	}
 	return edges
 }
@@ -2550,16 +2241,16 @@ func (m *SukipiMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *SukipiMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case sukipi.EdgeMbti:
-		if id := m.mbti; id != nil {
-			return []ent.Value{*id}
-		}
 	case sukipi.EdgeTweets:
 		ids := make([]ent.Value, 0, len(m.tweets))
 		for id := range m.tweets {
 			ids = append(ids, id)
 		}
 		return ids
+	case sukipi.EdgeUser:
+		if id := m.user; id != nil {
+			return []ent.Value{*id}
+		}
 	}
 	return nil
 }
@@ -2590,11 +2281,11 @@ func (m *SukipiMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *SukipiMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 2)
-	if m.clearedmbti {
-		edges = append(edges, sukipi.EdgeMbti)
-	}
 	if m.clearedtweets {
 		edges = append(edges, sukipi.EdgeTweets)
+	}
+	if m.cleareduser {
+		edges = append(edges, sukipi.EdgeUser)
 	}
 	return edges
 }
@@ -2603,10 +2294,10 @@ func (m *SukipiMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *SukipiMutation) EdgeCleared(name string) bool {
 	switch name {
-	case sukipi.EdgeMbti:
-		return m.clearedmbti
 	case sukipi.EdgeTweets:
 		return m.clearedtweets
+	case sukipi.EdgeUser:
+		return m.cleareduser
 	}
 	return false
 }
@@ -2615,8 +2306,8 @@ func (m *SukipiMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *SukipiMutation) ClearEdge(name string) error {
 	switch name {
-	case sukipi.EdgeMbti:
-		m.ClearMbti()
+	case sukipi.EdgeUser:
+		m.ClearUser()
 		return nil
 	}
 	return fmt.Errorf("unknown Sukipi unique edge %s", name)
@@ -2626,11 +2317,11 @@ func (m *SukipiMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *SukipiMutation) ResetEdge(name string) error {
 	switch name {
-	case sukipi.EdgeMbti:
-		m.ResetMbti()
-		return nil
 	case sukipi.EdgeTweets:
 		m.ResetTweets()
+		return nil
+	case sukipi.EdgeUser:
+		m.ResetUser()
 		return nil
 	}
 	return fmt.Errorf("unknown Sukipi edge %s", name)
@@ -4516,11 +4207,11 @@ type UserMutation struct {
 	is_male               *bool
 	created_at            *time.Time
 	clearedFields         map[string]struct{}
-	mbti                  *int
-	clearedmbti           bool
 	special_events        map[int]struct{}
 	removedspecial_events map[int]struct{}
 	clearedspecial_events bool
+	sukipis               *int
+	clearedsukipis        bool
 	done                  bool
 	oldValue              func(context.Context) (*User, error)
 	predicates            []predicate.User
@@ -4880,45 +4571,6 @@ func (m *UserMutation) ResetCreatedAt() {
 	m.created_at = nil
 }
 
-// SetMbtiID sets the "mbti" edge to the Mbti entity by id.
-func (m *UserMutation) SetMbtiID(id int) {
-	m.mbti = &id
-}
-
-// ClearMbti clears the "mbti" edge to the Mbti entity.
-func (m *UserMutation) ClearMbti() {
-	m.clearedmbti = true
-}
-
-// MbtiCleared reports if the "mbti" edge to the Mbti entity was cleared.
-func (m *UserMutation) MbtiCleared() bool {
-	return m.clearedmbti
-}
-
-// MbtiID returns the "mbti" edge ID in the mutation.
-func (m *UserMutation) MbtiID() (id int, exists bool) {
-	if m.mbti != nil {
-		return *m.mbti, true
-	}
-	return
-}
-
-// MbtiIDs returns the "mbti" edge IDs in the mutation.
-// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// MbtiID instead. It exists only for internal usage by the builders.
-func (m *UserMutation) MbtiIDs() (ids []int) {
-	if id := m.mbti; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetMbti resets all changes to the "mbti" edge.
-func (m *UserMutation) ResetMbti() {
-	m.mbti = nil
-	m.clearedmbti = false
-}
-
 // AddSpecialEventIDs adds the "special_events" edge to the SpecialEvent entity by ids.
 func (m *UserMutation) AddSpecialEventIDs(ids ...int) {
 	if m.special_events == nil {
@@ -4971,6 +4623,45 @@ func (m *UserMutation) ResetSpecialEvents() {
 	m.special_events = nil
 	m.clearedspecial_events = false
 	m.removedspecial_events = nil
+}
+
+// SetSukipisID sets the "sukipis" edge to the Sukipi entity by id.
+func (m *UserMutation) SetSukipisID(id int) {
+	m.sukipis = &id
+}
+
+// ClearSukipis clears the "sukipis" edge to the Sukipi entity.
+func (m *UserMutation) ClearSukipis() {
+	m.clearedsukipis = true
+}
+
+// SukipisCleared reports if the "sukipis" edge to the Sukipi entity was cleared.
+func (m *UserMutation) SukipisCleared() bool {
+	return m.clearedsukipis
+}
+
+// SukipisID returns the "sukipis" edge ID in the mutation.
+func (m *UserMutation) SukipisID() (id int, exists bool) {
+	if m.sukipis != nil {
+		return *m.sukipis, true
+	}
+	return
+}
+
+// SukipisIDs returns the "sukipis" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// SukipisID instead. It exists only for internal usage by the builders.
+func (m *UserMutation) SukipisIDs() (ids []int) {
+	if id := m.sukipis; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetSukipis resets all changes to the "sukipis" edge.
+func (m *UserMutation) ResetSukipis() {
+	m.sukipis = nil
+	m.clearedsukipis = false
 }
 
 // Where appends a list predicates to the UserMutation builder.
@@ -5219,11 +4910,11 @@ func (m *UserMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *UserMutation) AddedEdges() []string {
 	edges := make([]string, 0, 2)
-	if m.mbti != nil {
-		edges = append(edges, user.EdgeMbti)
-	}
 	if m.special_events != nil {
 		edges = append(edges, user.EdgeSpecialEvents)
+	}
+	if m.sukipis != nil {
+		edges = append(edges, user.EdgeSukipis)
 	}
 	return edges
 }
@@ -5232,16 +4923,16 @@ func (m *UserMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *UserMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case user.EdgeMbti:
-		if id := m.mbti; id != nil {
-			return []ent.Value{*id}
-		}
 	case user.EdgeSpecialEvents:
 		ids := make([]ent.Value, 0, len(m.special_events))
 		for id := range m.special_events {
 			ids = append(ids, id)
 		}
 		return ids
+	case user.EdgeSukipis:
+		if id := m.sukipis; id != nil {
+			return []ent.Value{*id}
+		}
 	}
 	return nil
 }
@@ -5272,11 +4963,11 @@ func (m *UserMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *UserMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 2)
-	if m.clearedmbti {
-		edges = append(edges, user.EdgeMbti)
-	}
 	if m.clearedspecial_events {
 		edges = append(edges, user.EdgeSpecialEvents)
+	}
+	if m.clearedsukipis {
+		edges = append(edges, user.EdgeSukipis)
 	}
 	return edges
 }
@@ -5285,10 +4976,10 @@ func (m *UserMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *UserMutation) EdgeCleared(name string) bool {
 	switch name {
-	case user.EdgeMbti:
-		return m.clearedmbti
 	case user.EdgeSpecialEvents:
 		return m.clearedspecial_events
+	case user.EdgeSukipis:
+		return m.clearedsukipis
 	}
 	return false
 }
@@ -5297,8 +4988,8 @@ func (m *UserMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *UserMutation) ClearEdge(name string) error {
 	switch name {
-	case user.EdgeMbti:
-		m.ClearMbti()
+	case user.EdgeSukipis:
+		m.ClearSukipis()
 		return nil
 	}
 	return fmt.Errorf("unknown User unique edge %s", name)
@@ -5308,11 +4999,11 @@ func (m *UserMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *UserMutation) ResetEdge(name string) error {
 	switch name {
-	case user.EdgeMbti:
-		m.ResetMbti()
-		return nil
 	case user.EdgeSpecialEvents:
 		m.ResetSpecialEvents()
+		return nil
+	case user.EdgeSukipis:
+		m.ResetSukipis()
 		return nil
 	}
 	return fmt.Errorf("unknown User edge %s", name)

@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"flehmen-api/ent/mbti"
 	"flehmen-api/ent/schema"
 	"flehmen-api/ent/sukipi"
 	"flehmen-api/ent/tweet"
@@ -17,16 +16,10 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
-	mbtiFields := schema.Mbti{}.Fields()
-	_ = mbtiFields
-	// mbtiDescCreatedAt is the schema descriptor for created_at field.
-	mbtiDescCreatedAt := mbtiFields[1].Descriptor()
-	// mbti.DefaultCreatedAt holds the default value on creation for the created_at field.
-	mbti.DefaultCreatedAt = mbtiDescCreatedAt.Default.(func() time.Time)
 	sukipiFields := schema.Sukipi{}.Fields()
 	_ = sukipiFields
 	// sukipiDescCreatedAt is the schema descriptor for created_at field.
-	sukipiDescCreatedAt := sukipiFields[10].Descriptor()
+	sukipiDescCreatedAt := sukipiFields[11].Descriptor()
 	// sukipi.DefaultCreatedAt holds the default value on creation for the created_at field.
 	sukipi.DefaultCreatedAt = sukipiDescCreatedAt.Default.(func() time.Time)
 	tweetFields := schema.Tweet{}.Fields()

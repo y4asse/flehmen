@@ -11,7 +11,6 @@ import (
 
 	"flehmen-api/ent/migrate"
 
-	"flehmen-api/ent/mbti"
 	"flehmen-api/ent/nextaction"
 	"flehmen-api/ent/specialevent"
 	"flehmen-api/ent/sukipi"
@@ -31,8 +30,6 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
-	// Mbti is the client for interacting with the Mbti builders.
-	Mbti *MbtiClient
 	// NextAction is the client for interacting with the NextAction builders.
 	NextAction *NextActionClient
 	// SpecialEvent is the client for interacting with the SpecialEvent builders.
@@ -58,7 +55,6 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
-	c.Mbti = NewMbtiClient(c.config)
 	c.NextAction = NewNextActionClient(c.config)
 	c.SpecialEvent = NewSpecialEventClient(c.config)
 	c.Sukipi = NewSukipiClient(c.config)
@@ -158,7 +154,6 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	return &Tx{
 		ctx:          ctx,
 		config:       cfg,
-		Mbti:         NewMbtiClient(cfg),
 		NextAction:   NewNextActionClient(cfg),
 		SpecialEvent: NewSpecialEventClient(cfg),
 		Sukipi:       NewSukipiClient(cfg),
@@ -185,7 +180,6 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		ctx:          ctx,
 		config:       cfg,
-		Mbti:         NewMbtiClient(cfg),
 		NextAction:   NewNextActionClient(cfg),
 		SpecialEvent: NewSpecialEventClient(cfg),
 		Sukipi:       NewSukipiClient(cfg),
@@ -199,7 +193,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Mbti.
+//		NextAction.
 //		Query().
 //		Count(ctx)
 func (c *Client) Debug() *Client {
@@ -222,8 +216,8 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Mbti, c.NextAction, c.SpecialEvent, c.Sukipi, c.Tweet, c.TwitterUser,
-		c.University, c.User,
+		c.NextAction, c.SpecialEvent, c.Sukipi, c.Tweet, c.TwitterUser, c.University,
+		c.User,
 	} {
 		n.Use(hooks...)
 	}
@@ -233,8 +227,8 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Mbti, c.NextAction, c.SpecialEvent, c.Sukipi, c.Tweet, c.TwitterUser,
-		c.University, c.User,
+		c.NextAction, c.SpecialEvent, c.Sukipi, c.Tweet, c.TwitterUser, c.University,
+		c.User,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -243,8 +237,6 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 // Mutate implements the ent.Mutator interface.
 func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
-	case *MbtiMutation:
-		return c.Mbti.mutate(ctx, m)
 	case *NextActionMutation:
 		return c.NextAction.mutate(ctx, m)
 	case *SpecialEventMutation:
@@ -261,139 +253,6 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.User.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
-	}
-}
-
-// MbtiClient is a client for the Mbti schema.
-type MbtiClient struct {
-	config
-}
-
-// NewMbtiClient returns a client for the Mbti from the given config.
-func NewMbtiClient(c config) *MbtiClient {
-	return &MbtiClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `mbti.Hooks(f(g(h())))`.
-func (c *MbtiClient) Use(hooks ...Hook) {
-	c.hooks.Mbti = append(c.hooks.Mbti, hooks...)
-}
-
-// Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `mbti.Intercept(f(g(h())))`.
-func (c *MbtiClient) Intercept(interceptors ...Interceptor) {
-	c.inters.Mbti = append(c.inters.Mbti, interceptors...)
-}
-
-// Create returns a builder for creating a Mbti entity.
-func (c *MbtiClient) Create() *MbtiCreate {
-	mutation := newMbtiMutation(c.config, OpCreate)
-	return &MbtiCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// CreateBulk returns a builder for creating a bulk of Mbti entities.
-func (c *MbtiClient) CreateBulk(builders ...*MbtiCreate) *MbtiCreateBulk {
-	return &MbtiCreateBulk{config: c.config, builders: builders}
-}
-
-// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
-// a builder and applies setFunc on it.
-func (c *MbtiClient) MapCreateBulk(slice any, setFunc func(*MbtiCreate, int)) *MbtiCreateBulk {
-	rv := reflect.ValueOf(slice)
-	if rv.Kind() != reflect.Slice {
-		return &MbtiCreateBulk{err: fmt.Errorf("calling to MbtiClient.MapCreateBulk with wrong type %T, need slice", slice)}
-	}
-	builders := make([]*MbtiCreate, rv.Len())
-	for i := 0; i < rv.Len(); i++ {
-		builders[i] = c.Create()
-		setFunc(builders[i], i)
-	}
-	return &MbtiCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for Mbti.
-func (c *MbtiClient) Update() *MbtiUpdate {
-	mutation := newMbtiMutation(c.config, OpUpdate)
-	return &MbtiUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *MbtiClient) UpdateOne(m *Mbti) *MbtiUpdateOne {
-	mutation := newMbtiMutation(c.config, OpUpdateOne, withMbti(m))
-	return &MbtiUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *MbtiClient) UpdateOneID(id int) *MbtiUpdateOne {
-	mutation := newMbtiMutation(c.config, OpUpdateOne, withMbtiID(id))
-	return &MbtiUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for Mbti.
-func (c *MbtiClient) Delete() *MbtiDelete {
-	mutation := newMbtiMutation(c.config, OpDelete)
-	return &MbtiDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a builder for deleting the given entity.
-func (c *MbtiClient) DeleteOne(m *Mbti) *MbtiDeleteOne {
-	return c.DeleteOneID(m.ID)
-}
-
-// DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *MbtiClient) DeleteOneID(id int) *MbtiDeleteOne {
-	builder := c.Delete().Where(mbti.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &MbtiDeleteOne{builder}
-}
-
-// Query returns a query builder for Mbti.
-func (c *MbtiClient) Query() *MbtiQuery {
-	return &MbtiQuery{
-		config: c.config,
-		ctx:    &QueryContext{Type: TypeMbti},
-		inters: c.Interceptors(),
-	}
-}
-
-// Get returns a Mbti entity by its id.
-func (c *MbtiClient) Get(ctx context.Context, id int) (*Mbti, error) {
-	return c.Query().Where(mbti.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *MbtiClient) GetX(ctx context.Context, id int) *Mbti {
-	obj, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return obj
-}
-
-// Hooks returns the client hooks.
-func (c *MbtiClient) Hooks() []Hook {
-	return c.hooks.Mbti
-}
-
-// Interceptors returns the client interceptors.
-func (c *MbtiClient) Interceptors() []Interceptor {
-	return c.inters.Mbti
-}
-
-func (c *MbtiClient) mutate(ctx context.Context, m *MbtiMutation) (Value, error) {
-	switch m.Op() {
-	case OpCreate:
-		return (&MbtiCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdate:
-		return (&MbtiUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdateOne:
-		return (&MbtiUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpDelete, OpDeleteOne:
-		return (&MbtiDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
-	default:
-		return nil, fmt.Errorf("ent: unknown Mbti mutation op: %q", m.Op())
 	}
 }
 
@@ -771,22 +630,6 @@ func (c *SukipiClient) GetX(ctx context.Context, id int) *Sukipi {
 	return obj
 }
 
-// QueryMbti queries the mbti edge of a Sukipi.
-func (c *SukipiClient) QueryMbti(s *Sukipi) *MbtiQuery {
-	query := (&MbtiClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := s.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(sukipi.Table, sukipi.FieldID, id),
-			sqlgraph.To(mbti.Table, mbti.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, false, sukipi.MbtiTable, sukipi.MbtiColumn),
-		)
-		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // QueryTweets queries the tweets edge of a Sukipi.
 func (c *SukipiClient) QueryTweets(s *Sukipi) *TweetQuery {
 	query := (&TweetClient{config: c.config}).Query()
@@ -796,6 +639,22 @@ func (c *SukipiClient) QueryTweets(s *Sukipi) *TweetQuery {
 			sqlgraph.From(sukipi.Table, sukipi.FieldID, id),
 			sqlgraph.To(tweet.Table, tweet.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, sukipi.TweetsTable, sukipi.TweetsColumn),
+		)
+		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryUser queries the user edge of a Sukipi.
+func (c *SukipiClient) QueryUser(s *Sukipi) *UserQuery {
+	query := (&UserClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := s.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(sukipi.Table, sukipi.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, sukipi.UserTable, sukipi.UserColumn),
 		)
 		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
 		return fromV, nil
@@ -1367,22 +1226,6 @@ func (c *UserClient) GetX(ctx context.Context, id int) *User {
 	return obj
 }
 
-// QueryMbti queries the mbti edge of a User.
-func (c *UserClient) QueryMbti(u *User) *MbtiQuery {
-	query := (&MbtiClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := u.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(user.Table, user.FieldID, id),
-			sqlgraph.To(mbti.Table, mbti.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, false, user.MbtiTable, user.MbtiColumn),
-		)
-		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // QuerySpecialEvents queries the special_events edge of a User.
 func (c *UserClient) QuerySpecialEvents(u *User) *SpecialEventQuery {
 	query := (&SpecialEventClient{config: c.config}).Query()
@@ -1392,6 +1235,22 @@ func (c *UserClient) QuerySpecialEvents(u *User) *SpecialEventQuery {
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(specialevent.Table, specialevent.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.SpecialEventsTable, user.SpecialEventsColumn),
+		)
+		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QuerySukipis queries the sukipis edge of a User.
+func (c *UserClient) QuerySukipis(u *User) *SukipiQuery {
+	query := (&SukipiClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := u.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(sukipi.Table, sukipi.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, user.SukipisTable, user.SukipisColumn),
 		)
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil
@@ -1427,11 +1286,11 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Mbti, NextAction, SpecialEvent, Sukipi, Tweet, TwitterUser, University,
+		NextAction, SpecialEvent, Sukipi, Tweet, TwitterUser, University,
 		User []ent.Hook
 	}
 	inters struct {
-		Mbti, NextAction, SpecialEvent, Sukipi, Tweet, TwitterUser, University,
+		NextAction, SpecialEvent, Sukipi, Tweet, TwitterUser, University,
 		User []ent.Interceptor
 	}
 )

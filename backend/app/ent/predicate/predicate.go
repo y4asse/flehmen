@@ -6,9 +6,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// Mbti is the predicate function for mbti builders.
-type Mbti func(*sql.Selector)
-
 // NextAction is the predicate function for nextaction builders.
 type NextAction func(*sql.Selector)
 
