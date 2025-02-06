@@ -96,6 +96,10 @@ func main() {
 		log.Fatalf("failed seeding user: %v", err)
 	}
 
+	if err := seedSukipi(ctx, client); err != nil {
+		log.Fatalf("failed seeding sukipi: %v", err)
+	}
+
 	fmt.Println("シーディングが完了しました")
 }
 
@@ -218,6 +222,27 @@ func seedUser(ctx context.Context, client *ent.Client) error {
 		SetIsMale(true).
 		SetWeight(173).
 		SetHeight(173).
+		Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func seedSukipi(ctx context.Context, client *ent.Client) error {
+	err := client.Sukipi.Create().
+		SetUserID(1).
+		SetName("test").
+		SetLikedAt(time.Now()).
+		SetWeight(173).
+		SetHeight(173).
+		SetXID("test").
+		SetHobby("test").
+		SetBirthday(time.Now()).
+		SetShoesSize(173).
+		SetFamily("test").
+		SetNearlyStation("test").
+		SetMbti("test").
 		Exec(ctx)
 	if err != nil {
 		return err
