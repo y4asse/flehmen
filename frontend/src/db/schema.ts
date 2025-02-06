@@ -14,7 +14,7 @@ export const users = mysqlTable("users", {
 
 // Sukipi Table
 export const sukipis = mysqlTable("sukipis", {
-  id: serial("id").primaryKey(),
+  id: serial("id").primaryKey().autoincrement(),
   name: varchar("name", { length: 255 }).notNull(),
   likedAt: datetime("liked_at"),
   weight: int("weight"),
