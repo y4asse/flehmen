@@ -2,7 +2,6 @@
 import { Windows } from "@/components/common/Windows";
 import React from "react";
 import ReplyList from "./_components/ReplyList";
-import { Sukipi } from "../profile/page";
 import Contents from "./_components/Contents";
 import { MonthlyRep } from "./_components/MonthlyRep";
 import { MobileWindows } from "@/components/common/MobileWindows";
@@ -213,7 +212,7 @@ const monthlRep = {
     z: 1,
   },
 };
-const sukipi: Sukipi = {
+const sukipi = {
   name: "早瀬",
 };
 

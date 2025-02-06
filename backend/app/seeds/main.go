@@ -232,17 +232,17 @@ func seedUser(ctx context.Context, client *ent.Client) error {
 func seedSukipi(ctx context.Context, client *ent.Client) error {
 	err := client.Sukipi.Create().
 		SetUserID(1).
-		SetName("test").
-		SetLikedAt(time.Now()).
-		SetWeight(173).
-		SetHeight(173).
-		SetXID("test").
-		SetHobby("test").
-		SetBirthday(time.Now()).
+		SetName("やせ").
+		SetLikedAt(time.Date(2023, 1, 1, 0, 0, 0, 0, time.UTC)).
+		SetWeight(66).
+		SetHeight(174).
+		SetXID("y4isse").
+		SetHobby("Apex").
+		SetBirthday(time.Date(2003, 2, 18, 0, 0, 0, 0, time.UTC)).
 		SetShoesSize(173).
-		SetFamily("test").
-		SetNearlyStation("test").
-		SetMbti("test").
+		SetFamily("片親").
+		SetNearlyStation("日比野").
+		SetMbti("INTP").
 		Exec(ctx)
 	if err != nil {
 		return err
