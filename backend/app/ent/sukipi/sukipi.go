@@ -16,8 +16,8 @@ const (
 	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-	// FieldUserID holds the string denoting the user_id field in the database.
-	FieldUserID = "user_id"
+	// FieldLikedAt holds the string denoting the liked_at field in the database.
+	FieldLikedAt = "liked_at"
 	// FieldWeight holds the string denoting the weight field in the database.
 	FieldWeight = "weight"
 	// FieldHeight holds the string denoting the height field in the database.
@@ -34,23 +34,16 @@ const (
 	FieldFamily = "family"
 	// FieldNearlyStation holds the string denoting the nearly_station field in the database.
 	FieldNearlyStation = "nearly_station"
-	// FieldLikedAt holds the string denoting the liked_at field in the database.
-	FieldLikedAt = "liked_at"
+	// FieldMbti holds the string denoting the mbti field in the database.
+	FieldMbti = "mbti"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
-	// EdgeMbti holds the string denoting the mbti edge name in mutations.
-	EdgeMbti = "mbti"
 	// EdgeTweets holds the string denoting the tweets edge name in mutations.
 	EdgeTweets = "tweets"
+	// EdgeUser holds the string denoting the user edge name in mutations.
+	EdgeUser = "user"
 	// Table holds the table name of the sukipi in the database.
 	Table = "sukipis"
-	// MbtiTable is the table that holds the mbti relation/edge.
-	MbtiTable = "sukipis"
-	// MbtiInverseTable is the table name for the Mbti entity.
-	// It exists in this package in order to avoid circular dependency with the "mbti" package.
-	MbtiInverseTable = "mbtis"
-	// MbtiColumn is the table column denoting the mbti relation/edge.
-	MbtiColumn = "sukipi_mbti"
 	// TweetsTable is the table that holds the tweets relation/edge.
 	TweetsTable = "tweets"
 	// TweetsInverseTable is the table name for the Tweet entity.
@@ -58,13 +51,20 @@ const (
 	TweetsInverseTable = "tweets"
 	// TweetsColumn is the table column denoting the tweets relation/edge.
 	TweetsColumn = "sukipi_tweets"
+	// UserTable is the table that holds the user relation/edge.
+	UserTable = "sukipis"
+	// UserInverseTable is the table name for the User entity.
+	// It exists in this package in order to avoid circular dependency with the "user" package.
+	UserInverseTable = "users"
+	// UserColumn is the table column denoting the user relation/edge.
+	UserColumn = "sukipi_user"
 )
 
 // Columns holds all SQL columns for sukipi fields.
 var Columns = []string{
 	FieldID,
 	FieldName,
-	FieldUserID,
+	FieldLikedAt,
 	FieldWeight,
 	FieldHeight,
 	FieldXID,
@@ -73,14 +73,14 @@ var Columns = []string{
 	FieldShoesSize,
 	FieldFamily,
 	FieldNearlyStation,
-	FieldLikedAt,
+	FieldMbti,
 	FieldCreatedAt,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "sukipis"
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
-	"sukipi_mbti",
+	"sukipi_user",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -116,9 +116,9 @@ func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
 }
 
-// ByUserID orders the results by the user_id field.
-func ByUserID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldUserID, opts...).ToFunc()
+// ByLikedAt orders the results by the liked_at field.
+func ByLikedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLikedAt, opts...).ToFunc()
 }
 
 // ByWeight orders the results by the weight field.
@@ -161,21 +161,14 @@ func ByNearlyStation(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldNearlyStation, opts...).ToFunc()
 }
 
-// ByLikedAt orders the results by the liked_at field.
-func ByLikedAt(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldLikedAt, opts...).ToFunc()
+// ByMbti orders the results by the mbti field.
+func ByMbti(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMbti, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.
 func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
-}
-
-// ByMbtiField orders the results by mbti field.
-func ByMbtiField(field string, opts ...sql.OrderTermOption) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newMbtiStep(), sql.OrderByField(field, opts...))
-	}
 }
 
 // ByTweetsCount orders the results by tweets count.
@@ -191,17 +184,24 @@ func ByTweets(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newTweetsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
-func newMbtiStep() *sqlgraph.Step {
-	return sqlgraph.NewStep(
-		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(MbtiInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2O, false, MbtiTable, MbtiColumn),
-	)
+
+// ByUserField orders the results by user field.
+func ByUserField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newUserStep(), sql.OrderByField(field, opts...))
+	}
 }
 func newTweetsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(TweetsInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, false, TweetsTable, TweetsColumn),
+	)
+}
+func newUserStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(UserInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, false, UserTable, UserColumn),
 	)
 }

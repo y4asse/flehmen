@@ -8,18 +8,6 @@ import (
 )
 
 var (
-	// MbtisColumns holds the columns for the "mbtis" table.
-	MbtisColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "type", Type: field.TypeString},
-		{Name: "created_at", Type: field.TypeTime},
-	}
-	// MbtisTable holds the schema information for the "mbtis" table.
-	MbtisTable = &schema.Table{
-		Name:       "mbtis",
-		Columns:    MbtisColumns,
-		PrimaryKey: []*schema.Column{MbtisColumns[0]},
-	}
 	// NextActionsColumns holds the columns for the "next_actions" table.
 	NextActionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -59,7 +47,7 @@ var (
 	SukipisColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString},
-		{Name: "user_id", Type: field.TypeString},
+		{Name: "liked_at", Type: field.TypeTime},
 		{Name: "weight", Type: field.TypeFloat64, Nullable: true},
 		{Name: "height", Type: field.TypeFloat64, Nullable: true},
 		{Name: "x_id", Type: field.TypeString, Nullable: true},
@@ -68,9 +56,9 @@ var (
 		{Name: "shoes_size", Type: field.TypeFloat64, Nullable: true},
 		{Name: "family", Type: field.TypeString, Nullable: true},
 		{Name: "nearly_station", Type: field.TypeString, Nullable: true},
-		{Name: "liked_at", Type: field.TypeTime},
+		{Name: "mbti", Type: field.TypeString, Nullable: true},
 		{Name: "created_at", Type: field.TypeTime},
-		{Name: "sukipi_mbti", Type: field.TypeInt, Nullable: true},
+		{Name: "sukipi_user", Type: field.TypeInt, Nullable: true},
 	}
 	// SukipisTable holds the schema information for the "sukipis" table.
 	SukipisTable = &schema.Table{
@@ -79,9 +67,9 @@ var (
 		PrimaryKey: []*schema.Column{SukipisColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "sukipis_mbtis_mbti",
+				Symbol:     "sukipis_users_user",
 				Columns:    []*schema.Column{SukipisColumns[13]},
-				RefColumns: []*schema.Column{MbtisColumns[0]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
@@ -161,7 +149,7 @@ var (
 		{Name: "clerk_id", Type: field.TypeString, Unique: true},
 		{Name: "is_male", Type: field.TypeBool},
 		{Name: "created_at", Type: field.TypeTime},
-		{Name: "user_mbti", Type: field.TypeInt, Nullable: true},
+		{Name: "user_sukipis", Type: field.TypeInt, Nullable: true},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{
@@ -170,16 +158,15 @@ var (
 		PrimaryKey: []*schema.Column{UsersColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "users_mbtis_mbti",
+				Symbol:     "users_sukipis_sukipis",
 				Columns:    []*schema.Column{UsersColumns[7]},
-				RefColumns: []*schema.Column{MbtisColumns[0]},
+				RefColumns: []*schema.Column{SukipisColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		MbtisTable,
 		NextActionsTable,
 		SpecialEventsTable,
 		SukipisTable,
@@ -192,8 +179,8 @@ var (
 
 func init() {
 	SpecialEventsTable.ForeignKeys[0].RefTable = UsersTable
-	SukipisTable.ForeignKeys[0].RefTable = MbtisTable
+	SukipisTable.ForeignKeys[0].RefTable = UsersTable
 	TweetsTable.ForeignKeys[0].RefTable = SukipisTable
 	TweetsTable.ForeignKeys[1].RefTable = TwitterUsersTable
-	UsersTable.ForeignKeys[0].RefTable = MbtisTable
+	UsersTable.ForeignKeys[0].RefTable = SukipisTable
 }

@@ -8,18 +8,6 @@ import (
 	"fmt"
 )
 
-// The MbtiFunc type is an adapter to allow the use of ordinary
-// function as Mbti mutator.
-type MbtiFunc func(context.Context, *ent.MbtiMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f MbtiFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.MbtiMutation); ok {
-		return f(ctx, mv)
-	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.MbtiMutation", m)
-}
-
 // The NextActionFunc type is an adapter to allow the use of ordinary
 // function as NextAction mutator.
 type NextActionFunc func(context.Context, *ent.NextActionMutation) (ent.Value, error)

@@ -1,4 +1,4 @@
-h1:zZafiEeIHX3R71Yx9aIz72diQ2JA6Qc8wowiZ1rF6BQ=
+h1:bRmftZvf91sLWKOlEiiTL7bRkxQJ/gRfUZL3Hl3GQBE=
 20241206114839_init.sql h1:QT3EoBe1olnNBw2gTjrGOWVyp4ITmrnvWVKCOsyxT/0=
 20241206125420_add_university.sql h1:XOj549/HXlaXX+QyPrMRInhDYKfjkjbTzA1nKFQ/G0k=
 20241206135552_add_university_column.sql h1:KTZcxY/J/UCLGywg3upIqqTz+zOzTdFEKIyVuaCgrV0=
@@ -10,3 +10,5 @@ h1:zZafiEeIHX3R71Yx9aIz72diQ2JA6Qc8wowiZ1rF6BQ=
 20241207154240_update_sukipi.sql h1:KSwkOkSK6Wx/kr0DZdhQ3CIj9Si/6i6xGURsPJ4WZh8=
 20250205165520_create_next_action_table.sql h1:7/JFhPEcsD+eeVguG+BL/DJHQ9lCCh+dCId2WMllbkE=
 20250205181906_update_sukipis.sql h1:jXPvdevHECCIcPJfRxhOjp0IcqXJ2ytmqpnvM4VSWYU=
+20250206093408_delete_mbti_table.sql h1:Lsr8w9YC4N64eYiGVh6bcm9U/tWLPakSoQX/YGeSbEA=
+20250206093709_update_sukipis_users_table.sql h1:OAkTvwZirNNWN/KKrfX6FtosnmMCTB6vEO98tyTTUHw=

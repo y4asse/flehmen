@@ -5,9 +5,9 @@ package ent
 import (
 	"context"
 	"errors"
-	"flehmen-api/ent/mbti"
 	"flehmen-api/ent/sukipi"
 	"flehmen-api/ent/tweet"
+	"flehmen-api/ent/user"
 	"fmt"
 	"time"
 
@@ -28,9 +28,9 @@ func (sc *SukipiCreate) SetName(s string) *SukipiCreate {
 	return sc
 }
 
-// SetUserID sets the "user_id" field.
-func (sc *SukipiCreate) SetUserID(s string) *SukipiCreate {
-	sc.mutation.SetUserID(s)
+// SetLikedAt sets the "liked_at" field.
+func (sc *SukipiCreate) SetLikedAt(t time.Time) *SukipiCreate {
+	sc.mutation.SetLikedAt(t)
 	return sc
 }
 
@@ -146,9 +146,17 @@ func (sc *SukipiCreate) SetNillableNearlyStation(s *string) *SukipiCreate {
 	return sc
 }
 
-// SetLikedAt sets the "liked_at" field.
-func (sc *SukipiCreate) SetLikedAt(t time.Time) *SukipiCreate {
-	sc.mutation.SetLikedAt(t)
+// SetMbti sets the "mbti" field.
+func (sc *SukipiCreate) SetMbti(s string) *SukipiCreate {
+	sc.mutation.SetMbti(s)
+	return sc
+}
+
+// SetNillableMbti sets the "mbti" field if the given value is not nil.
+func (sc *SukipiCreate) SetNillableMbti(s *string) *SukipiCreate {
+	if s != nil {
+		sc.SetMbti(*s)
+	}
 	return sc
 }
 
@@ -166,25 +174,6 @@ func (sc *SukipiCreate) SetNillableCreatedAt(t *time.Time) *SukipiCreate {
 	return sc
 }
 
-// SetMbtiID sets the "mbti" edge to the Mbti entity by ID.
-func (sc *SukipiCreate) SetMbtiID(id int) *SukipiCreate {
-	sc.mutation.SetMbtiID(id)
-	return sc
-}
-
-// SetNillableMbtiID sets the "mbti" edge to the Mbti entity by ID if the given value is not nil.
-func (sc *SukipiCreate) SetNillableMbtiID(id *int) *SukipiCreate {
-	if id != nil {
-		sc = sc.SetMbtiID(*id)
-	}
-	return sc
-}
-
-// SetMbti sets the "mbti" edge to the Mbti entity.
-func (sc *SukipiCreate) SetMbti(m *Mbti) *SukipiCreate {
-	return sc.SetMbtiID(m.ID)
-}
-
 // AddTweetIDs adds the "tweets" edge to the Tweet entity by IDs.
 func (sc *SukipiCreate) AddTweetIDs(ids ...int) *SukipiCreate {
 	sc.mutation.AddTweetIDs(ids...)
@@ -198,6 +187,25 @@ func (sc *SukipiCreate) AddTweets(t ...*Tweet) *SukipiCreate {
 		ids[i] = t[i].ID
 	}
 	return sc.AddTweetIDs(ids...)
+}
+
+// SetUserID sets the "user" edge to the User entity by ID.
+func (sc *SukipiCreate) SetUserID(id int) *SukipiCreate {
+	sc.mutation.SetUserID(id)
+	return sc
+}
+
+// SetNillableUserID sets the "user" edge to the User entity by ID if the given value is not nil.
+func (sc *SukipiCreate) SetNillableUserID(id *int) *SukipiCreate {
+	if id != nil {
+		sc = sc.SetUserID(*id)
+	}
+	return sc
+}
+
+// SetUser sets the "user" edge to the User entity.
+func (sc *SukipiCreate) SetUser(u *User) *SukipiCreate {
+	return sc.SetUserID(u.ID)
 }
 
 // Mutation returns the SukipiMutation object of the builder.
@@ -246,9 +254,6 @@ func (sc *SukipiCreate) check() error {
 	if _, ok := sc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Sukipi.name"`)}
 	}
-	if _, ok := sc.mutation.UserID(); !ok {
-		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Sukipi.user_id"`)}
-	}
 	if _, ok := sc.mutation.LikedAt(); !ok {
 		return &ValidationError{Name: "liked_at", err: errors.New(`ent: missing required field "Sukipi.liked_at"`)}
 	}
@@ -285,9 +290,9 @@ func (sc *SukipiCreate) createSpec() (*Sukipi, *sqlgraph.CreateSpec) {
 		_spec.SetField(sukipi.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
-	if value, ok := sc.mutation.UserID(); ok {
-		_spec.SetField(sukipi.FieldUserID, field.TypeString, value)
-		_node.UserID = value
+	if value, ok := sc.mutation.LikedAt(); ok {
+		_spec.SetField(sukipi.FieldLikedAt, field.TypeTime, value)
+		_node.LikedAt = value
 	}
 	if value, ok := sc.mutation.Weight(); ok {
 		_spec.SetField(sukipi.FieldWeight, field.TypeFloat64, value)
@@ -321,30 +326,13 @@ func (sc *SukipiCreate) createSpec() (*Sukipi, *sqlgraph.CreateSpec) {
 		_spec.SetField(sukipi.FieldNearlyStation, field.TypeString, value)
 		_node.NearlyStation = &value
 	}
-	if value, ok := sc.mutation.LikedAt(); ok {
-		_spec.SetField(sukipi.FieldLikedAt, field.TypeTime, value)
-		_node.LikedAt = value
+	if value, ok := sc.mutation.Mbti(); ok {
+		_spec.SetField(sukipi.FieldMbti, field.TypeString, value)
+		_node.Mbti = &value
 	}
 	if value, ok := sc.mutation.CreatedAt(); ok {
 		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
-	}
-	if nodes := sc.mutation.MbtiIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: false,
-			Table:   sukipi.MbtiTable,
-			Columns: []string{sukipi.MbtiColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(mbti.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_node.sukipi_mbti = &nodes[0]
-		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := sc.mutation.TweetsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -360,6 +348,23 @@ func (sc *SukipiCreate) createSpec() (*Sukipi, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := sc.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   sukipi.UserTable,
+			Columns: []string{sukipi.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.sukipi_user = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
