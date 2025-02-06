@@ -101,10 +101,10 @@ const Page = () => {
         <Swiper
           style={{
             position: "absolute",
-            bottom: "100px",
+            bottom: "90px",
             left: "0",
             width: "100%",
-            height: "300px",
+            height: "280px",
           }}
           // modules={[Autoplay, Navigation, Pagination]}
           // navigation
@@ -115,7 +115,7 @@ const Page = () => {
               key={index}
               style={{
                 width: "100%",
-                height: "300px",
+                height: "280px",
                 padding: "0 50px",
               }}
             >
@@ -251,27 +251,27 @@ const habitWindow = {
 const Icon: Icon[] = [
   {
     name: "プロフィール",
-    image: "/images/file.svg",
+    image: "/images/icon_profile.svg",
     href: "/profile",
   },
   {
     name: "FF",
-    image: "/images/file.svg",
+    image: "/images/icon_ff.svg",
     href: "/ff",
   },
   {
     name: "リプ",
-    image: "/images/file.svg",
+    image: "/images/icon_reply.svg",
     href: "/reply",
   },
   {
     name: "ひみつ",
-    image: "/images/file.svg",
+    image: "/images/icon_secret.svg",
     href: "/secret",
   },
   {
     name: "会話",
-    image: "/images/file.svg",
+    image: "/images/icon_friendly.svg",
     href: "/",
   },
 ];
