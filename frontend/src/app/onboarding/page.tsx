@@ -185,6 +185,7 @@ const Page = () => {
     );
     const { error } = await completeOnboarding(data as SukipiInfo)
     if (error) {
+      console.error(error)
       alert("エラーが発生しました")
       return
     }
