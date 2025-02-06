@@ -4,10 +4,8 @@ package ent
 
 import (
 	"context"
-	"database/sql/driver"
 	"flehmen-api/ent/predicate"
 	"flehmen-api/ent/sukipi"
-	"flehmen-api/ent/tweet"
 	"flehmen-api/ent/user"
 	"fmt"
 	"math"
@@ -25,7 +23,6 @@ type SukipiQuery struct {
 	order      []sukipi.OrderOption
 	inters     []Interceptor
 	predicates []predicate.Sukipi
-	withTweets *TweetQuery
 	withUser   *UserQuery
 	withFKs    bool
 	// intermediate query (i.e. traversal path).
@@ -62,28 +59,6 @@ func (sq *SukipiQuery) Unique(unique bool) *SukipiQuery {
 func (sq *SukipiQuery) Order(o ...sukipi.OrderOption) *SukipiQuery {
 	sq.order = append(sq.order, o...)
 	return sq
-}
-
-// QueryTweets chains the current query on the "tweets" edge.
-func (sq *SukipiQuery) QueryTweets() *TweetQuery {
-	query := (&TweetClient{config: sq.config}).Query()
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := sq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		selector := sq.sqlQuery(ctx)
-		if err := selector.Err(); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(sukipi.Table, sukipi.FieldID, selector),
-			sqlgraph.To(tweet.Table, tweet.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, sukipi.TweetsTable, sukipi.TweetsColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(sq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
 }
 
 // QueryUser chains the current query on the "user" edge.
@@ -300,23 +275,11 @@ func (sq *SukipiQuery) Clone() *SukipiQuery {
 		order:      append([]sukipi.OrderOption{}, sq.order...),
 		inters:     append([]Interceptor{}, sq.inters...),
 		predicates: append([]predicate.Sukipi{}, sq.predicates...),
-		withTweets: sq.withTweets.Clone(),
 		withUser:   sq.withUser.Clone(),
 		// clone intermediate query.
 		sql:  sq.sql.Clone(),
 		path: sq.path,
 	}
-}
-
-// WithTweets tells the query-builder to eager-load the nodes that are connected to
-// the "tweets" edge. The optional arguments are used to configure the query builder of the edge.
-func (sq *SukipiQuery) WithTweets(opts ...func(*TweetQuery)) *SukipiQuery {
-	query := (&TweetClient{config: sq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	sq.withTweets = query
-	return sq
 }
 
 // WithUser tells the query-builder to eager-load the nodes that are connected to
@@ -409,8 +372,7 @@ func (sq *SukipiQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Sukip
 		nodes       = []*Sukipi{}
 		withFKs     = sq.withFKs
 		_spec       = sq.querySpec()
-		loadedTypes = [2]bool{
-			sq.withTweets != nil,
+		loadedTypes = [1]bool{
 			sq.withUser != nil,
 		}
 	)
@@ -438,13 +400,6 @@ func (sq *SukipiQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Sukip
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := sq.withTweets; query != nil {
-		if err := sq.loadTweets(ctx, query, nodes,
-			func(n *Sukipi) { n.Edges.Tweets = []*Tweet{} },
-			func(n *Sukipi, e *Tweet) { n.Edges.Tweets = append(n.Edges.Tweets, e) }); err != nil {
-			return nil, err
-		}
-	}
 	if query := sq.withUser; query != nil {
 		if err := sq.loadUser(ctx, query, nodes, nil,
 			func(n *Sukipi, e *User) { n.Edges.User = e }); err != nil {
@@ -454,37 +409,6 @@ func (sq *SukipiQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Sukip
 	return nodes, nil
 }
 
-func (sq *SukipiQuery) loadTweets(ctx context.Context, query *TweetQuery, nodes []*Sukipi, init func(*Sukipi), assign func(*Sukipi, *Tweet)) error {
-	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[int]*Sukipi)
-	for i := range nodes {
-		fks = append(fks, nodes[i].ID)
-		nodeids[nodes[i].ID] = nodes[i]
-		if init != nil {
-			init(nodes[i])
-		}
-	}
-	query.withFKs = true
-	query.Where(predicate.Tweet(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(sukipi.TweetsColumn), fks...))
-	}))
-	neighbors, err := query.All(ctx)
-	if err != nil {
-		return err
-	}
-	for _, n := range neighbors {
-		fk := n.sukipi_tweets
-		if fk == nil {
-			return fmt.Errorf(`foreign-key "sukipi_tweets" is nil for node %v`, n.ID)
-		}
-		node, ok := nodeids[*fk]
-		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "sukipi_tweets" returned %v for node %v`, *fk, n.ID)
-		}
-		assign(node, n)
-	}
-	return nil
-}
 func (sq *SukipiQuery) loadUser(ctx context.Context, query *UserQuery, nodes []*Sukipi, init func(*Sukipi), assign func(*Sukipi, *User)) error {
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*Sukipi)

@@ -12,10 +12,7 @@ import (
 	"flehmen-api/ent/migrate"
 
 	"flehmen-api/ent/nextaction"
-	"flehmen-api/ent/specialevent"
 	"flehmen-api/ent/sukipi"
-	"flehmen-api/ent/tweet"
-	"flehmen-api/ent/twitteruser"
 	"flehmen-api/ent/university"
 	"flehmen-api/ent/user"
 
@@ -32,14 +29,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// NextAction is the client for interacting with the NextAction builders.
 	NextAction *NextActionClient
-	// SpecialEvent is the client for interacting with the SpecialEvent builders.
-	SpecialEvent *SpecialEventClient
 	// Sukipi is the client for interacting with the Sukipi builders.
 	Sukipi *SukipiClient
-	// Tweet is the client for interacting with the Tweet builders.
-	Tweet *TweetClient
-	// TwitterUser is the client for interacting with the TwitterUser builders.
-	TwitterUser *TwitterUserClient
 	// University is the client for interacting with the University builders.
 	University *UniversityClient
 	// User is the client for interacting with the User builders.
@@ -56,10 +47,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.NextAction = NewNextActionClient(c.config)
-	c.SpecialEvent = NewSpecialEventClient(c.config)
 	c.Sukipi = NewSukipiClient(c.config)
-	c.Tweet = NewTweetClient(c.config)
-	c.TwitterUser = NewTwitterUserClient(c.config)
 	c.University = NewUniversityClient(c.config)
 	c.User = NewUserClient(c.config)
 }
@@ -152,15 +140,12 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:          ctx,
-		config:       cfg,
-		NextAction:   NewNextActionClient(cfg),
-		SpecialEvent: NewSpecialEventClient(cfg),
-		Sukipi:       NewSukipiClient(cfg),
-		Tweet:        NewTweetClient(cfg),
-		TwitterUser:  NewTwitterUserClient(cfg),
-		University:   NewUniversityClient(cfg),
-		User:         NewUserClient(cfg),
+		ctx:        ctx,
+		config:     cfg,
+		NextAction: NewNextActionClient(cfg),
+		Sukipi:     NewSukipiClient(cfg),
+		University: NewUniversityClient(cfg),
+		User:       NewUserClient(cfg),
 	}, nil
 }
 
@@ -178,15 +163,12 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:          ctx,
-		config:       cfg,
-		NextAction:   NewNextActionClient(cfg),
-		SpecialEvent: NewSpecialEventClient(cfg),
-		Sukipi:       NewSukipiClient(cfg),
-		Tweet:        NewTweetClient(cfg),
-		TwitterUser:  NewTwitterUserClient(cfg),
-		University:   NewUniversityClient(cfg),
-		User:         NewUserClient(cfg),
+		ctx:        ctx,
+		config:     cfg,
+		NextAction: NewNextActionClient(cfg),
+		Sukipi:     NewSukipiClient(cfg),
+		University: NewUniversityClient(cfg),
+		User:       NewUserClient(cfg),
 	}, nil
 }
 
@@ -215,23 +197,19 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	for _, n := range []interface{ Use(...Hook) }{
-		c.NextAction, c.SpecialEvent, c.Sukipi, c.Tweet, c.TwitterUser, c.University,
-		c.User,
-	} {
-		n.Use(hooks...)
-	}
+	c.NextAction.Use(hooks...)
+	c.Sukipi.Use(hooks...)
+	c.University.Use(hooks...)
+	c.User.Use(hooks...)
 }
 
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
-	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.NextAction, c.SpecialEvent, c.Sukipi, c.Tweet, c.TwitterUser, c.University,
-		c.User,
-	} {
-		n.Intercept(interceptors...)
-	}
+	c.NextAction.Intercept(interceptors...)
+	c.Sukipi.Intercept(interceptors...)
+	c.University.Intercept(interceptors...)
+	c.User.Intercept(interceptors...)
 }
 
 // Mutate implements the ent.Mutator interface.
@@ -239,14 +217,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
 	case *NextActionMutation:
 		return c.NextAction.mutate(ctx, m)
-	case *SpecialEventMutation:
-		return c.SpecialEvent.mutate(ctx, m)
 	case *SukipiMutation:
 		return c.Sukipi.mutate(ctx, m)
-	case *TweetMutation:
-		return c.Tweet.mutate(ctx, m)
-	case *TwitterUserMutation:
-		return c.TwitterUser.mutate(ctx, m)
 	case *UniversityMutation:
 		return c.University.mutate(ctx, m)
 	case *UserMutation:
@@ -389,139 +361,6 @@ func (c *NextActionClient) mutate(ctx context.Context, m *NextActionMutation) (V
 	}
 }
 
-// SpecialEventClient is a client for the SpecialEvent schema.
-type SpecialEventClient struct {
-	config
-}
-
-// NewSpecialEventClient returns a client for the SpecialEvent from the given config.
-func NewSpecialEventClient(c config) *SpecialEventClient {
-	return &SpecialEventClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `specialevent.Hooks(f(g(h())))`.
-func (c *SpecialEventClient) Use(hooks ...Hook) {
-	c.hooks.SpecialEvent = append(c.hooks.SpecialEvent, hooks...)
-}
-
-// Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `specialevent.Intercept(f(g(h())))`.
-func (c *SpecialEventClient) Intercept(interceptors ...Interceptor) {
-	c.inters.SpecialEvent = append(c.inters.SpecialEvent, interceptors...)
-}
-
-// Create returns a builder for creating a SpecialEvent entity.
-func (c *SpecialEventClient) Create() *SpecialEventCreate {
-	mutation := newSpecialEventMutation(c.config, OpCreate)
-	return &SpecialEventCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// CreateBulk returns a builder for creating a bulk of SpecialEvent entities.
-func (c *SpecialEventClient) CreateBulk(builders ...*SpecialEventCreate) *SpecialEventCreateBulk {
-	return &SpecialEventCreateBulk{config: c.config, builders: builders}
-}
-
-// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
-// a builder and applies setFunc on it.
-func (c *SpecialEventClient) MapCreateBulk(slice any, setFunc func(*SpecialEventCreate, int)) *SpecialEventCreateBulk {
-	rv := reflect.ValueOf(slice)
-	if rv.Kind() != reflect.Slice {
-		return &SpecialEventCreateBulk{err: fmt.Errorf("calling to SpecialEventClient.MapCreateBulk with wrong type %T, need slice", slice)}
-	}
-	builders := make([]*SpecialEventCreate, rv.Len())
-	for i := 0; i < rv.Len(); i++ {
-		builders[i] = c.Create()
-		setFunc(builders[i], i)
-	}
-	return &SpecialEventCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for SpecialEvent.
-func (c *SpecialEventClient) Update() *SpecialEventUpdate {
-	mutation := newSpecialEventMutation(c.config, OpUpdate)
-	return &SpecialEventUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *SpecialEventClient) UpdateOne(se *SpecialEvent) *SpecialEventUpdateOne {
-	mutation := newSpecialEventMutation(c.config, OpUpdateOne, withSpecialEvent(se))
-	return &SpecialEventUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *SpecialEventClient) UpdateOneID(id int) *SpecialEventUpdateOne {
-	mutation := newSpecialEventMutation(c.config, OpUpdateOne, withSpecialEventID(id))
-	return &SpecialEventUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for SpecialEvent.
-func (c *SpecialEventClient) Delete() *SpecialEventDelete {
-	mutation := newSpecialEventMutation(c.config, OpDelete)
-	return &SpecialEventDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a builder for deleting the given entity.
-func (c *SpecialEventClient) DeleteOne(se *SpecialEvent) *SpecialEventDeleteOne {
-	return c.DeleteOneID(se.ID)
-}
-
-// DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *SpecialEventClient) DeleteOneID(id int) *SpecialEventDeleteOne {
-	builder := c.Delete().Where(specialevent.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &SpecialEventDeleteOne{builder}
-}
-
-// Query returns a query builder for SpecialEvent.
-func (c *SpecialEventClient) Query() *SpecialEventQuery {
-	return &SpecialEventQuery{
-		config: c.config,
-		ctx:    &QueryContext{Type: TypeSpecialEvent},
-		inters: c.Interceptors(),
-	}
-}
-
-// Get returns a SpecialEvent entity by its id.
-func (c *SpecialEventClient) Get(ctx context.Context, id int) (*SpecialEvent, error) {
-	return c.Query().Where(specialevent.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *SpecialEventClient) GetX(ctx context.Context, id int) *SpecialEvent {
-	obj, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return obj
-}
-
-// Hooks returns the client hooks.
-func (c *SpecialEventClient) Hooks() []Hook {
-	return c.hooks.SpecialEvent
-}
-
-// Interceptors returns the client interceptors.
-func (c *SpecialEventClient) Interceptors() []Interceptor {
-	return c.inters.SpecialEvent
-}
-
-func (c *SpecialEventClient) mutate(ctx context.Context, m *SpecialEventMutation) (Value, error) {
-	switch m.Op() {
-	case OpCreate:
-		return (&SpecialEventCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdate:
-		return (&SpecialEventUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdateOne:
-		return (&SpecialEventUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpDelete, OpDeleteOne:
-		return (&SpecialEventDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
-	default:
-		return nil, fmt.Errorf("ent: unknown SpecialEvent mutation op: %q", m.Op())
-	}
-}
-
 // SukipiClient is a client for the Sukipi schema.
 type SukipiClient struct {
 	config
@@ -630,22 +469,6 @@ func (c *SukipiClient) GetX(ctx context.Context, id int) *Sukipi {
 	return obj
 }
 
-// QueryTweets queries the tweets edge of a Sukipi.
-func (c *SukipiClient) QueryTweets(s *Sukipi) *TweetQuery {
-	query := (&TweetClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := s.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(sukipi.Table, sukipi.FieldID, id),
-			sqlgraph.To(tweet.Table, tweet.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, sukipi.TweetsTable, sukipi.TweetsColumn),
-		)
-		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // QueryUser queries the user edge of a Sukipi.
 func (c *SukipiClient) QueryUser(s *Sukipi) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
@@ -684,304 +507,6 @@ func (c *SukipiClient) mutate(ctx context.Context, m *SukipiMutation) (Value, er
 		return (&SukipiDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Sukipi mutation op: %q", m.Op())
-	}
-}
-
-// TweetClient is a client for the Tweet schema.
-type TweetClient struct {
-	config
-}
-
-// NewTweetClient returns a client for the Tweet from the given config.
-func NewTweetClient(c config) *TweetClient {
-	return &TweetClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `tweet.Hooks(f(g(h())))`.
-func (c *TweetClient) Use(hooks ...Hook) {
-	c.hooks.Tweet = append(c.hooks.Tweet, hooks...)
-}
-
-// Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `tweet.Intercept(f(g(h())))`.
-func (c *TweetClient) Intercept(interceptors ...Interceptor) {
-	c.inters.Tweet = append(c.inters.Tweet, interceptors...)
-}
-
-// Create returns a builder for creating a Tweet entity.
-func (c *TweetClient) Create() *TweetCreate {
-	mutation := newTweetMutation(c.config, OpCreate)
-	return &TweetCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// CreateBulk returns a builder for creating a bulk of Tweet entities.
-func (c *TweetClient) CreateBulk(builders ...*TweetCreate) *TweetCreateBulk {
-	return &TweetCreateBulk{config: c.config, builders: builders}
-}
-
-// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
-// a builder and applies setFunc on it.
-func (c *TweetClient) MapCreateBulk(slice any, setFunc func(*TweetCreate, int)) *TweetCreateBulk {
-	rv := reflect.ValueOf(slice)
-	if rv.Kind() != reflect.Slice {
-		return &TweetCreateBulk{err: fmt.Errorf("calling to TweetClient.MapCreateBulk with wrong type %T, need slice", slice)}
-	}
-	builders := make([]*TweetCreate, rv.Len())
-	for i := 0; i < rv.Len(); i++ {
-		builders[i] = c.Create()
-		setFunc(builders[i], i)
-	}
-	return &TweetCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for Tweet.
-func (c *TweetClient) Update() *TweetUpdate {
-	mutation := newTweetMutation(c.config, OpUpdate)
-	return &TweetUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *TweetClient) UpdateOne(t *Tweet) *TweetUpdateOne {
-	mutation := newTweetMutation(c.config, OpUpdateOne, withTweet(t))
-	return &TweetUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *TweetClient) UpdateOneID(id int) *TweetUpdateOne {
-	mutation := newTweetMutation(c.config, OpUpdateOne, withTweetID(id))
-	return &TweetUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for Tweet.
-func (c *TweetClient) Delete() *TweetDelete {
-	mutation := newTweetMutation(c.config, OpDelete)
-	return &TweetDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a builder for deleting the given entity.
-func (c *TweetClient) DeleteOne(t *Tweet) *TweetDeleteOne {
-	return c.DeleteOneID(t.ID)
-}
-
-// DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *TweetClient) DeleteOneID(id int) *TweetDeleteOne {
-	builder := c.Delete().Where(tweet.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &TweetDeleteOne{builder}
-}
-
-// Query returns a query builder for Tweet.
-func (c *TweetClient) Query() *TweetQuery {
-	return &TweetQuery{
-		config: c.config,
-		ctx:    &QueryContext{Type: TypeTweet},
-		inters: c.Interceptors(),
-	}
-}
-
-// Get returns a Tweet entity by its id.
-func (c *TweetClient) Get(ctx context.Context, id int) (*Tweet, error) {
-	return c.Query().Where(tweet.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *TweetClient) GetX(ctx context.Context, id int) *Tweet {
-	obj, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return obj
-}
-
-// QueryUser queries the user edge of a Tweet.
-func (c *TweetClient) QueryUser(t *Tweet) *TwitterUserQuery {
-	query := (&TwitterUserClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := t.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(tweet.Table, tweet.FieldID, id),
-			sqlgraph.To(twitteruser.Table, twitteruser.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, tweet.UserTable, tweet.UserColumn),
-		)
-		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// Hooks returns the client hooks.
-func (c *TweetClient) Hooks() []Hook {
-	return c.hooks.Tweet
-}
-
-// Interceptors returns the client interceptors.
-func (c *TweetClient) Interceptors() []Interceptor {
-	return c.inters.Tweet
-}
-
-func (c *TweetClient) mutate(ctx context.Context, m *TweetMutation) (Value, error) {
-	switch m.Op() {
-	case OpCreate:
-		return (&TweetCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdate:
-		return (&TweetUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdateOne:
-		return (&TweetUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpDelete, OpDeleteOne:
-		return (&TweetDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
-	default:
-		return nil, fmt.Errorf("ent: unknown Tweet mutation op: %q", m.Op())
-	}
-}
-
-// TwitterUserClient is a client for the TwitterUser schema.
-type TwitterUserClient struct {
-	config
-}
-
-// NewTwitterUserClient returns a client for the TwitterUser from the given config.
-func NewTwitterUserClient(c config) *TwitterUserClient {
-	return &TwitterUserClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `twitteruser.Hooks(f(g(h())))`.
-func (c *TwitterUserClient) Use(hooks ...Hook) {
-	c.hooks.TwitterUser = append(c.hooks.TwitterUser, hooks...)
-}
-
-// Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `twitteruser.Intercept(f(g(h())))`.
-func (c *TwitterUserClient) Intercept(interceptors ...Interceptor) {
-	c.inters.TwitterUser = append(c.inters.TwitterUser, interceptors...)
-}
-
-// Create returns a builder for creating a TwitterUser entity.
-func (c *TwitterUserClient) Create() *TwitterUserCreate {
-	mutation := newTwitterUserMutation(c.config, OpCreate)
-	return &TwitterUserCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// CreateBulk returns a builder for creating a bulk of TwitterUser entities.
-func (c *TwitterUserClient) CreateBulk(builders ...*TwitterUserCreate) *TwitterUserCreateBulk {
-	return &TwitterUserCreateBulk{config: c.config, builders: builders}
-}
-
-// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
-// a builder and applies setFunc on it.
-func (c *TwitterUserClient) MapCreateBulk(slice any, setFunc func(*TwitterUserCreate, int)) *TwitterUserCreateBulk {
-	rv := reflect.ValueOf(slice)
-	if rv.Kind() != reflect.Slice {
-		return &TwitterUserCreateBulk{err: fmt.Errorf("calling to TwitterUserClient.MapCreateBulk with wrong type %T, need slice", slice)}
-	}
-	builders := make([]*TwitterUserCreate, rv.Len())
-	for i := 0; i < rv.Len(); i++ {
-		builders[i] = c.Create()
-		setFunc(builders[i], i)
-	}
-	return &TwitterUserCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for TwitterUser.
-func (c *TwitterUserClient) Update() *TwitterUserUpdate {
-	mutation := newTwitterUserMutation(c.config, OpUpdate)
-	return &TwitterUserUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *TwitterUserClient) UpdateOne(tu *TwitterUser) *TwitterUserUpdateOne {
-	mutation := newTwitterUserMutation(c.config, OpUpdateOne, withTwitterUser(tu))
-	return &TwitterUserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *TwitterUserClient) UpdateOneID(id int) *TwitterUserUpdateOne {
-	mutation := newTwitterUserMutation(c.config, OpUpdateOne, withTwitterUserID(id))
-	return &TwitterUserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for TwitterUser.
-func (c *TwitterUserClient) Delete() *TwitterUserDelete {
-	mutation := newTwitterUserMutation(c.config, OpDelete)
-	return &TwitterUserDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a builder for deleting the given entity.
-func (c *TwitterUserClient) DeleteOne(tu *TwitterUser) *TwitterUserDeleteOne {
-	return c.DeleteOneID(tu.ID)
-}
-
-// DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *TwitterUserClient) DeleteOneID(id int) *TwitterUserDeleteOne {
-	builder := c.Delete().Where(twitteruser.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &TwitterUserDeleteOne{builder}
-}
-
-// Query returns a query builder for TwitterUser.
-func (c *TwitterUserClient) Query() *TwitterUserQuery {
-	return &TwitterUserQuery{
-		config: c.config,
-		ctx:    &QueryContext{Type: TypeTwitterUser},
-		inters: c.Interceptors(),
-	}
-}
-
-// Get returns a TwitterUser entity by its id.
-func (c *TwitterUserClient) Get(ctx context.Context, id int) (*TwitterUser, error) {
-	return c.Query().Where(twitteruser.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *TwitterUserClient) GetX(ctx context.Context, id int) *TwitterUser {
-	obj, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return obj
-}
-
-// QueryReplies queries the replies edge of a TwitterUser.
-func (c *TwitterUserClient) QueryReplies(tu *TwitterUser) *TweetQuery {
-	query := (&TweetClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := tu.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(twitteruser.Table, twitteruser.FieldID, id),
-			sqlgraph.To(tweet.Table, tweet.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, twitteruser.RepliesTable, twitteruser.RepliesColumn),
-		)
-		fromV = sqlgraph.Neighbors(tu.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// Hooks returns the client hooks.
-func (c *TwitterUserClient) Hooks() []Hook {
-	return c.hooks.TwitterUser
-}
-
-// Interceptors returns the client interceptors.
-func (c *TwitterUserClient) Interceptors() []Interceptor {
-	return c.inters.TwitterUser
-}
-
-func (c *TwitterUserClient) mutate(ctx context.Context, m *TwitterUserMutation) (Value, error) {
-	switch m.Op() {
-	case OpCreate:
-		return (&TwitterUserCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdate:
-		return (&TwitterUserUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdateOne:
-		return (&TwitterUserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpDelete, OpDeleteOne:
-		return (&TwitterUserDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
-	default:
-		return nil, fmt.Errorf("ent: unknown TwitterUser mutation op: %q", m.Op())
 	}
 }
 
@@ -1226,22 +751,6 @@ func (c *UserClient) GetX(ctx context.Context, id int) *User {
 	return obj
 }
 
-// QuerySpecialEvents queries the special_events edge of a User.
-func (c *UserClient) QuerySpecialEvents(u *User) *SpecialEventQuery {
-	query := (&SpecialEventClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := u.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(user.Table, user.FieldID, id),
-			sqlgraph.To(specialevent.Table, specialevent.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, user.SpecialEventsTable, user.SpecialEventsColumn),
-		)
-		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // QuerySukipis queries the sukipis edge of a User.
 func (c *UserClient) QuerySukipis(u *User) *SukipiQuery {
 	query := (&SukipiClient{config: c.config}).Query()
@@ -1286,11 +795,9 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		NextAction, SpecialEvent, Sukipi, Tweet, TwitterUser, University,
-		User []ent.Hook
+		NextAction, Sukipi, University, User []ent.Hook
 	}
 	inters struct {
-		NextAction, SpecialEvent, Sukipi, Tweet, TwitterUser, University,
-		User []ent.Interceptor
+		NextAction, Sukipi, University, User []ent.Interceptor
 	}
 )

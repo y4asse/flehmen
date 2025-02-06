@@ -20,18 +20,6 @@ func (f NextActionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, 
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.NextActionMutation", m)
 }
 
-// The SpecialEventFunc type is an adapter to allow the use of ordinary
-// function as SpecialEvent mutator.
-type SpecialEventFunc func(context.Context, *ent.SpecialEventMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f SpecialEventFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.SpecialEventMutation); ok {
-		return f(ctx, mv)
-	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SpecialEventMutation", m)
-}
-
 // The SukipiFunc type is an adapter to allow the use of ordinary
 // function as Sukipi mutator.
 type SukipiFunc func(context.Context, *ent.SukipiMutation) (ent.Value, error)
@@ -42,30 +30,6 @@ func (f SukipiFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, erro
 		return f(ctx, mv)
 	}
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SukipiMutation", m)
-}
-
-// The TweetFunc type is an adapter to allow the use of ordinary
-// function as Tweet mutator.
-type TweetFunc func(context.Context, *ent.TweetMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f TweetFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.TweetMutation); ok {
-		return f(ctx, mv)
-	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TweetMutation", m)
-}
-
-// The TwitterUserFunc type is an adapter to allow the use of ordinary
-// function as TwitterUser mutator.
-type TwitterUserFunc func(context.Context, *ent.TwitterUserMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f TwitterUserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.TwitterUserMutation); ok {
-		return f(ctx, mv)
-	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TwitterUserMutation", m)
 }
 
 // The UniversityFunc type is an adapter to allow the use of ordinary

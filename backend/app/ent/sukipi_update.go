@@ -7,7 +7,6 @@ import (
 	"errors"
 	"flehmen-api/ent/predicate"
 	"flehmen-api/ent/sukipi"
-	"flehmen-api/ent/tweet"
 	"flehmen-api/ent/user"
 	"fmt"
 	"time"
@@ -273,21 +272,6 @@ func (su *SukipiUpdate) SetNillableCreatedAt(t *time.Time) *SukipiUpdate {
 	return su
 }
 
-// AddTweetIDs adds the "tweets" edge to the Tweet entity by IDs.
-func (su *SukipiUpdate) AddTweetIDs(ids ...int) *SukipiUpdate {
-	su.mutation.AddTweetIDs(ids...)
-	return su
-}
-
-// AddTweets adds the "tweets" edges to the Tweet entity.
-func (su *SukipiUpdate) AddTweets(t ...*Tweet) *SukipiUpdate {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return su.AddTweetIDs(ids...)
-}
-
 // SetUserID sets the "user" edge to the User entity by ID.
 func (su *SukipiUpdate) SetUserID(id int) *SukipiUpdate {
 	su.mutation.SetUserID(id)
@@ -310,27 +294,6 @@ func (su *SukipiUpdate) SetUser(u *User) *SukipiUpdate {
 // Mutation returns the SukipiMutation object of the builder.
 func (su *SukipiUpdate) Mutation() *SukipiMutation {
 	return su.mutation
-}
-
-// ClearTweets clears all "tweets" edges to the Tweet entity.
-func (su *SukipiUpdate) ClearTweets() *SukipiUpdate {
-	su.mutation.ClearTweets()
-	return su
-}
-
-// RemoveTweetIDs removes the "tweets" edge to Tweet entities by IDs.
-func (su *SukipiUpdate) RemoveTweetIDs(ids ...int) *SukipiUpdate {
-	su.mutation.RemoveTweetIDs(ids...)
-	return su
-}
-
-// RemoveTweets removes "tweets" edges to Tweet entities.
-func (su *SukipiUpdate) RemoveTweets(t ...*Tweet) *SukipiUpdate {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return su.RemoveTweetIDs(ids...)
 }
 
 // ClearUser clears the "user" edge to the User entity.
@@ -446,51 +409,6 @@ func (su *SukipiUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := su.mutation.CreatedAt(); ok {
 		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)
-	}
-	if su.mutation.TweetsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   sukipi.TweetsTable,
-			Columns: []string{sukipi.TweetsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(tweet.FieldID, field.TypeInt),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := su.mutation.RemovedTweetsIDs(); len(nodes) > 0 && !su.mutation.TweetsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   sukipi.TweetsTable,
-			Columns: []string{sukipi.TweetsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(tweet.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := su.mutation.TweetsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   sukipi.TweetsTable,
-			Columns: []string{sukipi.TweetsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(tweet.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if su.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -784,21 +702,6 @@ func (suo *SukipiUpdateOne) SetNillableCreatedAt(t *time.Time) *SukipiUpdateOne 
 	return suo
 }
 
-// AddTweetIDs adds the "tweets" edge to the Tweet entity by IDs.
-func (suo *SukipiUpdateOne) AddTweetIDs(ids ...int) *SukipiUpdateOne {
-	suo.mutation.AddTweetIDs(ids...)
-	return suo
-}
-
-// AddTweets adds the "tweets" edges to the Tweet entity.
-func (suo *SukipiUpdateOne) AddTweets(t ...*Tweet) *SukipiUpdateOne {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return suo.AddTweetIDs(ids...)
-}
-
 // SetUserID sets the "user" edge to the User entity by ID.
 func (suo *SukipiUpdateOne) SetUserID(id int) *SukipiUpdateOne {
 	suo.mutation.SetUserID(id)
@@ -821,27 +724,6 @@ func (suo *SukipiUpdateOne) SetUser(u *User) *SukipiUpdateOne {
 // Mutation returns the SukipiMutation object of the builder.
 func (suo *SukipiUpdateOne) Mutation() *SukipiMutation {
 	return suo.mutation
-}
-
-// ClearTweets clears all "tweets" edges to the Tweet entity.
-func (suo *SukipiUpdateOne) ClearTweets() *SukipiUpdateOne {
-	suo.mutation.ClearTweets()
-	return suo
-}
-
-// RemoveTweetIDs removes the "tweets" edge to Tweet entities by IDs.
-func (suo *SukipiUpdateOne) RemoveTweetIDs(ids ...int) *SukipiUpdateOne {
-	suo.mutation.RemoveTweetIDs(ids...)
-	return suo
-}
-
-// RemoveTweets removes "tweets" edges to Tweet entities.
-func (suo *SukipiUpdateOne) RemoveTweets(t ...*Tweet) *SukipiUpdateOne {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return suo.RemoveTweetIDs(ids...)
 }
 
 // ClearUser clears the "user" edge to the User entity.
@@ -987,51 +869,6 @@ func (suo *SukipiUpdateOne) sqlSave(ctx context.Context) (_node *Sukipi, err err
 	}
 	if value, ok := suo.mutation.CreatedAt(); ok {
 		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)
-	}
-	if suo.mutation.TweetsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   sukipi.TweetsTable,
-			Columns: []string{sukipi.TweetsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(tweet.FieldID, field.TypeInt),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := suo.mutation.RemovedTweetsIDs(); len(nodes) > 0 && !suo.mutation.TweetsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   sukipi.TweetsTable,
-			Columns: []string{sukipi.TweetsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(tweet.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := suo.mutation.TweetsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   sukipi.TweetsTable,
-			Columns: []string{sukipi.TweetsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(tweet.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if suo.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{

@@ -6,7 +6,6 @@ import (
 	"context"
 	"errors"
 	"flehmen-api/ent/sukipi"
-	"flehmen-api/ent/tweet"
 	"flehmen-api/ent/user"
 	"fmt"
 	"time"
@@ -174,21 +173,6 @@ func (sc *SukipiCreate) SetNillableCreatedAt(t *time.Time) *SukipiCreate {
 	return sc
 }
 
-// AddTweetIDs adds the "tweets" edge to the Tweet entity by IDs.
-func (sc *SukipiCreate) AddTweetIDs(ids ...int) *SukipiCreate {
-	sc.mutation.AddTweetIDs(ids...)
-	return sc
-}
-
-// AddTweets adds the "tweets" edges to the Tweet entity.
-func (sc *SukipiCreate) AddTweets(t ...*Tweet) *SukipiCreate {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return sc.AddTweetIDs(ids...)
-}
-
 // SetUserID sets the "user" edge to the User entity by ID.
 func (sc *SukipiCreate) SetUserID(id int) *SukipiCreate {
 	sc.mutation.SetUserID(id)
@@ -333,22 +317,6 @@ func (sc *SukipiCreate) createSpec() (*Sukipi, *sqlgraph.CreateSpec) {
 	if value, ok := sc.mutation.CreatedAt(); ok {
 		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
-	}
-	if nodes := sc.mutation.TweetsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   sukipi.TweetsTable,
-			Columns: []string{sukipi.TweetsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(tweet.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := sc.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

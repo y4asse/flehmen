@@ -26,19 +26,10 @@ const (
 	FieldIsMale = "is_male"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
-	// EdgeSpecialEvents holds the string denoting the special_events edge name in mutations.
-	EdgeSpecialEvents = "special_events"
 	// EdgeSukipis holds the string denoting the sukipis edge name in mutations.
 	EdgeSukipis = "sukipis"
 	// Table holds the table name of the user in the database.
 	Table = "users"
-	// SpecialEventsTable is the table that holds the special_events relation/edge.
-	SpecialEventsTable = "special_events"
-	// SpecialEventsInverseTable is the table name for the SpecialEvent entity.
-	// It exists in this package in order to avoid circular dependency with the "specialevent" package.
-	SpecialEventsInverseTable = "special_events"
-	// SpecialEventsColumn is the table column denoting the special_events relation/edge.
-	SpecialEventsColumn = "user_special_events"
 	// SukipisTable is the table that holds the sukipis relation/edge.
 	SukipisTable = "users"
 	// SukipisInverseTable is the table name for the Sukipi entity.
@@ -123,32 +114,11 @@ func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
 }
 
-// BySpecialEventsCount orders the results by special_events count.
-func BySpecialEventsCount(opts ...sql.OrderTermOption) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newSpecialEventsStep(), opts...)
-	}
-}
-
-// BySpecialEvents orders the results by special_events terms.
-func BySpecialEvents(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newSpecialEventsStep(), append([]sql.OrderTerm{term}, terms...)...)
-	}
-}
-
 // BySukipisField orders the results by sukipis field.
 func BySukipisField(field string, opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
 		sqlgraph.OrderByNeighborTerms(s, newSukipisStep(), sql.OrderByField(field, opts...))
 	}
-}
-func newSpecialEventsStep() *sqlgraph.Step {
-	return sqlgraph.NewStep(
-		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(SpecialEventsInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, false, SpecialEventsTable, SpecialEventsColumn),
-	)
 }
 func newSukipisStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(

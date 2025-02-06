@@ -21,28 +21,6 @@ var (
 		Columns:    NextActionsColumns,
 		PrimaryKey: []*schema.Column{NextActionsColumns[0]},
 	}
-	// SpecialEventsColumns holds the columns for the "special_events" table.
-	SpecialEventsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "occured_at", Type: field.TypeTime},
-		{Name: "title", Type: field.TypeString},
-		{Name: "detail_comment", Type: field.TypeString},
-		{Name: "user_special_events", Type: field.TypeInt, Nullable: true},
-	}
-	// SpecialEventsTable holds the schema information for the "special_events" table.
-	SpecialEventsTable = &schema.Table{
-		Name:       "special_events",
-		Columns:    SpecialEventsColumns,
-		PrimaryKey: []*schema.Column{SpecialEventsColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:     "special_events_users_special_events",
-				Columns:    []*schema.Column{SpecialEventsColumns[4]},
-				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-		},
-	}
 	// SukipisColumns holds the columns for the "sukipis" table.
 	SukipisColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -73,49 +51,6 @@ var (
 				OnDelete:   schema.SetNull,
 			},
 		},
-	}
-	// TweetsColumns holds the columns for the "tweets" table.
-	TweetsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "text", Type: field.TypeString},
-		{Name: "tweet_id", Type: field.TypeInt, Unique: true},
-		{Name: "tweet_created_at", Type: field.TypeTime},
-		{Name: "created_at", Type: field.TypeTime},
-		{Name: "sukipi_tweets", Type: field.TypeInt, Nullable: true},
-		{Name: "reply_twitter_user_id", Type: field.TypeInt, Nullable: true},
-	}
-	// TweetsTable holds the schema information for the "tweets" table.
-	TweetsTable = &schema.Table{
-		Name:       "tweets",
-		Columns:    TweetsColumns,
-		PrimaryKey: []*schema.Column{TweetsColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:     "tweets_sukipis_tweets",
-				Columns:    []*schema.Column{TweetsColumns[5]},
-				RefColumns: []*schema.Column{SukipisColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-			{
-				Symbol:     "tweets_twitter_users_replies",
-				Columns:    []*schema.Column{TweetsColumns[6]},
-				RefColumns: []*schema.Column{TwitterUsersColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-		},
-	}
-	// TwitterUsersColumns holds the columns for the "twitter_users" table.
-	TwitterUsersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "name", Type: field.TypeString},
-		{Name: "username", Type: field.TypeString},
-		{Name: "created_at", Type: field.TypeTime},
-	}
-	// TwitterUsersTable holds the schema information for the "twitter_users" table.
-	TwitterUsersTable = &schema.Table{
-		Name:       "twitter_users",
-		Columns:    TwitterUsersColumns,
-		PrimaryKey: []*schema.Column{TwitterUsersColumns[0]},
 	}
 	// UniversitiesColumns holds the columns for the "universities" table.
 	UniversitiesColumns = []*schema.Column{
@@ -168,19 +103,13 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		NextActionsTable,
-		SpecialEventsTable,
 		SukipisTable,
-		TweetsTable,
-		TwitterUsersTable,
 		UniversitiesTable,
 		UsersTable,
 	}
 )
 
 func init() {
-	SpecialEventsTable.ForeignKeys[0].RefTable = UsersTable
 	SukipisTable.ForeignKeys[0].RefTable = UsersTable
-	TweetsTable.ForeignKeys[0].RefTable = SukipisTable
-	TweetsTable.ForeignKeys[1].RefTable = TwitterUsersTable
 	UsersTable.ForeignKeys[0].RefTable = SukipisTable
 }

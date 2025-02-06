@@ -5,7 +5,6 @@ package ent
 import (
 	"context"
 	"errors"
-	"flehmen-api/ent/specialevent"
 	"flehmen-api/ent/sukipi"
 	"flehmen-api/ent/user"
 	"fmt"
@@ -64,21 +63,6 @@ func (uc *UserCreate) SetNillableCreatedAt(t *time.Time) *UserCreate {
 		uc.SetCreatedAt(*t)
 	}
 	return uc
-}
-
-// AddSpecialEventIDs adds the "special_events" edge to the SpecialEvent entity by IDs.
-func (uc *UserCreate) AddSpecialEventIDs(ids ...int) *UserCreate {
-	uc.mutation.AddSpecialEventIDs(ids...)
-	return uc
-}
-
-// AddSpecialEvents adds the "special_events" edges to the SpecialEvent entity.
-func (uc *UserCreate) AddSpecialEvents(s ...*SpecialEvent) *UserCreate {
-	ids := make([]int, len(s))
-	for i := range s {
-		ids[i] = s[i].ID
-	}
-	return uc.AddSpecialEventIDs(ids...)
 }
 
 // SetSukipisID sets the "sukipis" edge to the Sukipi entity by ID.
@@ -210,22 +194,6 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
-	}
-	if nodes := uc.mutation.SpecialEventsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.SpecialEventsTable,
-			Columns: []string{user.SpecialEventsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(specialevent.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := uc.mutation.SukipisIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

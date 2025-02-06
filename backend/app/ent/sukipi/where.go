@@ -835,29 +835,6 @@ func CreatedAtLTE(v time.Time) predicate.Sukipi {
 	return predicate.Sukipi(sql.FieldLTE(FieldCreatedAt, v))
 }
 
-// HasTweets applies the HasEdge predicate on the "tweets" edge.
-func HasTweets() predicate.Sukipi {
-	return predicate.Sukipi(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, TweetsTable, TweetsColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasTweetsWith applies the HasEdge predicate on the "tweets" edge with a given conditions (other predicates).
-func HasTweetsWith(preds ...predicate.Tweet) predicate.Sukipi {
-	return predicate.Sukipi(func(s *sql.Selector) {
-		step := newTweetsStep()
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
-	})
-}
-
 // HasUser applies the HasEdge predicate on the "user" edge.
 func HasUser() predicate.Sukipi {
 	return predicate.Sukipi(func(s *sql.Selector) {

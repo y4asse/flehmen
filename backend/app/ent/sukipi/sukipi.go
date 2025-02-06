@@ -38,19 +38,10 @@ const (
 	FieldMbti = "mbti"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
-	// EdgeTweets holds the string denoting the tweets edge name in mutations.
-	EdgeTweets = "tweets"
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
 	// Table holds the table name of the sukipi in the database.
 	Table = "sukipis"
-	// TweetsTable is the table that holds the tweets relation/edge.
-	TweetsTable = "tweets"
-	// TweetsInverseTable is the table name for the Tweet entity.
-	// It exists in this package in order to avoid circular dependency with the "tweet" package.
-	TweetsInverseTable = "tweets"
-	// TweetsColumn is the table column denoting the tweets relation/edge.
-	TweetsColumn = "sukipi_tweets"
 	// UserTable is the table that holds the user relation/edge.
 	UserTable = "sukipis"
 	// UserInverseTable is the table name for the User entity.
@@ -171,32 +162,11 @@ func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
 }
 
-// ByTweetsCount orders the results by tweets count.
-func ByTweetsCount(opts ...sql.OrderTermOption) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newTweetsStep(), opts...)
-	}
-}
-
-// ByTweets orders the results by tweets terms.
-func ByTweets(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newTweetsStep(), append([]sql.OrderTerm{term}, terms...)...)
-	}
-}
-
 // ByUserField orders the results by user field.
 func ByUserField(field string, opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
 		sqlgraph.OrderByNeighborTerms(s, newUserStep(), sql.OrderByField(field, opts...))
 	}
-}
-func newTweetsStep() *sqlgraph.Step {
-	return sqlgraph.NewStep(
-		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(TweetsInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, false, TweetsTable, TweetsColumn),
-	)
 }
 func newUserStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(

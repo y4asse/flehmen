@@ -9,17 +9,8 @@ import (
 // NextAction is the predicate function for nextaction builders.
 type NextAction func(*sql.Selector)
 
-// SpecialEvent is the predicate function for specialevent builders.
-type SpecialEvent func(*sql.Selector)
-
 // Sukipi is the predicate function for sukipi builders.
 type Sukipi func(*sql.Selector)
-
-// Tweet is the predicate function for tweet builders.
-type Tweet func(*sql.Selector)
-
-// TwitterUser is the predicate function for twitteruser builders.
-type TwitterUser func(*sql.Selector)
 
 // University is the predicate function for university builders.
 type University func(*sql.Selector)

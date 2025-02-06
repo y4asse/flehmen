@@ -39,22 +39,11 @@ type User struct {
 
 // UserEdges holds the relations/edges for other nodes in the graph.
 type UserEdges struct {
-	// SpecialEvents holds the value of the special_events edge.
-	SpecialEvents []*SpecialEvent `json:"special_events,omitempty"`
 	// Sukipis holds the value of the sukipis edge.
 	Sukipis *Sukipi `json:"sukipis,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
-}
-
-// SpecialEventsOrErr returns the SpecialEvents value or an error if the edge
-// was not loaded in eager-loading.
-func (e UserEdges) SpecialEventsOrErr() ([]*SpecialEvent, error) {
-	if e.loadedTypes[0] {
-		return e.SpecialEvents, nil
-	}
-	return nil, &NotLoadedError{edge: "special_events"}
+	loadedTypes [1]bool
 }
 
 // SukipisOrErr returns the Sukipis value or an error if the edge
@@ -62,7 +51,7 @@ func (e UserEdges) SpecialEventsOrErr() ([]*SpecialEvent, error) {
 func (e UserEdges) SukipisOrErr() (*Sukipi, error) {
 	if e.Sukipis != nil {
 		return e.Sukipis, nil
-	} else if e.loadedTypes[1] {
+	} else if e.loadedTypes[0] {
 		return nil, &NotFoundError{label: sukipi.Label}
 	}
 	return nil, &NotLoadedError{edge: "sukipis"}
@@ -162,11 +151,6 @@ func (u *User) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (u *User) Value(name string) (ent.Value, error) {
 	return u.selectValues.Get(name)
-}
-
-// QuerySpecialEvents queries the "special_events" edge of the User entity.
-func (u *User) QuerySpecialEvents() *SpecialEventQuery {
-	return NewUserClient(u.config).QuerySpecialEvents(u)
 }
 
 // QuerySukipis queries the "sukipis" edge of the User entity.

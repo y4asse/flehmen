@@ -51,22 +51,11 @@ type Sukipi struct {
 
 // SukipiEdges holds the relations/edges for other nodes in the graph.
 type SukipiEdges struct {
-	// Tweets holds the value of the tweets edge.
-	Tweets []*Tweet `json:"tweets,omitempty"`
 	// User holds the value of the user edge.
 	User *User `json:"user,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
-}
-
-// TweetsOrErr returns the Tweets value or an error if the edge
-// was not loaded in eager-loading.
-func (e SukipiEdges) TweetsOrErr() ([]*Tweet, error) {
-	if e.loadedTypes[0] {
-		return e.Tweets, nil
-	}
-	return nil, &NotLoadedError{edge: "tweets"}
+	loadedTypes [1]bool
 }
 
 // UserOrErr returns the User value or an error if the edge
@@ -74,7 +63,7 @@ func (e SukipiEdges) TweetsOrErr() ([]*Tweet, error) {
 func (e SukipiEdges) UserOrErr() (*User, error) {
 	if e.User != nil {
 		return e.User, nil
-	} else if e.loadedTypes[1] {
+	} else if e.loadedTypes[0] {
 		return nil, &NotFoundError{label: user.Label}
 	}
 	return nil, &NotLoadedError{edge: "user"}
@@ -215,11 +204,6 @@ func (s *Sukipi) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (s *Sukipi) Value(name string) (ent.Value, error) {
 	return s.selectValues.Get(name)
-}
-
-// QueryTweets queries the "tweets" edge of the Sukipi entity.
-func (s *Sukipi) QueryTweets() *TweetQuery {
-	return NewSukipiClient(s.config).QueryTweets(s)
 }
 
 // QueryUser queries the "user" edge of the Sukipi entity.
