@@ -69,7 +69,6 @@ async function fetchWrapper<ResponseType, BodyType = undefined>(
       options
     );
 
-    console.log(`${process.env.NEXT_PUBLIC_API_URL}${url}`);
     if (!response.ok) {
       throw new Error(`Error: status code ${response.status}`);
     }

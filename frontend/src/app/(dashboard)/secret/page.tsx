@@ -1,59 +1,154 @@
 "use client";
-import { Windows } from "@/components/common/Windows";
+import { MobileWindows } from "@/components/common/MobileWindows";
 import React, { useState } from "react";
-import InputVoice from "./_components/InputVoice";
-import VoicePlay from "./_components/VoicePlay";
+import { Score } from "./_components/Score";
+import FriendlyGraph from "./_components/FriendlyGraph";
+import NextAction from "./_components/NextAction";
+import { FileUploader } from "./_components/FileUploader";
+import { Flex } from "@/components/ui/flex";
+import { Button } from "@/components/ui/button";
+
+type UploadResult = {
+  next_action: string;
+  score: Score;
+};
+
+export type Score = {
+  balance: number;
+  rhythm: number;
+  time: number;
+  total: number;
+  type: number;
+  words: number;
+};
 
 const Page = () => {
-  const [isLoading, setIsLoading] = React.useState(true);
-  const handleSetLoading = () => {
-    setIsLoading(true);
-  };
-  const handleStopLoading = () => {
-    setIsLoading(false);
-  };
-  const [url, setUrl] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [uploadResult, setUploadResult] = useState<UploadResult | null>(null);
 
-  const windows = [
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setSelectedFile(event.target.files[0]);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      setMessage("ファイルを選択してください");
+      return;
+    }
+
+    setUploading(true);
+    setMessage("");
+
+    const formData = new FormData();
+    formData.append("text", selectedFile);
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/between`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const result = (await response.json()) as UploadResult;
+
+      if (result) {
+        setMessage("アップロードが完了しました");
+        setUploadResult(result);
+      } else {
+        setMessage("アップロードに失敗しました");
+      }
+    } catch (error) {
+      console.error(error);
+      setMessage("アップロードに失敗しました");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleInitResult = () => {
+    setUploadResult(null);
+    setSelectedFile(null);
+  };
+
+  const resultMobile = [
     {
-      ...timeGraphWindow,
-      title: "聞く❤︎",
-      children: <VoicePlay isLoading={isLoading} url={url} />,
+      ...scoreWindow,
+      children: <Score total={uploadResult?.score.total} />,
     },
     {
-      ...weekGraphWindow,
-      title: "作る❤︎",
+      ...friendlyGraphWindow,
+      children: <FriendlyGraph score={uploadResult?.score} />,
+    },
+    {
+      ...resultWindow,
       children: (
-        <InputVoice
-          handleSetLoading={handleSetLoading}
-          handleStopLoading={handleStopLoading}
-          setUrl={setUrl}
+        <NextAction
+          text={uploadResult?.next_action}
+          onClickBack={handleInitResult}
         />
       ),
     },
   ];
+
+  const fileuploadMobile = [
+    {
+      ...fileuploadWindow,
+      children: <FileUploader handleFileChange={handleFileChange} />,
+    },
+  ];
+
   return (
     <div>
-      <Windows windows={windows} />
+      <div className="hidden md:block">
+        {/* <Windows windows={windows} /> */}
+      </div>
+      <div className="block md:hidden ">
+        {uploadResult ? (
+          <MobileWindows windows={resultMobile} />
+        ) : (
+          <Flex direction={"column"}>
+            <MobileWindows windows={fileuploadMobile} />
+            <Button
+              onClick={handleUpload}
+              disabled={uploading}
+              className="text-white absolute bottom-[40vh]"
+            >
+              {uploading ? "アップロード中..." : "アップロード"}
+            </Button>
+            {message && (
+              <p className="mt-4 text-white absolute bottom-[50vh]">
+                {message}
+              </p>
+            )}
+          </Flex>
+        )}
+      </div>
     </div>
   );
 };
 
-const timeGraphWindow = {
+const scoreWindow = {
   initSize: {
-    width: 800,
-    height: 530,
+    width: 460,
+    height: 330,
   },
   initPosition: {
-    x: 170,
-    y: 80,
-    z: 1,
+    x: 900,
+    y: 350,
+    z: 3,
   },
 };
-const weekGraphWindow = {
+
+const friendlyGraphWindow = {
   initSize: {
     width: 430,
-    height: 350,
+    height: 330,
   },
   initPosition: {
     x: 950,
@@ -62,4 +157,27 @@ const weekGraphWindow = {
   },
 };
 
+const resultWindow = {
+  initSize: {
+    width: 800,
+    height: 530,
+  },
+  initPosition: {
+    x: 140,
+    y: 80,
+    z: 1,
+  },
+};
+
+const fileuploadWindow = {
+  initSize: {
+    width: 800,
+    height: 800,
+  },
+  initPosition: {
+    x: 140,
+    y: 80,
+    z: 1,
+  },
+};
 export default Page;
