@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import { Sukipi } from "../page";
+import { SukipiInfo as SukipiInfoType } from "@/types/sukipiInfo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import dayjs from "dayjs";
 
 type Props = {
-  sukipi: Sukipi;
-  onUpdate: (updatedSukipi: Sukipi) => void;
+  sukipi: SukipiInfoType;
+  onUpdate: (updatedSukipi: SukipiInfoType) => void;
 };
 
 export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState<Sukipi>(sukipi);
+  const [formData, setFormData] = useState<SukipiInfoType>(sukipi);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -56,9 +57,9 @@ export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
       content: sukipi.family || "?まだわからない?",
     },
     {
-      key: "nearlyStation",
+      key: "nearStation",
       title: "最寄駅",
-      content: sukipi.nearlyStation || "?まだわからない?",
+      content: sukipi.nearStation || "?まだわからない?",
     },
   ];
 
@@ -70,7 +71,7 @@ export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
             <div key={item.key} className="flex flex-col">
               <div className="text-white font-bold">{item.title}</div>
               <div className="text-white text-sm mb-2">
-                元の値: <span className="opacity-70">{item.content}</span>
+                元の値: <span className="opacity-70">{typeof item.content === "string" ? item.content : dayjs(item.content).format("YYYY/MM/DD")}</span>
               </div>
               <Input
                 name={item.key}
@@ -105,7 +106,7 @@ export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
         {infoItems.map((item) => (
           <div key={item.key} className="grid grid-cols-[6rem_1fr] gap-2">
             <div className="text-white font-bold text-left">{item.title}</div>
-            <div className="text-white text-left w-40">{item.content}</div>
+            <div className="text-white text-left w-40">{typeof item.content === "string" ? item.content : dayjs(item.content).format("YYYY/MM/DD")}</div>
           </div>
         ))}
         <div className="flex justify-end">

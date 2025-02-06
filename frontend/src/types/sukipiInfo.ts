@@ -1,13 +1,13 @@
 export type SukipiInfo = {
     name: string
-    twitterId: string
     likedAt: Date | null
-    weight: number
-    height: number
-    mbti: string
+    twitterId: string | null
+    weight: number | null
+    height: number | null
+    mbti: string | null
     birthday: Date | null
-    hobby: string
+    hobby: string | null
     shoesSize: number | null
-    family: string
-    nearStation: string
+    family: string | null
+    nearStation: string | null
   }
