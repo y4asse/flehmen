@@ -12,4 +12,4 @@ RUN pip install -r requirements.txt
 
 # ポートの公開
 EXPOSE 5000
-CMD ["flask","--app", "app.py", "run", "--host=0.0.0.0"]
+CMD ["flask","--app", "app.py", "run", "--host=0.0.0.0", "--debug"]
