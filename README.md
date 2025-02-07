@@ -1,0 +1,6 @@
+```
+cd frontend
+```
+```
+cd backend
+```
