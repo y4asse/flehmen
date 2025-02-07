@@ -3,12 +3,12 @@ import dayjs from "dayjs";
 
 // Propsの型定義
 type Props = {
-  likedAt: string;
+  likedAt: Date | null;
 };
 
 export const SukipiLikedAt = ({ likedAt }: Props) => {
   // 日付操作を dayjs で行う
-  const likedAtDate = dayjs(likedAt);
+  const likedAtDate = likedAt ? dayjs(likedAt) : dayjs();
   const today = dayjs();
 
   // 経過日数を計算

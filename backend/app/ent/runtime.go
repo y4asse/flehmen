@@ -3,11 +3,8 @@
 package ent
 
 import (
-	"flehmen-api/ent/mbti"
 	"flehmen-api/ent/schema"
 	"flehmen-api/ent/sukipi"
-	"flehmen-api/ent/tweet"
-	"flehmen-api/ent/twitteruser"
 	"flehmen-api/ent/university"
 	"flehmen-api/ent/user"
 	"time"
@@ -17,30 +14,12 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
-	mbtiFields := schema.Mbti{}.Fields()
-	_ = mbtiFields
-	// mbtiDescCreatedAt is the schema descriptor for created_at field.
-	mbtiDescCreatedAt := mbtiFields[1].Descriptor()
-	// mbti.DefaultCreatedAt holds the default value on creation for the created_at field.
-	mbti.DefaultCreatedAt = mbtiDescCreatedAt.Default.(func() time.Time)
 	sukipiFields := schema.Sukipi{}.Fields()
 	_ = sukipiFields
 	// sukipiDescCreatedAt is the schema descriptor for created_at field.
-	sukipiDescCreatedAt := sukipiFields[10].Descriptor()
+	sukipiDescCreatedAt := sukipiFields[11].Descriptor()
 	// sukipi.DefaultCreatedAt holds the default value on creation for the created_at field.
 	sukipi.DefaultCreatedAt = sukipiDescCreatedAt.Default.(func() time.Time)
-	tweetFields := schema.Tweet{}.Fields()
-	_ = tweetFields
-	// tweetDescCreatedAt is the schema descriptor for created_at field.
-	tweetDescCreatedAt := tweetFields[4].Descriptor()
-	// tweet.DefaultCreatedAt holds the default value on creation for the created_at field.
-	tweet.DefaultCreatedAt = tweetDescCreatedAt.Default.(func() time.Time)
-	twitteruserFields := schema.TwitterUser{}.Fields()
-	_ = twitteruserFields
-	// twitteruserDescCreatedAt is the schema descriptor for created_at field.
-	twitteruserDescCreatedAt := twitteruserFields[3].Descriptor()
-	// twitteruser.DefaultCreatedAt holds the default value on creation for the created_at field.
-	twitteruser.DefaultCreatedAt = twitteruserDescCreatedAt.Default.(func() time.Time)
 	universityFields := schema.University{}.Fields()
 	_ = universityFields
 	// universityDescCreatedAt is the schema descriptor for created_at field.

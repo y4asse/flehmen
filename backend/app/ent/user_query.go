@@ -4,10 +4,8 @@ package ent
 
 import (
 	"context"
-	"database/sql/driver"
-	"flehmen-api/ent/mbti"
 	"flehmen-api/ent/predicate"
-	"flehmen-api/ent/specialevent"
+	"flehmen-api/ent/sukipi"
 	"flehmen-api/ent/user"
 	"fmt"
 	"math"
@@ -21,13 +19,12 @@ import (
 // UserQuery is the builder for querying User entities.
 type UserQuery struct {
 	config
-	ctx               *QueryContext
-	order             []user.OrderOption
-	inters            []Interceptor
-	predicates        []predicate.User
-	withMbti          *MbtiQuery
-	withSpecialEvents *SpecialEventQuery
-	withFKs           bool
+	ctx         *QueryContext
+	order       []user.OrderOption
+	inters      []Interceptor
+	predicates  []predicate.User
+	withSukipis *SukipiQuery
+	withFKs     bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -64,9 +61,9 @@ func (uq *UserQuery) Order(o ...user.OrderOption) *UserQuery {
 	return uq
 }
 
-// QueryMbti chains the current query on the "mbti" edge.
-func (uq *UserQuery) QueryMbti() *MbtiQuery {
-	query := (&MbtiClient{config: uq.config}).Query()
+// QuerySukipis chains the current query on the "sukipis" edge.
+func (uq *UserQuery) QuerySukipis() *SukipiQuery {
+	query := (&SukipiClient{config: uq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := uq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -77,30 +74,8 @@ func (uq *UserQuery) QueryMbti() *MbtiQuery {
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, selector),
-			sqlgraph.To(mbti.Table, mbti.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, false, user.MbtiTable, user.MbtiColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
-// QuerySpecialEvents chains the current query on the "special_events" edge.
-func (uq *UserQuery) QuerySpecialEvents() *SpecialEventQuery {
-	query := (&SpecialEventClient{config: uq.config}).Query()
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := uq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		selector := uq.sqlQuery(ctx)
-		if err := selector.Err(); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(user.Table, user.FieldID, selector),
-			sqlgraph.To(specialevent.Table, specialevent.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, user.SpecialEventsTable, user.SpecialEventsColumn),
+			sqlgraph.To(sukipi.Table, sukipi.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, user.SukipisTable, user.SukipisColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
@@ -295,38 +270,26 @@ func (uq *UserQuery) Clone() *UserQuery {
 		return nil
 	}
 	return &UserQuery{
-		config:            uq.config,
-		ctx:               uq.ctx.Clone(),
-		order:             append([]user.OrderOption{}, uq.order...),
-		inters:            append([]Interceptor{}, uq.inters...),
-		predicates:        append([]predicate.User{}, uq.predicates...),
-		withMbti:          uq.withMbti.Clone(),
-		withSpecialEvents: uq.withSpecialEvents.Clone(),
+		config:      uq.config,
+		ctx:         uq.ctx.Clone(),
+		order:       append([]user.OrderOption{}, uq.order...),
+		inters:      append([]Interceptor{}, uq.inters...),
+		predicates:  append([]predicate.User{}, uq.predicates...),
+		withSukipis: uq.withSukipis.Clone(),
 		// clone intermediate query.
 		sql:  uq.sql.Clone(),
 		path: uq.path,
 	}
 }
 
-// WithMbti tells the query-builder to eager-load the nodes that are connected to
-// the "mbti" edge. The optional arguments are used to configure the query builder of the edge.
-func (uq *UserQuery) WithMbti(opts ...func(*MbtiQuery)) *UserQuery {
-	query := (&MbtiClient{config: uq.config}).Query()
+// WithSukipis tells the query-builder to eager-load the nodes that are connected to
+// the "sukipis" edge. The optional arguments are used to configure the query builder of the edge.
+func (uq *UserQuery) WithSukipis(opts ...func(*SukipiQuery)) *UserQuery {
+	query := (&SukipiClient{config: uq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	uq.withMbti = query
-	return uq
-}
-
-// WithSpecialEvents tells the query-builder to eager-load the nodes that are connected to
-// the "special_events" edge. The optional arguments are used to configure the query builder of the edge.
-func (uq *UserQuery) WithSpecialEvents(opts ...func(*SpecialEventQuery)) *UserQuery {
-	query := (&SpecialEventClient{config: uq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	uq.withSpecialEvents = query
+	uq.withSukipis = query
 	return uq
 }
 
@@ -409,12 +372,11 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 		nodes       = []*User{}
 		withFKs     = uq.withFKs
 		_spec       = uq.querySpec()
-		loadedTypes = [2]bool{
-			uq.withMbti != nil,
-			uq.withSpecialEvents != nil,
+		loadedTypes = [1]bool{
+			uq.withSukipis != nil,
 		}
 	)
-	if uq.withMbti != nil {
+	if uq.withSukipis != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -438,30 +400,23 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := uq.withMbti; query != nil {
-		if err := uq.loadMbti(ctx, query, nodes, nil,
-			func(n *User, e *Mbti) { n.Edges.Mbti = e }); err != nil {
-			return nil, err
-		}
-	}
-	if query := uq.withSpecialEvents; query != nil {
-		if err := uq.loadSpecialEvents(ctx, query, nodes,
-			func(n *User) { n.Edges.SpecialEvents = []*SpecialEvent{} },
-			func(n *User, e *SpecialEvent) { n.Edges.SpecialEvents = append(n.Edges.SpecialEvents, e) }); err != nil {
+	if query := uq.withSukipis; query != nil {
+		if err := uq.loadSukipis(ctx, query, nodes, nil,
+			func(n *User, e *Sukipi) { n.Edges.Sukipis = e }); err != nil {
 			return nil, err
 		}
 	}
 	return nodes, nil
 }
 
-func (uq *UserQuery) loadMbti(ctx context.Context, query *MbtiQuery, nodes []*User, init func(*User), assign func(*User, *Mbti)) error {
+func (uq *UserQuery) loadSukipis(ctx context.Context, query *SukipiQuery, nodes []*User, init func(*User), assign func(*User, *Sukipi)) error {
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*User)
 	for i := range nodes {
-		if nodes[i].user_mbti == nil {
+		if nodes[i].user_sukipis == nil {
 			continue
 		}
-		fk := *nodes[i].user_mbti
+		fk := *nodes[i].user_sukipis
 		if _, ok := nodeids[fk]; !ok {
 			ids = append(ids, fk)
 		}
@@ -470,7 +425,7 @@ func (uq *UserQuery) loadMbti(ctx context.Context, query *MbtiQuery, nodes []*Us
 	if len(ids) == 0 {
 		return nil
 	}
-	query.Where(mbti.IDIn(ids...))
+	query.Where(sukipi.IDIn(ids...))
 	neighbors, err := query.All(ctx)
 	if err != nil {
 		return err
@@ -478,42 +433,11 @@ func (uq *UserQuery) loadMbti(ctx context.Context, query *MbtiQuery, nodes []*Us
 	for _, n := range neighbors {
 		nodes, ok := nodeids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "user_mbti" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "user_sukipis" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)
 		}
-	}
-	return nil
-}
-func (uq *UserQuery) loadSpecialEvents(ctx context.Context, query *SpecialEventQuery, nodes []*User, init func(*User), assign func(*User, *SpecialEvent)) error {
-	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[int]*User)
-	for i := range nodes {
-		fks = append(fks, nodes[i].ID)
-		nodeids[nodes[i].ID] = nodes[i]
-		if init != nil {
-			init(nodes[i])
-		}
-	}
-	query.withFKs = true
-	query.Where(predicate.SpecialEvent(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(user.SpecialEventsColumn), fks...))
-	}))
-	neighbors, err := query.All(ctx)
-	if err != nil {
-		return err
-	}
-	for _, n := range neighbors {
-		fk := n.user_special_events
-		if fk == nil {
-			return fmt.Errorf(`foreign-key "user_special_events" is nil for node %v`, n.ID)
-		}
-		node, ok := nodeids[*fk]
-		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "user_special_events" returned %v for node %v`, *fk, n.ID)
-		}
-		assign(node, n)
 	}
 	return nil
 }

@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"flehmen-api/ent/mbti"
+	"flehmen-api/ent/sukipi"
 	"flehmen-api/ent/user"
 	"fmt"
 	"strings"
@@ -33,39 +33,28 @@ type User struct {
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
 	Edges        UserEdges `json:"edges"`
-	user_mbti    *int
+	user_sukipis *int
 	selectValues sql.SelectValues
 }
 
 // UserEdges holds the relations/edges for other nodes in the graph.
 type UserEdges struct {
-	// Mbti holds the value of the mbti edge.
-	Mbti *Mbti `json:"mbti,omitempty"`
-	// SpecialEvents holds the value of the special_events edge.
-	SpecialEvents []*SpecialEvent `json:"special_events,omitempty"`
+	// Sukipis holds the value of the sukipis edge.
+	Sukipis *Sukipi `json:"sukipis,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [1]bool
 }
 
-// MbtiOrErr returns the Mbti value or an error if the edge
+// SukipisOrErr returns the Sukipis value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e UserEdges) MbtiOrErr() (*Mbti, error) {
-	if e.Mbti != nil {
-		return e.Mbti, nil
+func (e UserEdges) SukipisOrErr() (*Sukipi, error) {
+	if e.Sukipis != nil {
+		return e.Sukipis, nil
 	} else if e.loadedTypes[0] {
-		return nil, &NotFoundError{label: mbti.Label}
+		return nil, &NotFoundError{label: sukipi.Label}
 	}
-	return nil, &NotLoadedError{edge: "mbti"}
-}
-
-// SpecialEventsOrErr returns the SpecialEvents value or an error if the edge
-// was not loaded in eager-loading.
-func (e UserEdges) SpecialEventsOrErr() ([]*SpecialEvent, error) {
-	if e.loadedTypes[1] {
-		return e.SpecialEvents, nil
-	}
-	return nil, &NotLoadedError{edge: "special_events"}
+	return nil, &NotLoadedError{edge: "sukipis"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -83,7 +72,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullString)
 		case user.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
-		case user.ForeignKeys[0]: // user_mbti
+		case user.ForeignKeys[0]: // user_sukipis
 			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -146,10 +135,10 @@ func (u *User) assignValues(columns []string, values []any) error {
 			}
 		case user.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for edge-field user_mbti", value)
+				return fmt.Errorf("unexpected type %T for edge-field user_sukipis", value)
 			} else if value.Valid {
-				u.user_mbti = new(int)
-				*u.user_mbti = int(value.Int64)
+				u.user_sukipis = new(int)
+				*u.user_sukipis = int(value.Int64)
 			}
 		default:
 			u.selectValues.Set(columns[i], values[i])
@@ -164,14 +153,9 @@ func (u *User) Value(name string) (ent.Value, error) {
 	return u.selectValues.Get(name)
 }
 
-// QueryMbti queries the "mbti" edge of the User entity.
-func (u *User) QueryMbti() *MbtiQuery {
-	return NewUserClient(u.config).QueryMbti(u)
-}
-
-// QuerySpecialEvents queries the "special_events" edge of the User entity.
-func (u *User) QuerySpecialEvents() *SpecialEventQuery {
-	return NewUserClient(u.config).QuerySpecialEvents(u)
+// QuerySukipis queries the "sukipis" edge of the User entity.
+func (u *User) QuerySukipis() *SukipiQuery {
+	return NewUserClient(u.config).QuerySukipis(u)
 }
 
 // Update returns a builder for updating this User.

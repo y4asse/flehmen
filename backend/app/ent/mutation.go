@@ -5,13 +5,9 @@ package ent
 import (
 	"context"
 	"errors"
-	"flehmen-api/ent/mbti"
 	"flehmen-api/ent/nextaction"
 	"flehmen-api/ent/predicate"
-	"flehmen-api/ent/specialevent"
 	"flehmen-api/ent/sukipi"
-	"flehmen-api/ent/tweet"
-	"flehmen-api/ent/twitteruser"
 	"flehmen-api/ent/university"
 	"flehmen-api/ent/user"
 	"fmt"
@@ -31,395 +27,11 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeMbti         = "Mbti"
-	TypeNextAction   = "NextAction"
-	TypeSpecialEvent = "SpecialEvent"
-	TypeSukipi       = "Sukipi"
-	TypeTweet        = "Tweet"
-	TypeTwitterUser  = "TwitterUser"
-	TypeUniversity   = "University"
-	TypeUser         = "User"
+	TypeNextAction = "NextAction"
+	TypeSukipi     = "Sukipi"
+	TypeUniversity = "University"
+	TypeUser       = "User"
 )
-
-// MbtiMutation represents an operation that mutates the Mbti nodes in the graph.
-type MbtiMutation struct {
-	config
-	op            Op
-	typ           string
-	id            *int
-	_type         *string
-	created_at    *time.Time
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*Mbti, error)
-	predicates    []predicate.Mbti
-}
-
-var _ ent.Mutation = (*MbtiMutation)(nil)
-
-// mbtiOption allows management of the mutation configuration using functional options.
-type mbtiOption func(*MbtiMutation)
-
-// newMbtiMutation creates new mutation for the Mbti entity.
-func newMbtiMutation(c config, op Op, opts ...mbtiOption) *MbtiMutation {
-	m := &MbtiMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeMbti,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withMbtiID sets the ID field of the mutation.
-func withMbtiID(id int) mbtiOption {
-	return func(m *MbtiMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *Mbti
-		)
-		m.oldValue = func(ctx context.Context) (*Mbti, error) {
-			once.Do(func() {
-				if m.done {
-					err = errors.New("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().Mbti.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withMbti sets the old Mbti of the mutation.
-func withMbti(node *Mbti) mbtiOption {
-	return func(m *MbtiMutation) {
-		m.oldValue = func(context.Context) (*Mbti, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m MbtiMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m MbtiMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, errors.New("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// ID returns the ID value in the mutation. Note that the ID is only available
-// if it was provided to the builder or after it was returned from the database.
-func (m *MbtiMutation) ID() (id int, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// IDs queries the database and returns the entity ids that match the mutation's predicate.
-// That means, if the mutation is applied within a transaction with an isolation level such
-// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
-// or updated by the mutation.
-func (m *MbtiMutation) IDs(ctx context.Context) ([]int, error) {
-	switch {
-	case m.op.Is(OpUpdateOne | OpDeleteOne):
-		id, exists := m.ID()
-		if exists {
-			return []int{id}, nil
-		}
-		fallthrough
-	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().Mbti.Query().Where(m.predicates...).IDs(ctx)
-	default:
-		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
-	}
-}
-
-// SetType sets the "type" field.
-func (m *MbtiMutation) SetType(s string) {
-	m._type = &s
-}
-
-// GetType returns the value of the "type" field in the mutation.
-func (m *MbtiMutation) GetType() (r string, exists bool) {
-	v := m._type
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldType returns the old "type" field's value of the Mbti entity.
-// If the Mbti object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MbtiMutation) OldType(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldType is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldType requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldType: %w", err)
-	}
-	return oldValue.Type, nil
-}
-
-// ResetType resets all changes to the "type" field.
-func (m *MbtiMutation) ResetType() {
-	m._type = nil
-}
-
-// SetCreatedAt sets the "created_at" field.
-func (m *MbtiMutation) SetCreatedAt(t time.Time) {
-	m.created_at = &t
-}
-
-// CreatedAt returns the value of the "created_at" field in the mutation.
-func (m *MbtiMutation) CreatedAt() (r time.Time, exists bool) {
-	v := m.created_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCreatedAt returns the old "created_at" field's value of the Mbti entity.
-// If the Mbti object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MbtiMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
-	}
-	return oldValue.CreatedAt, nil
-}
-
-// ResetCreatedAt resets all changes to the "created_at" field.
-func (m *MbtiMutation) ResetCreatedAt() {
-	m.created_at = nil
-}
-
-// Where appends a list predicates to the MbtiMutation builder.
-func (m *MbtiMutation) Where(ps ...predicate.Mbti) {
-	m.predicates = append(m.predicates, ps...)
-}
-
-// WhereP appends storage-level predicates to the MbtiMutation builder. Using this method,
-// users can use type-assertion to append predicates that do not depend on any generated package.
-func (m *MbtiMutation) WhereP(ps ...func(*sql.Selector)) {
-	p := make([]predicate.Mbti, len(ps))
-	for i := range ps {
-		p[i] = ps[i]
-	}
-	m.Where(p...)
-}
-
-// Op returns the operation name.
-func (m *MbtiMutation) Op() Op {
-	return m.op
-}
-
-// SetOp allows setting the mutation operation.
-func (m *MbtiMutation) SetOp(op Op) {
-	m.op = op
-}
-
-// Type returns the node type of this mutation (Mbti).
-func (m *MbtiMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during this mutation. Note that in
-// order to get all numeric fields that were incremented/decremented, call
-// AddedFields().
-func (m *MbtiMutation) Fields() []string {
-	fields := make([]string, 0, 2)
-	if m._type != nil {
-		fields = append(fields, mbti.FieldType)
-	}
-	if m.created_at != nil {
-		fields = append(fields, mbti.FieldCreatedAt)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name. The second boolean
-// return value indicates that this field was not set, or was not defined in the
-// schema.
-func (m *MbtiMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case mbti.FieldType:
-		return m.GetType()
-	case mbti.FieldCreatedAt:
-		return m.CreatedAt()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database. An error is
-// returned if the mutation operation is not UpdateOne, or the query to the
-// database failed.
-func (m *MbtiMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case mbti.FieldType:
-		return m.OldType(ctx)
-	case mbti.FieldCreatedAt:
-		return m.OldCreatedAt(ctx)
-	}
-	return nil, fmt.Errorf("unknown Mbti field %s", name)
-}
-
-// SetField sets the value of a field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *MbtiMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case mbti.FieldType:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetType(v)
-		return nil
-	case mbti.FieldCreatedAt:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCreatedAt(v)
-		return nil
-	}
-	return fmt.Errorf("unknown Mbti field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented/decremented during
-// this mutation.
-func (m *MbtiMutation) AddedFields() []string {
-	return nil
-}
-
-// AddedField returns the numeric value that was incremented/decremented on a field
-// with the given name. The second boolean return value indicates that this field
-// was not set, or was not defined in the schema.
-func (m *MbtiMutation) AddedField(name string) (ent.Value, bool) {
-	return nil, false
-}
-
-// AddField adds the value to the field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *MbtiMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	}
-	return fmt.Errorf("unknown Mbti numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared during this
-// mutation.
-func (m *MbtiMutation) ClearedFields() []string {
-	return nil
-}
-
-// FieldCleared returns a boolean indicating if a field with the given name was
-// cleared in this mutation.
-func (m *MbtiMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value of the field with the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *MbtiMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Mbti nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation for the field with the given name.
-// It returns an error if the field is not defined in the schema.
-func (m *MbtiMutation) ResetField(name string) error {
-	switch name {
-	case mbti.FieldType:
-		m.ResetType()
-		return nil
-	case mbti.FieldCreatedAt:
-		m.ResetCreatedAt()
-		return nil
-	}
-	return fmt.Errorf("unknown Mbti field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this mutation.
-func (m *MbtiMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// AddedIDs returns all IDs (to other nodes) that were added for the given edge
-// name in this mutation.
-func (m *MbtiMutation) AddedIDs(name string) []ent.Value {
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this mutation.
-func (m *MbtiMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
-// the given name in this mutation.
-func (m *MbtiMutation) RemovedIDs(name string) []ent.Value {
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *MbtiMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// EdgeCleared returns a boolean which indicates if the edge with the given name
-// was cleared in this mutation.
-func (m *MbtiMutation) EdgeCleared(name string) bool {
-	return false
-}
-
-// ClearEdge clears the value of the edge with the given name. It returns an error
-// if that edge is not defined in the schema.
-func (m *MbtiMutation) ClearEdge(name string) error {
-	return fmt.Errorf("unknown Mbti unique edge %s", name)
-}
-
-// ResetEdge resets all changes to the edge with the given name in this mutation.
-// It returns an error if the edge is not defined in the schema.
-func (m *MbtiMutation) ResetEdge(name string) error {
-	return fmt.Errorf("unknown Mbti edge %s", name)
-}
 
 // NextActionMutation represents an operation that mutates the NextAction nodes in the graph.
 type NextActionMutation struct {
@@ -924,440 +536,6 @@ func (m *NextActionMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown NextAction edge %s", name)
 }
 
-// SpecialEventMutation represents an operation that mutates the SpecialEvent nodes in the graph.
-type SpecialEventMutation struct {
-	config
-	op             Op
-	typ            string
-	id             *int
-	occured_at     *time.Time
-	title          *string
-	detail_comment *string
-	clearedFields  map[string]struct{}
-	done           bool
-	oldValue       func(context.Context) (*SpecialEvent, error)
-	predicates     []predicate.SpecialEvent
-}
-
-var _ ent.Mutation = (*SpecialEventMutation)(nil)
-
-// specialeventOption allows management of the mutation configuration using functional options.
-type specialeventOption func(*SpecialEventMutation)
-
-// newSpecialEventMutation creates new mutation for the SpecialEvent entity.
-func newSpecialEventMutation(c config, op Op, opts ...specialeventOption) *SpecialEventMutation {
-	m := &SpecialEventMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeSpecialEvent,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withSpecialEventID sets the ID field of the mutation.
-func withSpecialEventID(id int) specialeventOption {
-	return func(m *SpecialEventMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *SpecialEvent
-		)
-		m.oldValue = func(ctx context.Context) (*SpecialEvent, error) {
-			once.Do(func() {
-				if m.done {
-					err = errors.New("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().SpecialEvent.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withSpecialEvent sets the old SpecialEvent of the mutation.
-func withSpecialEvent(node *SpecialEvent) specialeventOption {
-	return func(m *SpecialEventMutation) {
-		m.oldValue = func(context.Context) (*SpecialEvent, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m SpecialEventMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m SpecialEventMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, errors.New("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// ID returns the ID value in the mutation. Note that the ID is only available
-// if it was provided to the builder or after it was returned from the database.
-func (m *SpecialEventMutation) ID() (id int, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// IDs queries the database and returns the entity ids that match the mutation's predicate.
-// That means, if the mutation is applied within a transaction with an isolation level such
-// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
-// or updated by the mutation.
-func (m *SpecialEventMutation) IDs(ctx context.Context) ([]int, error) {
-	switch {
-	case m.op.Is(OpUpdateOne | OpDeleteOne):
-		id, exists := m.ID()
-		if exists {
-			return []int{id}, nil
-		}
-		fallthrough
-	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().SpecialEvent.Query().Where(m.predicates...).IDs(ctx)
-	default:
-		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
-	}
-}
-
-// SetOccuredAt sets the "occured_at" field.
-func (m *SpecialEventMutation) SetOccuredAt(t time.Time) {
-	m.occured_at = &t
-}
-
-// OccuredAt returns the value of the "occured_at" field in the mutation.
-func (m *SpecialEventMutation) OccuredAt() (r time.Time, exists bool) {
-	v := m.occured_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldOccuredAt returns the old "occured_at" field's value of the SpecialEvent entity.
-// If the SpecialEvent object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SpecialEventMutation) OldOccuredAt(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldOccuredAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldOccuredAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldOccuredAt: %w", err)
-	}
-	return oldValue.OccuredAt, nil
-}
-
-// ResetOccuredAt resets all changes to the "occured_at" field.
-func (m *SpecialEventMutation) ResetOccuredAt() {
-	m.occured_at = nil
-}
-
-// SetTitle sets the "title" field.
-func (m *SpecialEventMutation) SetTitle(s string) {
-	m.title = &s
-}
-
-// Title returns the value of the "title" field in the mutation.
-func (m *SpecialEventMutation) Title() (r string, exists bool) {
-	v := m.title
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldTitle returns the old "title" field's value of the SpecialEvent entity.
-// If the SpecialEvent object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SpecialEventMutation) OldTitle(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldTitle is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldTitle requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldTitle: %w", err)
-	}
-	return oldValue.Title, nil
-}
-
-// ResetTitle resets all changes to the "title" field.
-func (m *SpecialEventMutation) ResetTitle() {
-	m.title = nil
-}
-
-// SetDetailComment sets the "detail_comment" field.
-func (m *SpecialEventMutation) SetDetailComment(s string) {
-	m.detail_comment = &s
-}
-
-// DetailComment returns the value of the "detail_comment" field in the mutation.
-func (m *SpecialEventMutation) DetailComment() (r string, exists bool) {
-	v := m.detail_comment
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldDetailComment returns the old "detail_comment" field's value of the SpecialEvent entity.
-// If the SpecialEvent object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SpecialEventMutation) OldDetailComment(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDetailComment is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDetailComment requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDetailComment: %w", err)
-	}
-	return oldValue.DetailComment, nil
-}
-
-// ResetDetailComment resets all changes to the "detail_comment" field.
-func (m *SpecialEventMutation) ResetDetailComment() {
-	m.detail_comment = nil
-}
-
-// Where appends a list predicates to the SpecialEventMutation builder.
-func (m *SpecialEventMutation) Where(ps ...predicate.SpecialEvent) {
-	m.predicates = append(m.predicates, ps...)
-}
-
-// WhereP appends storage-level predicates to the SpecialEventMutation builder. Using this method,
-// users can use type-assertion to append predicates that do not depend on any generated package.
-func (m *SpecialEventMutation) WhereP(ps ...func(*sql.Selector)) {
-	p := make([]predicate.SpecialEvent, len(ps))
-	for i := range ps {
-		p[i] = ps[i]
-	}
-	m.Where(p...)
-}
-
-// Op returns the operation name.
-func (m *SpecialEventMutation) Op() Op {
-	return m.op
-}
-
-// SetOp allows setting the mutation operation.
-func (m *SpecialEventMutation) SetOp(op Op) {
-	m.op = op
-}
-
-// Type returns the node type of this mutation (SpecialEvent).
-func (m *SpecialEventMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during this mutation. Note that in
-// order to get all numeric fields that were incremented/decremented, call
-// AddedFields().
-func (m *SpecialEventMutation) Fields() []string {
-	fields := make([]string, 0, 3)
-	if m.occured_at != nil {
-		fields = append(fields, specialevent.FieldOccuredAt)
-	}
-	if m.title != nil {
-		fields = append(fields, specialevent.FieldTitle)
-	}
-	if m.detail_comment != nil {
-		fields = append(fields, specialevent.FieldDetailComment)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name. The second boolean
-// return value indicates that this field was not set, or was not defined in the
-// schema.
-func (m *SpecialEventMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case specialevent.FieldOccuredAt:
-		return m.OccuredAt()
-	case specialevent.FieldTitle:
-		return m.Title()
-	case specialevent.FieldDetailComment:
-		return m.DetailComment()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database. An error is
-// returned if the mutation operation is not UpdateOne, or the query to the
-// database failed.
-func (m *SpecialEventMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case specialevent.FieldOccuredAt:
-		return m.OldOccuredAt(ctx)
-	case specialevent.FieldTitle:
-		return m.OldTitle(ctx)
-	case specialevent.FieldDetailComment:
-		return m.OldDetailComment(ctx)
-	}
-	return nil, fmt.Errorf("unknown SpecialEvent field %s", name)
-}
-
-// SetField sets the value of a field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *SpecialEventMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case specialevent.FieldOccuredAt:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetOccuredAt(v)
-		return nil
-	case specialevent.FieldTitle:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetTitle(v)
-		return nil
-	case specialevent.FieldDetailComment:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetDetailComment(v)
-		return nil
-	}
-	return fmt.Errorf("unknown SpecialEvent field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented/decremented during
-// this mutation.
-func (m *SpecialEventMutation) AddedFields() []string {
-	return nil
-}
-
-// AddedField returns the numeric value that was incremented/decremented on a field
-// with the given name. The second boolean return value indicates that this field
-// was not set, or was not defined in the schema.
-func (m *SpecialEventMutation) AddedField(name string) (ent.Value, bool) {
-	return nil, false
-}
-
-// AddField adds the value to the field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *SpecialEventMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	}
-	return fmt.Errorf("unknown SpecialEvent numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared during this
-// mutation.
-func (m *SpecialEventMutation) ClearedFields() []string {
-	return nil
-}
-
-// FieldCleared returns a boolean indicating if a field with the given name was
-// cleared in this mutation.
-func (m *SpecialEventMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value of the field with the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *SpecialEventMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown SpecialEvent nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation for the field with the given name.
-// It returns an error if the field is not defined in the schema.
-func (m *SpecialEventMutation) ResetField(name string) error {
-	switch name {
-	case specialevent.FieldOccuredAt:
-		m.ResetOccuredAt()
-		return nil
-	case specialevent.FieldTitle:
-		m.ResetTitle()
-		return nil
-	case specialevent.FieldDetailComment:
-		m.ResetDetailComment()
-		return nil
-	}
-	return fmt.Errorf("unknown SpecialEvent field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this mutation.
-func (m *SpecialEventMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// AddedIDs returns all IDs (to other nodes) that were added for the given edge
-// name in this mutation.
-func (m *SpecialEventMutation) AddedIDs(name string) []ent.Value {
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this mutation.
-func (m *SpecialEventMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
-// the given name in this mutation.
-func (m *SpecialEventMutation) RemovedIDs(name string) []ent.Value {
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *SpecialEventMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// EdgeCleared returns a boolean which indicates if the edge with the given name
-// was cleared in this mutation.
-func (m *SpecialEventMutation) EdgeCleared(name string) bool {
-	return false
-}
-
-// ClearEdge clears the value of the edge with the given name. It returns an error
-// if that edge is not defined in the schema.
-func (m *SpecialEventMutation) ClearEdge(name string) error {
-	return fmt.Errorf("unknown SpecialEvent unique edge %s", name)
-}
-
-// ResetEdge resets all changes to the edge with the given name in this mutation.
-// It returns an error if the edge is not defined in the schema.
-func (m *SpecialEventMutation) ResetEdge(name string) error {
-	return fmt.Errorf("unknown SpecialEvent edge %s", name)
-}
-
 // SukipiMutation represents an operation that mutates the Sukipi nodes in the graph.
 type SukipiMutation struct {
 	config
@@ -1365,6 +543,7 @@ type SukipiMutation struct {
 	typ            string
 	id             *int
 	name           *string
+	liked_at       *time.Time
 	weight         *float64
 	addweight      *float64
 	height         *float64
@@ -1376,14 +555,11 @@ type SukipiMutation struct {
 	addshoesSize   *float64
 	family         *string
 	nearly_station *string
-	liked_at       *time.Time
+	mbti           *string
 	created_at     *time.Time
 	clearedFields  map[string]struct{}
-	mbti           *int
-	clearedmbti    bool
-	tweets         map[int]struct{}
-	removedtweets  map[int]struct{}
-	clearedtweets  bool
+	user           *int
+	cleareduser    bool
 	done           bool
 	oldValue       func(context.Context) (*Sukipi, error)
 	predicates     []predicate.Sukipi
@@ -1521,6 +697,42 @@ func (m *SukipiMutation) OldName(ctx context.Context) (v string, err error) {
 // ResetName resets all changes to the "name" field.
 func (m *SukipiMutation) ResetName() {
 	m.name = nil
+}
+
+// SetLikedAt sets the "liked_at" field.
+func (m *SukipiMutation) SetLikedAt(t time.Time) {
+	m.liked_at = &t
+}
+
+// LikedAt returns the value of the "liked_at" field in the mutation.
+func (m *SukipiMutation) LikedAt() (r time.Time, exists bool) {
+	v := m.liked_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLikedAt returns the old "liked_at" field's value of the Sukipi entity.
+// If the Sukipi object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SukipiMutation) OldLikedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLikedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLikedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLikedAt: %w", err)
+	}
+	return oldValue.LikedAt, nil
+}
+
+// ResetLikedAt resets all changes to the "liked_at" field.
+func (m *SukipiMutation) ResetLikedAt() {
+	m.liked_at = nil
 }
 
 // SetWeight sets the "weight" field.
@@ -1978,40 +1190,53 @@ func (m *SukipiMutation) ResetNearlyStation() {
 	delete(m.clearedFields, sukipi.FieldNearlyStation)
 }
 
-// SetLikedAt sets the "liked_at" field.
-func (m *SukipiMutation) SetLikedAt(t time.Time) {
-	m.liked_at = &t
+// SetMbti sets the "mbti" field.
+func (m *SukipiMutation) SetMbti(s string) {
+	m.mbti = &s
 }
 
-// LikedAt returns the value of the "liked_at" field in the mutation.
-func (m *SukipiMutation) LikedAt() (r time.Time, exists bool) {
-	v := m.liked_at
+// Mbti returns the value of the "mbti" field in the mutation.
+func (m *SukipiMutation) Mbti() (r string, exists bool) {
+	v := m.mbti
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldLikedAt returns the old "liked_at" field's value of the Sukipi entity.
+// OldMbti returns the old "mbti" field's value of the Sukipi entity.
 // If the Sukipi object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SukipiMutation) OldLikedAt(ctx context.Context) (v time.Time, err error) {
+func (m *SukipiMutation) OldMbti(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldLikedAt is only allowed on UpdateOne operations")
+		return v, errors.New("OldMbti is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldLikedAt requires an ID field in the mutation")
+		return v, errors.New("OldMbti requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldLikedAt: %w", err)
+		return v, fmt.Errorf("querying old value for OldMbti: %w", err)
 	}
-	return oldValue.LikedAt, nil
+	return oldValue.Mbti, nil
 }
 
-// ResetLikedAt resets all changes to the "liked_at" field.
-func (m *SukipiMutation) ResetLikedAt() {
-	m.liked_at = nil
+// ClearMbti clears the value of the "mbti" field.
+func (m *SukipiMutation) ClearMbti() {
+	m.mbti = nil
+	m.clearedFields[sukipi.FieldMbti] = struct{}{}
+}
+
+// MbtiCleared returns if the "mbti" field was cleared in this mutation.
+func (m *SukipiMutation) MbtiCleared() bool {
+	_, ok := m.clearedFields[sukipi.FieldMbti]
+	return ok
+}
+
+// ResetMbti resets all changes to the "mbti" field.
+func (m *SukipiMutation) ResetMbti() {
+	m.mbti = nil
+	delete(m.clearedFields, sukipi.FieldMbti)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -2050,97 +1275,43 @@ func (m *SukipiMutation) ResetCreatedAt() {
 	m.created_at = nil
 }
 
-// SetMbtiID sets the "mbti" edge to the Mbti entity by id.
-func (m *SukipiMutation) SetMbtiID(id int) {
-	m.mbti = &id
+// SetUserID sets the "user" edge to the User entity by id.
+func (m *SukipiMutation) SetUserID(id int) {
+	m.user = &id
 }
 
-// ClearMbti clears the "mbti" edge to the Mbti entity.
-func (m *SukipiMutation) ClearMbti() {
-	m.clearedmbti = true
+// ClearUser clears the "user" edge to the User entity.
+func (m *SukipiMutation) ClearUser() {
+	m.cleareduser = true
 }
 
-// MbtiCleared reports if the "mbti" edge to the Mbti entity was cleared.
-func (m *SukipiMutation) MbtiCleared() bool {
-	return m.clearedmbti
+// UserCleared reports if the "user" edge to the User entity was cleared.
+func (m *SukipiMutation) UserCleared() bool {
+	return m.cleareduser
 }
 
-// MbtiID returns the "mbti" edge ID in the mutation.
-func (m *SukipiMutation) MbtiID() (id int, exists bool) {
-	if m.mbti != nil {
-		return *m.mbti, true
+// UserID returns the "user" edge ID in the mutation.
+func (m *SukipiMutation) UserID() (id int, exists bool) {
+	if m.user != nil {
+		return *m.user, true
 	}
 	return
 }
 
-// MbtiIDs returns the "mbti" edge IDs in the mutation.
+// UserIDs returns the "user" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// MbtiID instead. It exists only for internal usage by the builders.
-func (m *SukipiMutation) MbtiIDs() (ids []int) {
-	if id := m.mbti; id != nil {
+// UserID instead. It exists only for internal usage by the builders.
+func (m *SukipiMutation) UserIDs() (ids []int) {
+	if id := m.user; id != nil {
 		ids = append(ids, *id)
 	}
 	return
 }
 
-// ResetMbti resets all changes to the "mbti" edge.
-func (m *SukipiMutation) ResetMbti() {
-	m.mbti = nil
-	m.clearedmbti = false
-}
-
-// AddTweetIDs adds the "tweets" edge to the Tweet entity by ids.
-func (m *SukipiMutation) AddTweetIDs(ids ...int) {
-	if m.tweets == nil {
-		m.tweets = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.tweets[ids[i]] = struct{}{}
-	}
-}
-
-// ClearTweets clears the "tweets" edge to the Tweet entity.
-func (m *SukipiMutation) ClearTweets() {
-	m.clearedtweets = true
-}
-
-// TweetsCleared reports if the "tweets" edge to the Tweet entity was cleared.
-func (m *SukipiMutation) TweetsCleared() bool {
-	return m.clearedtweets
-}
-
-// RemoveTweetIDs removes the "tweets" edge to the Tweet entity by IDs.
-func (m *SukipiMutation) RemoveTweetIDs(ids ...int) {
-	if m.removedtweets == nil {
-		m.removedtweets = make(map[int]struct{})
-	}
-	for i := range ids {
-		delete(m.tweets, ids[i])
-		m.removedtweets[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedTweets returns the removed IDs of the "tweets" edge to the Tweet entity.
-func (m *SukipiMutation) RemovedTweetsIDs() (ids []int) {
-	for id := range m.removedtweets {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// TweetsIDs returns the "tweets" edge IDs in the mutation.
-func (m *SukipiMutation) TweetsIDs() (ids []int) {
-	for id := range m.tweets {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetTweets resets all changes to the "tweets" edge.
-func (m *SukipiMutation) ResetTweets() {
-	m.tweets = nil
-	m.clearedtweets = false
-	m.removedtweets = nil
+// ResetUser resets all changes to the "user" edge.
+func (m *SukipiMutation) ResetUser() {
+	m.user = nil
+	m.cleareduser = false
 }
 
 // Where appends a list predicates to the SukipiMutation builder.
@@ -2177,9 +1348,12 @@ func (m *SukipiMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *SukipiMutation) Fields() []string {
-	fields := make([]string, 0, 11)
+	fields := make([]string, 0, 12)
 	if m.name != nil {
 		fields = append(fields, sukipi.FieldName)
+	}
+	if m.liked_at != nil {
+		fields = append(fields, sukipi.FieldLikedAt)
 	}
 	if m.weight != nil {
 		fields = append(fields, sukipi.FieldWeight)
@@ -2205,8 +1379,8 @@ func (m *SukipiMutation) Fields() []string {
 	if m.nearly_station != nil {
 		fields = append(fields, sukipi.FieldNearlyStation)
 	}
-	if m.liked_at != nil {
-		fields = append(fields, sukipi.FieldLikedAt)
+	if m.mbti != nil {
+		fields = append(fields, sukipi.FieldMbti)
 	}
 	if m.created_at != nil {
 		fields = append(fields, sukipi.FieldCreatedAt)
@@ -2221,6 +1395,8 @@ func (m *SukipiMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case sukipi.FieldName:
 		return m.Name()
+	case sukipi.FieldLikedAt:
+		return m.LikedAt()
 	case sukipi.FieldWeight:
 		return m.Weight()
 	case sukipi.FieldHeight:
@@ -2237,8 +1413,8 @@ func (m *SukipiMutation) Field(name string) (ent.Value, bool) {
 		return m.Family()
 	case sukipi.FieldNearlyStation:
 		return m.NearlyStation()
-	case sukipi.FieldLikedAt:
-		return m.LikedAt()
+	case sukipi.FieldMbti:
+		return m.Mbti()
 	case sukipi.FieldCreatedAt:
 		return m.CreatedAt()
 	}
@@ -2252,6 +1428,8 @@ func (m *SukipiMutation) OldField(ctx context.Context, name string) (ent.Value, 
 	switch name {
 	case sukipi.FieldName:
 		return m.OldName(ctx)
+	case sukipi.FieldLikedAt:
+		return m.OldLikedAt(ctx)
 	case sukipi.FieldWeight:
 		return m.OldWeight(ctx)
 	case sukipi.FieldHeight:
@@ -2268,8 +1446,8 @@ func (m *SukipiMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldFamily(ctx)
 	case sukipi.FieldNearlyStation:
 		return m.OldNearlyStation(ctx)
-	case sukipi.FieldLikedAt:
-		return m.OldLikedAt(ctx)
+	case sukipi.FieldMbti:
+		return m.OldMbti(ctx)
 	case sukipi.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	}
@@ -2287,6 +1465,13 @@ func (m *SukipiMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetName(v)
+		return nil
+	case sukipi.FieldLikedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLikedAt(v)
 		return nil
 	case sukipi.FieldWeight:
 		v, ok := value.(float64)
@@ -2344,12 +1529,12 @@ func (m *SukipiMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetNearlyStation(v)
 		return nil
-	case sukipi.FieldLikedAt:
-		v, ok := value.(time.Time)
+	case sukipi.FieldMbti:
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetLikedAt(v)
+		m.SetMbti(v)
 		return nil
 	case sukipi.FieldCreatedAt:
 		v, ok := value.(time.Time)
@@ -2451,6 +1636,9 @@ func (m *SukipiMutation) ClearedFields() []string {
 	if m.FieldCleared(sukipi.FieldNearlyStation) {
 		fields = append(fields, sukipi.FieldNearlyStation)
 	}
+	if m.FieldCleared(sukipi.FieldMbti) {
+		fields = append(fields, sukipi.FieldMbti)
+	}
 	return fields
 }
 
@@ -2489,6 +1677,9 @@ func (m *SukipiMutation) ClearField(name string) error {
 	case sukipi.FieldNearlyStation:
 		m.ClearNearlyStation()
 		return nil
+	case sukipi.FieldMbti:
+		m.ClearMbti()
+		return nil
 	}
 	return fmt.Errorf("unknown Sukipi nullable field %s", name)
 }
@@ -2499,6 +1690,9 @@ func (m *SukipiMutation) ResetField(name string) error {
 	switch name {
 	case sukipi.FieldName:
 		m.ResetName()
+		return nil
+	case sukipi.FieldLikedAt:
+		m.ResetLikedAt()
 		return nil
 	case sukipi.FieldWeight:
 		m.ResetWeight()
@@ -2524,8 +1718,8 @@ func (m *SukipiMutation) ResetField(name string) error {
 	case sukipi.FieldNearlyStation:
 		m.ResetNearlyStation()
 		return nil
-	case sukipi.FieldLikedAt:
-		m.ResetLikedAt()
+	case sukipi.FieldMbti:
+		m.ResetMbti()
 		return nil
 	case sukipi.FieldCreatedAt:
 		m.ResetCreatedAt()
@@ -2536,12 +1730,9 @@ func (m *SukipiMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *SukipiMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.mbti != nil {
-		edges = append(edges, sukipi.EdgeMbti)
-	}
-	if m.tweets != nil {
-		edges = append(edges, sukipi.EdgeTweets)
+	edges := make([]string, 0, 1)
+	if m.user != nil {
+		edges = append(edges, sukipi.EdgeUser)
 	}
 	return edges
 }
@@ -2550,51 +1741,31 @@ func (m *SukipiMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *SukipiMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case sukipi.EdgeMbti:
-		if id := m.mbti; id != nil {
+	case sukipi.EdgeUser:
+		if id := m.user; id != nil {
 			return []ent.Value{*id}
 		}
-	case sukipi.EdgeTweets:
-		ids := make([]ent.Value, 0, len(m.tweets))
-		for id := range m.tweets {
-			ids = append(ids, id)
-		}
-		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *SukipiMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.removedtweets != nil {
-		edges = append(edges, sukipi.EdgeTweets)
-	}
+	edges := make([]string, 0, 1)
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *SukipiMutation) RemovedIDs(name string) []ent.Value {
-	switch name {
-	case sukipi.EdgeTweets:
-		ids := make([]ent.Value, 0, len(m.removedtweets))
-		for id := range m.removedtweets {
-			ids = append(ids, id)
-		}
-		return ids
-	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *SukipiMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.clearedmbti {
-		edges = append(edges, sukipi.EdgeMbti)
-	}
-	if m.clearedtweets {
-		edges = append(edges, sukipi.EdgeTweets)
+	edges := make([]string, 0, 1)
+	if m.cleareduser {
+		edges = append(edges, sukipi.EdgeUser)
 	}
 	return edges
 }
@@ -2603,10 +1774,8 @@ func (m *SukipiMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *SukipiMutation) EdgeCleared(name string) bool {
 	switch name {
-	case sukipi.EdgeMbti:
-		return m.clearedmbti
-	case sukipi.EdgeTweets:
-		return m.clearedtweets
+	case sukipi.EdgeUser:
+		return m.cleareduser
 	}
 	return false
 }
@@ -2615,8 +1784,8 @@ func (m *SukipiMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *SukipiMutation) ClearEdge(name string) error {
 	switch name {
-	case sukipi.EdgeMbti:
-		m.ClearMbti()
+	case sukipi.EdgeUser:
+		m.ClearUser()
 		return nil
 	}
 	return fmt.Errorf("unknown Sukipi unique edge %s", name)
@@ -2626,1214 +1795,11 @@ func (m *SukipiMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *SukipiMutation) ResetEdge(name string) error {
 	switch name {
-	case sukipi.EdgeMbti:
-		m.ResetMbti()
-		return nil
-	case sukipi.EdgeTweets:
-		m.ResetTweets()
-		return nil
-	}
-	return fmt.Errorf("unknown Sukipi edge %s", name)
-}
-
-// TweetMutation represents an operation that mutates the Tweet nodes in the graph.
-type TweetMutation struct {
-	config
-	op               Op
-	typ              string
-	id               *int
-	text             *string
-	tweet_id         *int
-	addtweet_id      *int
-	tweet_created_at *time.Time
-	created_at       *time.Time
-	clearedFields    map[string]struct{}
-	user             *int
-	cleareduser      bool
-	done             bool
-	oldValue         func(context.Context) (*Tweet, error)
-	predicates       []predicate.Tweet
-}
-
-var _ ent.Mutation = (*TweetMutation)(nil)
-
-// tweetOption allows management of the mutation configuration using functional options.
-type tweetOption func(*TweetMutation)
-
-// newTweetMutation creates new mutation for the Tweet entity.
-func newTweetMutation(c config, op Op, opts ...tweetOption) *TweetMutation {
-	m := &TweetMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeTweet,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withTweetID sets the ID field of the mutation.
-func withTweetID(id int) tweetOption {
-	return func(m *TweetMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *Tweet
-		)
-		m.oldValue = func(ctx context.Context) (*Tweet, error) {
-			once.Do(func() {
-				if m.done {
-					err = errors.New("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().Tweet.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withTweet sets the old Tweet of the mutation.
-func withTweet(node *Tweet) tweetOption {
-	return func(m *TweetMutation) {
-		m.oldValue = func(context.Context) (*Tweet, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m TweetMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m TweetMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, errors.New("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// ID returns the ID value in the mutation. Note that the ID is only available
-// if it was provided to the builder or after it was returned from the database.
-func (m *TweetMutation) ID() (id int, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// IDs queries the database and returns the entity ids that match the mutation's predicate.
-// That means, if the mutation is applied within a transaction with an isolation level such
-// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
-// or updated by the mutation.
-func (m *TweetMutation) IDs(ctx context.Context) ([]int, error) {
-	switch {
-	case m.op.Is(OpUpdateOne | OpDeleteOne):
-		id, exists := m.ID()
-		if exists {
-			return []int{id}, nil
-		}
-		fallthrough
-	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().Tweet.Query().Where(m.predicates...).IDs(ctx)
-	default:
-		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
-	}
-}
-
-// SetText sets the "text" field.
-func (m *TweetMutation) SetText(s string) {
-	m.text = &s
-}
-
-// Text returns the value of the "text" field in the mutation.
-func (m *TweetMutation) Text() (r string, exists bool) {
-	v := m.text
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldText returns the old "text" field's value of the Tweet entity.
-// If the Tweet object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TweetMutation) OldText(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldText is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldText requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldText: %w", err)
-	}
-	return oldValue.Text, nil
-}
-
-// ResetText resets all changes to the "text" field.
-func (m *TweetMutation) ResetText() {
-	m.text = nil
-}
-
-// SetTweetID sets the "tweet_id" field.
-func (m *TweetMutation) SetTweetID(i int) {
-	m.tweet_id = &i
-	m.addtweet_id = nil
-}
-
-// TweetID returns the value of the "tweet_id" field in the mutation.
-func (m *TweetMutation) TweetID() (r int, exists bool) {
-	v := m.tweet_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldTweetID returns the old "tweet_id" field's value of the Tweet entity.
-// If the Tweet object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TweetMutation) OldTweetID(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldTweetID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldTweetID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldTweetID: %w", err)
-	}
-	return oldValue.TweetID, nil
-}
-
-// AddTweetID adds i to the "tweet_id" field.
-func (m *TweetMutation) AddTweetID(i int) {
-	if m.addtweet_id != nil {
-		*m.addtweet_id += i
-	} else {
-		m.addtweet_id = &i
-	}
-}
-
-// AddedTweetID returns the value that was added to the "tweet_id" field in this mutation.
-func (m *TweetMutation) AddedTweetID() (r int, exists bool) {
-	v := m.addtweet_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetTweetID resets all changes to the "tweet_id" field.
-func (m *TweetMutation) ResetTweetID() {
-	m.tweet_id = nil
-	m.addtweet_id = nil
-}
-
-// SetTweetCreatedAt sets the "tweet_created_at" field.
-func (m *TweetMutation) SetTweetCreatedAt(t time.Time) {
-	m.tweet_created_at = &t
-}
-
-// TweetCreatedAt returns the value of the "tweet_created_at" field in the mutation.
-func (m *TweetMutation) TweetCreatedAt() (r time.Time, exists bool) {
-	v := m.tweet_created_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldTweetCreatedAt returns the old "tweet_created_at" field's value of the Tweet entity.
-// If the Tweet object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TweetMutation) OldTweetCreatedAt(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldTweetCreatedAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldTweetCreatedAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldTweetCreatedAt: %w", err)
-	}
-	return oldValue.TweetCreatedAt, nil
-}
-
-// ResetTweetCreatedAt resets all changes to the "tweet_created_at" field.
-func (m *TweetMutation) ResetTweetCreatedAt() {
-	m.tweet_created_at = nil
-}
-
-// SetReplyTwitterUserID sets the "reply_twitter_user_id" field.
-func (m *TweetMutation) SetReplyTwitterUserID(i int) {
-	m.user = &i
-}
-
-// ReplyTwitterUserID returns the value of the "reply_twitter_user_id" field in the mutation.
-func (m *TweetMutation) ReplyTwitterUserID() (r int, exists bool) {
-	v := m.user
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldReplyTwitterUserID returns the old "reply_twitter_user_id" field's value of the Tweet entity.
-// If the Tweet object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TweetMutation) OldReplyTwitterUserID(ctx context.Context) (v *int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldReplyTwitterUserID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldReplyTwitterUserID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldReplyTwitterUserID: %w", err)
-	}
-	return oldValue.ReplyTwitterUserID, nil
-}
-
-// ClearReplyTwitterUserID clears the value of the "reply_twitter_user_id" field.
-func (m *TweetMutation) ClearReplyTwitterUserID() {
-	m.user = nil
-	m.clearedFields[tweet.FieldReplyTwitterUserID] = struct{}{}
-}
-
-// ReplyTwitterUserIDCleared returns if the "reply_twitter_user_id" field was cleared in this mutation.
-func (m *TweetMutation) ReplyTwitterUserIDCleared() bool {
-	_, ok := m.clearedFields[tweet.FieldReplyTwitterUserID]
-	return ok
-}
-
-// ResetReplyTwitterUserID resets all changes to the "reply_twitter_user_id" field.
-func (m *TweetMutation) ResetReplyTwitterUserID() {
-	m.user = nil
-	delete(m.clearedFields, tweet.FieldReplyTwitterUserID)
-}
-
-// SetCreatedAt sets the "created_at" field.
-func (m *TweetMutation) SetCreatedAt(t time.Time) {
-	m.created_at = &t
-}
-
-// CreatedAt returns the value of the "created_at" field in the mutation.
-func (m *TweetMutation) CreatedAt() (r time.Time, exists bool) {
-	v := m.created_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCreatedAt returns the old "created_at" field's value of the Tweet entity.
-// If the Tweet object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TweetMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
-	}
-	return oldValue.CreatedAt, nil
-}
-
-// ResetCreatedAt resets all changes to the "created_at" field.
-func (m *TweetMutation) ResetCreatedAt() {
-	m.created_at = nil
-}
-
-// SetUserID sets the "user" edge to the TwitterUser entity by id.
-func (m *TweetMutation) SetUserID(id int) {
-	m.user = &id
-}
-
-// ClearUser clears the "user" edge to the TwitterUser entity.
-func (m *TweetMutation) ClearUser() {
-	m.cleareduser = true
-	m.clearedFields[tweet.FieldReplyTwitterUserID] = struct{}{}
-}
-
-// UserCleared reports if the "user" edge to the TwitterUser entity was cleared.
-func (m *TweetMutation) UserCleared() bool {
-	return m.ReplyTwitterUserIDCleared() || m.cleareduser
-}
-
-// UserID returns the "user" edge ID in the mutation.
-func (m *TweetMutation) UserID() (id int, exists bool) {
-	if m.user != nil {
-		return *m.user, true
-	}
-	return
-}
-
-// UserIDs returns the "user" edge IDs in the mutation.
-// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// UserID instead. It exists only for internal usage by the builders.
-func (m *TweetMutation) UserIDs() (ids []int) {
-	if id := m.user; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetUser resets all changes to the "user" edge.
-func (m *TweetMutation) ResetUser() {
-	m.user = nil
-	m.cleareduser = false
-}
-
-// Where appends a list predicates to the TweetMutation builder.
-func (m *TweetMutation) Where(ps ...predicate.Tweet) {
-	m.predicates = append(m.predicates, ps...)
-}
-
-// WhereP appends storage-level predicates to the TweetMutation builder. Using this method,
-// users can use type-assertion to append predicates that do not depend on any generated package.
-func (m *TweetMutation) WhereP(ps ...func(*sql.Selector)) {
-	p := make([]predicate.Tweet, len(ps))
-	for i := range ps {
-		p[i] = ps[i]
-	}
-	m.Where(p...)
-}
-
-// Op returns the operation name.
-func (m *TweetMutation) Op() Op {
-	return m.op
-}
-
-// SetOp allows setting the mutation operation.
-func (m *TweetMutation) SetOp(op Op) {
-	m.op = op
-}
-
-// Type returns the node type of this mutation (Tweet).
-func (m *TweetMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during this mutation. Note that in
-// order to get all numeric fields that were incremented/decremented, call
-// AddedFields().
-func (m *TweetMutation) Fields() []string {
-	fields := make([]string, 0, 5)
-	if m.text != nil {
-		fields = append(fields, tweet.FieldText)
-	}
-	if m.tweet_id != nil {
-		fields = append(fields, tweet.FieldTweetID)
-	}
-	if m.tweet_created_at != nil {
-		fields = append(fields, tweet.FieldTweetCreatedAt)
-	}
-	if m.user != nil {
-		fields = append(fields, tweet.FieldReplyTwitterUserID)
-	}
-	if m.created_at != nil {
-		fields = append(fields, tweet.FieldCreatedAt)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name. The second boolean
-// return value indicates that this field was not set, or was not defined in the
-// schema.
-func (m *TweetMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case tweet.FieldText:
-		return m.Text()
-	case tweet.FieldTweetID:
-		return m.TweetID()
-	case tweet.FieldTweetCreatedAt:
-		return m.TweetCreatedAt()
-	case tweet.FieldReplyTwitterUserID:
-		return m.ReplyTwitterUserID()
-	case tweet.FieldCreatedAt:
-		return m.CreatedAt()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database. An error is
-// returned if the mutation operation is not UpdateOne, or the query to the
-// database failed.
-func (m *TweetMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case tweet.FieldText:
-		return m.OldText(ctx)
-	case tweet.FieldTweetID:
-		return m.OldTweetID(ctx)
-	case tweet.FieldTweetCreatedAt:
-		return m.OldTweetCreatedAt(ctx)
-	case tweet.FieldReplyTwitterUserID:
-		return m.OldReplyTwitterUserID(ctx)
-	case tweet.FieldCreatedAt:
-		return m.OldCreatedAt(ctx)
-	}
-	return nil, fmt.Errorf("unknown Tweet field %s", name)
-}
-
-// SetField sets the value of a field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *TweetMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case tweet.FieldText:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetText(v)
-		return nil
-	case tweet.FieldTweetID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetTweetID(v)
-		return nil
-	case tweet.FieldTweetCreatedAt:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetTweetCreatedAt(v)
-		return nil
-	case tweet.FieldReplyTwitterUserID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetReplyTwitterUserID(v)
-		return nil
-	case tweet.FieldCreatedAt:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCreatedAt(v)
-		return nil
-	}
-	return fmt.Errorf("unknown Tweet field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented/decremented during
-// this mutation.
-func (m *TweetMutation) AddedFields() []string {
-	var fields []string
-	if m.addtweet_id != nil {
-		fields = append(fields, tweet.FieldTweetID)
-	}
-	return fields
-}
-
-// AddedField returns the numeric value that was incremented/decremented on a field
-// with the given name. The second boolean return value indicates that this field
-// was not set, or was not defined in the schema.
-func (m *TweetMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case tweet.FieldTweetID:
-		return m.AddedTweetID()
-	}
-	return nil, false
-}
-
-// AddField adds the value to the field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *TweetMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	case tweet.FieldTweetID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddTweetID(v)
-		return nil
-	}
-	return fmt.Errorf("unknown Tweet numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared during this
-// mutation.
-func (m *TweetMutation) ClearedFields() []string {
-	var fields []string
-	if m.FieldCleared(tweet.FieldReplyTwitterUserID) {
-		fields = append(fields, tweet.FieldReplyTwitterUserID)
-	}
-	return fields
-}
-
-// FieldCleared returns a boolean indicating if a field with the given name was
-// cleared in this mutation.
-func (m *TweetMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value of the field with the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *TweetMutation) ClearField(name string) error {
-	switch name {
-	case tweet.FieldReplyTwitterUserID:
-		m.ClearReplyTwitterUserID()
-		return nil
-	}
-	return fmt.Errorf("unknown Tweet nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation for the field with the given name.
-// It returns an error if the field is not defined in the schema.
-func (m *TweetMutation) ResetField(name string) error {
-	switch name {
-	case tweet.FieldText:
-		m.ResetText()
-		return nil
-	case tweet.FieldTweetID:
-		m.ResetTweetID()
-		return nil
-	case tweet.FieldTweetCreatedAt:
-		m.ResetTweetCreatedAt()
-		return nil
-	case tweet.FieldReplyTwitterUserID:
-		m.ResetReplyTwitterUserID()
-		return nil
-	case tweet.FieldCreatedAt:
-		m.ResetCreatedAt()
-		return nil
-	}
-	return fmt.Errorf("unknown Tweet field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this mutation.
-func (m *TweetMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.user != nil {
-		edges = append(edges, tweet.EdgeUser)
-	}
-	return edges
-}
-
-// AddedIDs returns all IDs (to other nodes) that were added for the given edge
-// name in this mutation.
-func (m *TweetMutation) AddedIDs(name string) []ent.Value {
-	switch name {
-	case tweet.EdgeUser:
-		if id := m.user; id != nil {
-			return []ent.Value{*id}
-		}
-	}
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this mutation.
-func (m *TweetMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
-	return edges
-}
-
-// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
-// the given name in this mutation.
-func (m *TweetMutation) RemovedIDs(name string) []ent.Value {
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *TweetMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.cleareduser {
-		edges = append(edges, tweet.EdgeUser)
-	}
-	return edges
-}
-
-// EdgeCleared returns a boolean which indicates if the edge with the given name
-// was cleared in this mutation.
-func (m *TweetMutation) EdgeCleared(name string) bool {
-	switch name {
-	case tweet.EdgeUser:
-		return m.cleareduser
-	}
-	return false
-}
-
-// ClearEdge clears the value of the edge with the given name. It returns an error
-// if that edge is not defined in the schema.
-func (m *TweetMutation) ClearEdge(name string) error {
-	switch name {
-	case tweet.EdgeUser:
-		m.ClearUser()
-		return nil
-	}
-	return fmt.Errorf("unknown Tweet unique edge %s", name)
-}
-
-// ResetEdge resets all changes to the edge with the given name in this mutation.
-// It returns an error if the edge is not defined in the schema.
-func (m *TweetMutation) ResetEdge(name string) error {
-	switch name {
-	case tweet.EdgeUser:
+	case sukipi.EdgeUser:
 		m.ResetUser()
 		return nil
 	}
-	return fmt.Errorf("unknown Tweet edge %s", name)
-}
-
-// TwitterUserMutation represents an operation that mutates the TwitterUser nodes in the graph.
-type TwitterUserMutation struct {
-	config
-	op             Op
-	typ            string
-	id             *int
-	name           *string
-	username       *string
-	created_at     *time.Time
-	clearedFields  map[string]struct{}
-	replies        map[int]struct{}
-	removedreplies map[int]struct{}
-	clearedreplies bool
-	done           bool
-	oldValue       func(context.Context) (*TwitterUser, error)
-	predicates     []predicate.TwitterUser
-}
-
-var _ ent.Mutation = (*TwitterUserMutation)(nil)
-
-// twitteruserOption allows management of the mutation configuration using functional options.
-type twitteruserOption func(*TwitterUserMutation)
-
-// newTwitterUserMutation creates new mutation for the TwitterUser entity.
-func newTwitterUserMutation(c config, op Op, opts ...twitteruserOption) *TwitterUserMutation {
-	m := &TwitterUserMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeTwitterUser,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withTwitterUserID sets the ID field of the mutation.
-func withTwitterUserID(id int) twitteruserOption {
-	return func(m *TwitterUserMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *TwitterUser
-		)
-		m.oldValue = func(ctx context.Context) (*TwitterUser, error) {
-			once.Do(func() {
-				if m.done {
-					err = errors.New("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().TwitterUser.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withTwitterUser sets the old TwitterUser of the mutation.
-func withTwitterUser(node *TwitterUser) twitteruserOption {
-	return func(m *TwitterUserMutation) {
-		m.oldValue = func(context.Context) (*TwitterUser, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m TwitterUserMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m TwitterUserMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, errors.New("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of TwitterUser entities.
-func (m *TwitterUserMutation) SetID(id int) {
-	m.id = &id
-}
-
-// ID returns the ID value in the mutation. Note that the ID is only available
-// if it was provided to the builder or after it was returned from the database.
-func (m *TwitterUserMutation) ID() (id int, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// IDs queries the database and returns the entity ids that match the mutation's predicate.
-// That means, if the mutation is applied within a transaction with an isolation level such
-// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
-// or updated by the mutation.
-func (m *TwitterUserMutation) IDs(ctx context.Context) ([]int, error) {
-	switch {
-	case m.op.Is(OpUpdateOne | OpDeleteOne):
-		id, exists := m.ID()
-		if exists {
-			return []int{id}, nil
-		}
-		fallthrough
-	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().TwitterUser.Query().Where(m.predicates...).IDs(ctx)
-	default:
-		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
-	}
-}
-
-// SetName sets the "name" field.
-func (m *TwitterUserMutation) SetName(s string) {
-	m.name = &s
-}
-
-// Name returns the value of the "name" field in the mutation.
-func (m *TwitterUserMutation) Name() (r string, exists bool) {
-	v := m.name
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldName returns the old "name" field's value of the TwitterUser entity.
-// If the TwitterUser object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TwitterUserMutation) OldName(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldName is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldName requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldName: %w", err)
-	}
-	return oldValue.Name, nil
-}
-
-// ResetName resets all changes to the "name" field.
-func (m *TwitterUserMutation) ResetName() {
-	m.name = nil
-}
-
-// SetUsername sets the "username" field.
-func (m *TwitterUserMutation) SetUsername(s string) {
-	m.username = &s
-}
-
-// Username returns the value of the "username" field in the mutation.
-func (m *TwitterUserMutation) Username() (r string, exists bool) {
-	v := m.username
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldUsername returns the old "username" field's value of the TwitterUser entity.
-// If the TwitterUser object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TwitterUserMutation) OldUsername(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUsername is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUsername requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUsername: %w", err)
-	}
-	return oldValue.Username, nil
-}
-
-// ResetUsername resets all changes to the "username" field.
-func (m *TwitterUserMutation) ResetUsername() {
-	m.username = nil
-}
-
-// SetCreatedAt sets the "created_at" field.
-func (m *TwitterUserMutation) SetCreatedAt(t time.Time) {
-	m.created_at = &t
-}
-
-// CreatedAt returns the value of the "created_at" field in the mutation.
-func (m *TwitterUserMutation) CreatedAt() (r time.Time, exists bool) {
-	v := m.created_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCreatedAt returns the old "created_at" field's value of the TwitterUser entity.
-// If the TwitterUser object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TwitterUserMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
-	}
-	return oldValue.CreatedAt, nil
-}
-
-// ResetCreatedAt resets all changes to the "created_at" field.
-func (m *TwitterUserMutation) ResetCreatedAt() {
-	m.created_at = nil
-}
-
-// AddReplyIDs adds the "replies" edge to the Tweet entity by ids.
-func (m *TwitterUserMutation) AddReplyIDs(ids ...int) {
-	if m.replies == nil {
-		m.replies = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.replies[ids[i]] = struct{}{}
-	}
-}
-
-// ClearReplies clears the "replies" edge to the Tweet entity.
-func (m *TwitterUserMutation) ClearReplies() {
-	m.clearedreplies = true
-}
-
-// RepliesCleared reports if the "replies" edge to the Tweet entity was cleared.
-func (m *TwitterUserMutation) RepliesCleared() bool {
-	return m.clearedreplies
-}
-
-// RemoveReplyIDs removes the "replies" edge to the Tweet entity by IDs.
-func (m *TwitterUserMutation) RemoveReplyIDs(ids ...int) {
-	if m.removedreplies == nil {
-		m.removedreplies = make(map[int]struct{})
-	}
-	for i := range ids {
-		delete(m.replies, ids[i])
-		m.removedreplies[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedReplies returns the removed IDs of the "replies" edge to the Tweet entity.
-func (m *TwitterUserMutation) RemovedRepliesIDs() (ids []int) {
-	for id := range m.removedreplies {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// RepliesIDs returns the "replies" edge IDs in the mutation.
-func (m *TwitterUserMutation) RepliesIDs() (ids []int) {
-	for id := range m.replies {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetReplies resets all changes to the "replies" edge.
-func (m *TwitterUserMutation) ResetReplies() {
-	m.replies = nil
-	m.clearedreplies = false
-	m.removedreplies = nil
-}
-
-// Where appends a list predicates to the TwitterUserMutation builder.
-func (m *TwitterUserMutation) Where(ps ...predicate.TwitterUser) {
-	m.predicates = append(m.predicates, ps...)
-}
-
-// WhereP appends storage-level predicates to the TwitterUserMutation builder. Using this method,
-// users can use type-assertion to append predicates that do not depend on any generated package.
-func (m *TwitterUserMutation) WhereP(ps ...func(*sql.Selector)) {
-	p := make([]predicate.TwitterUser, len(ps))
-	for i := range ps {
-		p[i] = ps[i]
-	}
-	m.Where(p...)
-}
-
-// Op returns the operation name.
-func (m *TwitterUserMutation) Op() Op {
-	return m.op
-}
-
-// SetOp allows setting the mutation operation.
-func (m *TwitterUserMutation) SetOp(op Op) {
-	m.op = op
-}
-
-// Type returns the node type of this mutation (TwitterUser).
-func (m *TwitterUserMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during this mutation. Note that in
-// order to get all numeric fields that were incremented/decremented, call
-// AddedFields().
-func (m *TwitterUserMutation) Fields() []string {
-	fields := make([]string, 0, 3)
-	if m.name != nil {
-		fields = append(fields, twitteruser.FieldName)
-	}
-	if m.username != nil {
-		fields = append(fields, twitteruser.FieldUsername)
-	}
-	if m.created_at != nil {
-		fields = append(fields, twitteruser.FieldCreatedAt)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name. The second boolean
-// return value indicates that this field was not set, or was not defined in the
-// schema.
-func (m *TwitterUserMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case twitteruser.FieldName:
-		return m.Name()
-	case twitteruser.FieldUsername:
-		return m.Username()
-	case twitteruser.FieldCreatedAt:
-		return m.CreatedAt()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database. An error is
-// returned if the mutation operation is not UpdateOne, or the query to the
-// database failed.
-func (m *TwitterUserMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case twitteruser.FieldName:
-		return m.OldName(ctx)
-	case twitteruser.FieldUsername:
-		return m.OldUsername(ctx)
-	case twitteruser.FieldCreatedAt:
-		return m.OldCreatedAt(ctx)
-	}
-	return nil, fmt.Errorf("unknown TwitterUser field %s", name)
-}
-
-// SetField sets the value of a field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *TwitterUserMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case twitteruser.FieldName:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetName(v)
-		return nil
-	case twitteruser.FieldUsername:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetUsername(v)
-		return nil
-	case twitteruser.FieldCreatedAt:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCreatedAt(v)
-		return nil
-	}
-	return fmt.Errorf("unknown TwitterUser field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented/decremented during
-// this mutation.
-func (m *TwitterUserMutation) AddedFields() []string {
-	return nil
-}
-
-// AddedField returns the numeric value that was incremented/decremented on a field
-// with the given name. The second boolean return value indicates that this field
-// was not set, or was not defined in the schema.
-func (m *TwitterUserMutation) AddedField(name string) (ent.Value, bool) {
-	return nil, false
-}
-
-// AddField adds the value to the field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *TwitterUserMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	}
-	return fmt.Errorf("unknown TwitterUser numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared during this
-// mutation.
-func (m *TwitterUserMutation) ClearedFields() []string {
-	return nil
-}
-
-// FieldCleared returns a boolean indicating if a field with the given name was
-// cleared in this mutation.
-func (m *TwitterUserMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value of the field with the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *TwitterUserMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown TwitterUser nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation for the field with the given name.
-// It returns an error if the field is not defined in the schema.
-func (m *TwitterUserMutation) ResetField(name string) error {
-	switch name {
-	case twitteruser.FieldName:
-		m.ResetName()
-		return nil
-	case twitteruser.FieldUsername:
-		m.ResetUsername()
-		return nil
-	case twitteruser.FieldCreatedAt:
-		m.ResetCreatedAt()
-		return nil
-	}
-	return fmt.Errorf("unknown TwitterUser field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this mutation.
-func (m *TwitterUserMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.replies != nil {
-		edges = append(edges, twitteruser.EdgeReplies)
-	}
-	return edges
-}
-
-// AddedIDs returns all IDs (to other nodes) that were added for the given edge
-// name in this mutation.
-func (m *TwitterUserMutation) AddedIDs(name string) []ent.Value {
-	switch name {
-	case twitteruser.EdgeReplies:
-		ids := make([]ent.Value, 0, len(m.replies))
-		for id := range m.replies {
-			ids = append(ids, id)
-		}
-		return ids
-	}
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this mutation.
-func (m *TwitterUserMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.removedreplies != nil {
-		edges = append(edges, twitteruser.EdgeReplies)
-	}
-	return edges
-}
-
-// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
-// the given name in this mutation.
-func (m *TwitterUserMutation) RemovedIDs(name string) []ent.Value {
-	switch name {
-	case twitteruser.EdgeReplies:
-		ids := make([]ent.Value, 0, len(m.removedreplies))
-		for id := range m.removedreplies {
-			ids = append(ids, id)
-		}
-		return ids
-	}
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *TwitterUserMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.clearedreplies {
-		edges = append(edges, twitteruser.EdgeReplies)
-	}
-	return edges
-}
-
-// EdgeCleared returns a boolean which indicates if the edge with the given name
-// was cleared in this mutation.
-func (m *TwitterUserMutation) EdgeCleared(name string) bool {
-	switch name {
-	case twitteruser.EdgeReplies:
-		return m.clearedreplies
-	}
-	return false
-}
-
-// ClearEdge clears the value of the edge with the given name. It returns an error
-// if that edge is not defined in the schema.
-func (m *TwitterUserMutation) ClearEdge(name string) error {
-	switch name {
-	}
-	return fmt.Errorf("unknown TwitterUser unique edge %s", name)
-}
-
-// ResetEdge resets all changes to the edge with the given name in this mutation.
-// It returns an error if the edge is not defined in the schema.
-func (m *TwitterUserMutation) ResetEdge(name string) error {
-	switch name {
-	case twitteruser.EdgeReplies:
-		m.ResetReplies()
-		return nil
-	}
-	return fmt.Errorf("unknown TwitterUser edge %s", name)
+	return fmt.Errorf("unknown Sukipi edge %s", name)
 }
 
 // UniversityMutation represents an operation that mutates the University nodes in the graph.
@@ -4504,26 +2470,23 @@ func (m *UniversityMutation) ResetEdge(name string) error {
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
 	config
-	op                    Op
-	typ                   string
-	id                    *int
-	name                  *string
-	weight                *float64
-	addweight             *float64
-	height                *float64
-	addheight             *float64
-	clerk_id              *string
-	is_male               *bool
-	created_at            *time.Time
-	clearedFields         map[string]struct{}
-	mbti                  *int
-	clearedmbti           bool
-	special_events        map[int]struct{}
-	removedspecial_events map[int]struct{}
-	clearedspecial_events bool
-	done                  bool
-	oldValue              func(context.Context) (*User, error)
-	predicates            []predicate.User
+	op             Op
+	typ            string
+	id             *int
+	name           *string
+	weight         *float64
+	addweight      *float64
+	height         *float64
+	addheight      *float64
+	clerk_id       *string
+	is_male        *bool
+	created_at     *time.Time
+	clearedFields  map[string]struct{}
+	sukipis        *int
+	clearedsukipis bool
+	done           bool
+	oldValue       func(context.Context) (*User, error)
+	predicates     []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -4880,97 +2843,43 @@ func (m *UserMutation) ResetCreatedAt() {
 	m.created_at = nil
 }
 
-// SetMbtiID sets the "mbti" edge to the Mbti entity by id.
-func (m *UserMutation) SetMbtiID(id int) {
-	m.mbti = &id
+// SetSukipisID sets the "sukipis" edge to the Sukipi entity by id.
+func (m *UserMutation) SetSukipisID(id int) {
+	m.sukipis = &id
 }
 
-// ClearMbti clears the "mbti" edge to the Mbti entity.
-func (m *UserMutation) ClearMbti() {
-	m.clearedmbti = true
+// ClearSukipis clears the "sukipis" edge to the Sukipi entity.
+func (m *UserMutation) ClearSukipis() {
+	m.clearedsukipis = true
 }
 
-// MbtiCleared reports if the "mbti" edge to the Mbti entity was cleared.
-func (m *UserMutation) MbtiCleared() bool {
-	return m.clearedmbti
+// SukipisCleared reports if the "sukipis" edge to the Sukipi entity was cleared.
+func (m *UserMutation) SukipisCleared() bool {
+	return m.clearedsukipis
 }
 
-// MbtiID returns the "mbti" edge ID in the mutation.
-func (m *UserMutation) MbtiID() (id int, exists bool) {
-	if m.mbti != nil {
-		return *m.mbti, true
+// SukipisID returns the "sukipis" edge ID in the mutation.
+func (m *UserMutation) SukipisID() (id int, exists bool) {
+	if m.sukipis != nil {
+		return *m.sukipis, true
 	}
 	return
 }
 
-// MbtiIDs returns the "mbti" edge IDs in the mutation.
+// SukipisIDs returns the "sukipis" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// MbtiID instead. It exists only for internal usage by the builders.
-func (m *UserMutation) MbtiIDs() (ids []int) {
-	if id := m.mbti; id != nil {
+// SukipisID instead. It exists only for internal usage by the builders.
+func (m *UserMutation) SukipisIDs() (ids []int) {
+	if id := m.sukipis; id != nil {
 		ids = append(ids, *id)
 	}
 	return
 }
 
-// ResetMbti resets all changes to the "mbti" edge.
-func (m *UserMutation) ResetMbti() {
-	m.mbti = nil
-	m.clearedmbti = false
-}
-
-// AddSpecialEventIDs adds the "special_events" edge to the SpecialEvent entity by ids.
-func (m *UserMutation) AddSpecialEventIDs(ids ...int) {
-	if m.special_events == nil {
-		m.special_events = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.special_events[ids[i]] = struct{}{}
-	}
-}
-
-// ClearSpecialEvents clears the "special_events" edge to the SpecialEvent entity.
-func (m *UserMutation) ClearSpecialEvents() {
-	m.clearedspecial_events = true
-}
-
-// SpecialEventsCleared reports if the "special_events" edge to the SpecialEvent entity was cleared.
-func (m *UserMutation) SpecialEventsCleared() bool {
-	return m.clearedspecial_events
-}
-
-// RemoveSpecialEventIDs removes the "special_events" edge to the SpecialEvent entity by IDs.
-func (m *UserMutation) RemoveSpecialEventIDs(ids ...int) {
-	if m.removedspecial_events == nil {
-		m.removedspecial_events = make(map[int]struct{})
-	}
-	for i := range ids {
-		delete(m.special_events, ids[i])
-		m.removedspecial_events[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedSpecialEvents returns the removed IDs of the "special_events" edge to the SpecialEvent entity.
-func (m *UserMutation) RemovedSpecialEventsIDs() (ids []int) {
-	for id := range m.removedspecial_events {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// SpecialEventsIDs returns the "special_events" edge IDs in the mutation.
-func (m *UserMutation) SpecialEventsIDs() (ids []int) {
-	for id := range m.special_events {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetSpecialEvents resets all changes to the "special_events" edge.
-func (m *UserMutation) ResetSpecialEvents() {
-	m.special_events = nil
-	m.clearedspecial_events = false
-	m.removedspecial_events = nil
+// ResetSukipis resets all changes to the "sukipis" edge.
+func (m *UserMutation) ResetSukipis() {
+	m.sukipis = nil
+	m.clearedsukipis = false
 }
 
 // Where appends a list predicates to the UserMutation builder.
@@ -5218,12 +3127,9 @@ func (m *UserMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *UserMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.mbti != nil {
-		edges = append(edges, user.EdgeMbti)
-	}
-	if m.special_events != nil {
-		edges = append(edges, user.EdgeSpecialEvents)
+	edges := make([]string, 0, 1)
+	if m.sukipis != nil {
+		edges = append(edges, user.EdgeSukipis)
 	}
 	return edges
 }
@@ -5232,51 +3138,31 @@ func (m *UserMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *UserMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case user.EdgeMbti:
-		if id := m.mbti; id != nil {
+	case user.EdgeSukipis:
+		if id := m.sukipis; id != nil {
 			return []ent.Value{*id}
 		}
-	case user.EdgeSpecialEvents:
-		ids := make([]ent.Value, 0, len(m.special_events))
-		for id := range m.special_events {
-			ids = append(ids, id)
-		}
-		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *UserMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.removedspecial_events != nil {
-		edges = append(edges, user.EdgeSpecialEvents)
-	}
+	edges := make([]string, 0, 1)
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *UserMutation) RemovedIDs(name string) []ent.Value {
-	switch name {
-	case user.EdgeSpecialEvents:
-		ids := make([]ent.Value, 0, len(m.removedspecial_events))
-		for id := range m.removedspecial_events {
-			ids = append(ids, id)
-		}
-		return ids
-	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *UserMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.clearedmbti {
-		edges = append(edges, user.EdgeMbti)
-	}
-	if m.clearedspecial_events {
-		edges = append(edges, user.EdgeSpecialEvents)
+	edges := make([]string, 0, 1)
+	if m.clearedsukipis {
+		edges = append(edges, user.EdgeSukipis)
 	}
 	return edges
 }
@@ -5285,10 +3171,8 @@ func (m *UserMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *UserMutation) EdgeCleared(name string) bool {
 	switch name {
-	case user.EdgeMbti:
-		return m.clearedmbti
-	case user.EdgeSpecialEvents:
-		return m.clearedspecial_events
+	case user.EdgeSukipis:
+		return m.clearedsukipis
 	}
 	return false
 }
@@ -5297,8 +3181,8 @@ func (m *UserMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *UserMutation) ClearEdge(name string) error {
 	switch name {
-	case user.EdgeMbti:
-		m.ClearMbti()
+	case user.EdgeSukipis:
+		m.ClearSukipis()
 		return nil
 	}
 	return fmt.Errorf("unknown User unique edge %s", name)
@@ -5308,11 +3192,8 @@ func (m *UserMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *UserMutation) ResetEdge(name string) error {
 	switch name {
-	case user.EdgeMbti:
-		m.ResetMbti()
-		return nil
-	case user.EdgeSpecialEvents:
-		m.ResetSpecialEvents()
+	case user.EdgeSukipis:
+		m.ResetSukipis()
 		return nil
 	}
 	return fmt.Errorf("unknown User edge %s", name)

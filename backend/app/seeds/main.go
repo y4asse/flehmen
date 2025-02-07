@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"time"
 
 	"entgo.io/ent/dialect"
@@ -58,6 +57,11 @@ type TweetData struct {
 	Metadeta Metadeta `json:"metadeta"`
 }
 
+type UserData struct {
+	ID      string `json:"id"`
+	ClerkID string `json:"clerk_id"`
+}
+
 func main() {
 	c := mysql.Config{
 		DBName:    os.Getenv("DB_NAME"),
@@ -83,8 +87,12 @@ func main() {
 		log.Fatalf("failed seeding next action: %v", err)
 	}
 
-	if err := seedTweets(ctx, client); err != nil {
-		log.Fatalf("failed seeding tweets: %v", err)
+	if err := seedUser(ctx, client); err != nil {
+		log.Fatalf("failed seeding user: %v", err)
+	}
+
+	if err := seedSukipi(ctx, client); err != nil {
+		log.Fatalf("failed seeding sukipi: %v", err)
 	}
 
 	fmt.Println("シーディングが完了しました")
@@ -142,62 +150,37 @@ func seedNextAction(ctx context.Context, client *ent.Client) error {
 	return nil
 }
 
-func seedTweets(ctx context.Context, client *ent.Client) error {
-	file, err := os.Open("seeds/tweets.json")
+func seedUser(ctx context.Context, client *ent.Client) error {
+	err := client.User.Create().
+		SetClerkID("user_2sfTghKeM7uB97iqooGRkN6fAd8").
+		SetName("test").
+		SetIsMale(true).
+		SetWeight(173).
+		SetHeight(173).
+		Exec(ctx)
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	return nil
+}
 
-	var tweetData TweetData
-	if err := json.NewDecoder(file).Decode(&tweetData); err != nil {
+func seedSukipi(ctx context.Context, client *ent.Client) error {
+	err := client.Sukipi.Create().
+		SetUserID(1).
+		SetName("やせ").
+		SetLikedAt(time.Date(2023, 1, 1, 0, 0, 0, 0, time.UTC)).
+		SetWeight(66).
+		SetHeight(174).
+		SetXID("y4isse").
+		SetHobby("Apex").
+		SetBirthday(time.Date(2003, 2, 18, 0, 0, 0, 0, time.UTC)).
+		SetShoesSize(173).
+		SetFamily("片親").
+		SetNearlyStation("日比野").
+		SetMbti("INTP").
+		Exec(ctx)
+	if err != nil {
 		return err
 	}
-
-	var bulkUsers []*ent.TwitterUserCreate
-	for _, u := range tweetData.Includes.Users {
-		userId, err := strconv.Atoi(u.ID)
-		if err != nil {
-			return err
-		}
-		bulkUsers = append(bulkUsers, client.TwitterUser.Create().
-			SetID(userId).
-			SetName(u.Name).
-			SetUsername(u.Username),
-		)
-	}
-	if err := client.TwitterUser.CreateBulk(bulkUsers...).Exec(ctx); err != nil {
-		return err
-	}
-
-	var bulk []*ent.TweetCreate
-	for _, t := range tweetData.Data {
-		tweetID, err := strconv.Atoi(t.ID)
-		if err != nil {
-			return err
-		}
-		var replyToUserID *int
-		if t.InReplyToUserID != "" {
-			id, err := strconv.Atoi(t.InReplyToUserID)
-			if err == nil {
-				replyToUserID = &id
-			}
-		}
-		createdAt, err := time.Parse(time.RFC3339, t.CreatedAt)
-		if err != nil {
-			return err
-		}
-
-		bulk = append(bulk, client.Tweet.Create().
-			SetText(t.Text).
-			SetTweetID(tweetID).
-			SetTweetCreatedAt(createdAt).
-			SetNillableReplyTwitterUserID(replyToUserID),
-		)
-	}
-	if err := client.Tweet.CreateBulk(bulk...).Exec(ctx); err != nil {
-		return err
-	}
-
 	return nil
 }

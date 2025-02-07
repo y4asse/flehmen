@@ -5,9 +5,8 @@ package ent
 import (
 	"context"
 	"errors"
-	"flehmen-api/ent/mbti"
 	"flehmen-api/ent/predicate"
-	"flehmen-api/ent/specialevent"
+	"flehmen-api/ent/sukipi"
 	"flehmen-api/ent/user"
 	"fmt"
 	"time"
@@ -128,38 +127,23 @@ func (uu *UserUpdate) SetNillableCreatedAt(t *time.Time) *UserUpdate {
 	return uu
 }
 
-// SetMbtiID sets the "mbti" edge to the Mbti entity by ID.
-func (uu *UserUpdate) SetMbtiID(id int) *UserUpdate {
-	uu.mutation.SetMbtiID(id)
+// SetSukipisID sets the "sukipis" edge to the Sukipi entity by ID.
+func (uu *UserUpdate) SetSukipisID(id int) *UserUpdate {
+	uu.mutation.SetSukipisID(id)
 	return uu
 }
 
-// SetNillableMbtiID sets the "mbti" edge to the Mbti entity by ID if the given value is not nil.
-func (uu *UserUpdate) SetNillableMbtiID(id *int) *UserUpdate {
+// SetNillableSukipisID sets the "sukipis" edge to the Sukipi entity by ID if the given value is not nil.
+func (uu *UserUpdate) SetNillableSukipisID(id *int) *UserUpdate {
 	if id != nil {
-		uu = uu.SetMbtiID(*id)
+		uu = uu.SetSukipisID(*id)
 	}
 	return uu
 }
 
-// SetMbti sets the "mbti" edge to the Mbti entity.
-func (uu *UserUpdate) SetMbti(m *Mbti) *UserUpdate {
-	return uu.SetMbtiID(m.ID)
-}
-
-// AddSpecialEventIDs adds the "special_events" edge to the SpecialEvent entity by IDs.
-func (uu *UserUpdate) AddSpecialEventIDs(ids ...int) *UserUpdate {
-	uu.mutation.AddSpecialEventIDs(ids...)
-	return uu
-}
-
-// AddSpecialEvents adds the "special_events" edges to the SpecialEvent entity.
-func (uu *UserUpdate) AddSpecialEvents(s ...*SpecialEvent) *UserUpdate {
-	ids := make([]int, len(s))
-	for i := range s {
-		ids[i] = s[i].ID
-	}
-	return uu.AddSpecialEventIDs(ids...)
+// SetSukipis sets the "sukipis" edge to the Sukipi entity.
+func (uu *UserUpdate) SetSukipis(s *Sukipi) *UserUpdate {
+	return uu.SetSukipisID(s.ID)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -167,31 +151,10 @@ func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
 }
 
-// ClearMbti clears the "mbti" edge to the Mbti entity.
-func (uu *UserUpdate) ClearMbti() *UserUpdate {
-	uu.mutation.ClearMbti()
+// ClearSukipis clears the "sukipis" edge to the Sukipi entity.
+func (uu *UserUpdate) ClearSukipis() *UserUpdate {
+	uu.mutation.ClearSukipis()
 	return uu
-}
-
-// ClearSpecialEvents clears all "special_events" edges to the SpecialEvent entity.
-func (uu *UserUpdate) ClearSpecialEvents() *UserUpdate {
-	uu.mutation.ClearSpecialEvents()
-	return uu
-}
-
-// RemoveSpecialEventIDs removes the "special_events" edge to SpecialEvent entities by IDs.
-func (uu *UserUpdate) RemoveSpecialEventIDs(ids ...int) *UserUpdate {
-	uu.mutation.RemoveSpecialEventIDs(ids...)
-	return uu
-}
-
-// RemoveSpecialEvents removes "special_events" edges to SpecialEvent entities.
-func (uu *UserUpdate) RemoveSpecialEvents(s ...*SpecialEvent) *UserUpdate {
-	ids := make([]int, len(s))
-	for i := range s {
-		ids[i] = s[i].ID
-	}
-	return uu.RemoveSpecialEventIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -254,73 +217,28 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := uu.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
 	}
-	if uu.mutation.MbtiCleared() {
+	if uu.mutation.SukipisCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
-			Table:   user.MbtiTable,
-			Columns: []string{user.MbtiColumn},
+			Table:   user.SukipisTable,
+			Columns: []string{user.SukipisColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(mbti.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(sukipi.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := uu.mutation.MbtiIDs(); len(nodes) > 0 {
+	if nodes := uu.mutation.SukipisIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
-			Table:   user.MbtiTable,
-			Columns: []string{user.MbtiColumn},
+			Table:   user.SukipisTable,
+			Columns: []string{user.SukipisColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(mbti.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if uu.mutation.SpecialEventsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.SpecialEventsTable,
-			Columns: []string{user.SpecialEventsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(specialevent.FieldID, field.TypeInt),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := uu.mutation.RemovedSpecialEventsIDs(); len(nodes) > 0 && !uu.mutation.SpecialEventsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.SpecialEventsTable,
-			Columns: []string{user.SpecialEventsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(specialevent.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := uu.mutation.SpecialEventsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.SpecialEventsTable,
-			Columns: []string{user.SpecialEventsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(specialevent.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(sukipi.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -446,38 +364,23 @@ func (uuo *UserUpdateOne) SetNillableCreatedAt(t *time.Time) *UserUpdateOne {
 	return uuo
 }
 
-// SetMbtiID sets the "mbti" edge to the Mbti entity by ID.
-func (uuo *UserUpdateOne) SetMbtiID(id int) *UserUpdateOne {
-	uuo.mutation.SetMbtiID(id)
+// SetSukipisID sets the "sukipis" edge to the Sukipi entity by ID.
+func (uuo *UserUpdateOne) SetSukipisID(id int) *UserUpdateOne {
+	uuo.mutation.SetSukipisID(id)
 	return uuo
 }
 
-// SetNillableMbtiID sets the "mbti" edge to the Mbti entity by ID if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableMbtiID(id *int) *UserUpdateOne {
+// SetNillableSukipisID sets the "sukipis" edge to the Sukipi entity by ID if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableSukipisID(id *int) *UserUpdateOne {
 	if id != nil {
-		uuo = uuo.SetMbtiID(*id)
+		uuo = uuo.SetSukipisID(*id)
 	}
 	return uuo
 }
 
-// SetMbti sets the "mbti" edge to the Mbti entity.
-func (uuo *UserUpdateOne) SetMbti(m *Mbti) *UserUpdateOne {
-	return uuo.SetMbtiID(m.ID)
-}
-
-// AddSpecialEventIDs adds the "special_events" edge to the SpecialEvent entity by IDs.
-func (uuo *UserUpdateOne) AddSpecialEventIDs(ids ...int) *UserUpdateOne {
-	uuo.mutation.AddSpecialEventIDs(ids...)
-	return uuo
-}
-
-// AddSpecialEvents adds the "special_events" edges to the SpecialEvent entity.
-func (uuo *UserUpdateOne) AddSpecialEvents(s ...*SpecialEvent) *UserUpdateOne {
-	ids := make([]int, len(s))
-	for i := range s {
-		ids[i] = s[i].ID
-	}
-	return uuo.AddSpecialEventIDs(ids...)
+// SetSukipis sets the "sukipis" edge to the Sukipi entity.
+func (uuo *UserUpdateOne) SetSukipis(s *Sukipi) *UserUpdateOne {
+	return uuo.SetSukipisID(s.ID)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -485,31 +388,10 @@ func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
 }
 
-// ClearMbti clears the "mbti" edge to the Mbti entity.
-func (uuo *UserUpdateOne) ClearMbti() *UserUpdateOne {
-	uuo.mutation.ClearMbti()
+// ClearSukipis clears the "sukipis" edge to the Sukipi entity.
+func (uuo *UserUpdateOne) ClearSukipis() *UserUpdateOne {
+	uuo.mutation.ClearSukipis()
 	return uuo
-}
-
-// ClearSpecialEvents clears all "special_events" edges to the SpecialEvent entity.
-func (uuo *UserUpdateOne) ClearSpecialEvents() *UserUpdateOne {
-	uuo.mutation.ClearSpecialEvents()
-	return uuo
-}
-
-// RemoveSpecialEventIDs removes the "special_events" edge to SpecialEvent entities by IDs.
-func (uuo *UserUpdateOne) RemoveSpecialEventIDs(ids ...int) *UserUpdateOne {
-	uuo.mutation.RemoveSpecialEventIDs(ids...)
-	return uuo
-}
-
-// RemoveSpecialEvents removes "special_events" edges to SpecialEvent entities.
-func (uuo *UserUpdateOne) RemoveSpecialEvents(s ...*SpecialEvent) *UserUpdateOne {
-	ids := make([]int, len(s))
-	for i := range s {
-		ids[i] = s[i].ID
-	}
-	return uuo.RemoveSpecialEventIDs(ids...)
 }
 
 // Where appends a list predicates to the UserUpdate builder.
@@ -602,73 +484,28 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	if value, ok := uuo.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
 	}
-	if uuo.mutation.MbtiCleared() {
+	if uuo.mutation.SukipisCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
-			Table:   user.MbtiTable,
-			Columns: []string{user.MbtiColumn},
+			Table:   user.SukipisTable,
+			Columns: []string{user.SukipisColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(mbti.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(sukipi.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := uuo.mutation.MbtiIDs(); len(nodes) > 0 {
+	if nodes := uuo.mutation.SukipisIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
-			Table:   user.MbtiTable,
-			Columns: []string{user.MbtiColumn},
+			Table:   user.SukipisTable,
+			Columns: []string{user.SukipisColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(mbti.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if uuo.mutation.SpecialEventsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.SpecialEventsTable,
-			Columns: []string{user.SpecialEventsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(specialevent.FieldID, field.TypeInt),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := uuo.mutation.RemovedSpecialEventsIDs(); len(nodes) > 0 && !uuo.mutation.SpecialEventsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.SpecialEventsTable,
-			Columns: []string{user.SpecialEventsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(specialevent.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := uuo.mutation.SpecialEventsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.SpecialEventsTable,
-			Columns: []string{user.SpecialEventsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(specialevent.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(sukipi.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

@@ -5,12 +5,8 @@ package ent
 import (
 	"context"
 	"errors"
-	"flehmen-api/ent/mbti"
 	"flehmen-api/ent/nextaction"
-	"flehmen-api/ent/specialevent"
 	"flehmen-api/ent/sukipi"
-	"flehmen-api/ent/tweet"
-	"flehmen-api/ent/twitteruser"
 	"flehmen-api/ent/university"
 	"flehmen-api/ent/user"
 	"fmt"
@@ -80,14 +76,10 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			mbti.Table:         mbti.ValidColumn,
-			nextaction.Table:   nextaction.ValidColumn,
-			specialevent.Table: specialevent.ValidColumn,
-			sukipi.Table:       sukipi.ValidColumn,
-			tweet.Table:        tweet.ValidColumn,
-			twitteruser.Table:  twitteruser.ValidColumn,
-			university.Table:   university.ValidColumn,
-			user.Table:         user.ValidColumn,
+			nextaction.Table: nextaction.ValidColumn,
+			sukipi.Table:     sukipi.ValidColumn,
+			university.Table: university.ValidColumn,
+			user.Table:       user.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

@@ -5,10 +5,9 @@ package ent
 import (
 	"context"
 	"errors"
-	"flehmen-api/ent/mbti"
 	"flehmen-api/ent/predicate"
 	"flehmen-api/ent/sukipi"
-	"flehmen-api/ent/tweet"
+	"flehmen-api/ent/user"
 	"fmt"
 	"time"
 
@@ -40,6 +39,20 @@ func (su *SukipiUpdate) SetName(s string) *SukipiUpdate {
 func (su *SukipiUpdate) SetNillableName(s *string) *SukipiUpdate {
 	if s != nil {
 		su.SetName(*s)
+	}
+	return su
+}
+
+// SetLikedAt sets the "liked_at" field.
+func (su *SukipiUpdate) SetLikedAt(t time.Time) *SukipiUpdate {
+	su.mutation.SetLikedAt(t)
+	return su
+}
+
+// SetNillableLikedAt sets the "liked_at" field if the given value is not nil.
+func (su *SukipiUpdate) SetNillableLikedAt(t *time.Time) *SukipiUpdate {
+	if t != nil {
+		su.SetLikedAt(*t)
 	}
 	return su
 }
@@ -225,17 +238,23 @@ func (su *SukipiUpdate) ClearNearlyStation() *SukipiUpdate {
 	return su
 }
 
-// SetLikedAt sets the "liked_at" field.
-func (su *SukipiUpdate) SetLikedAt(t time.Time) *SukipiUpdate {
-	su.mutation.SetLikedAt(t)
+// SetMbti sets the "mbti" field.
+func (su *SukipiUpdate) SetMbti(s string) *SukipiUpdate {
+	su.mutation.SetMbti(s)
 	return su
 }
 
-// SetNillableLikedAt sets the "liked_at" field if the given value is not nil.
-func (su *SukipiUpdate) SetNillableLikedAt(t *time.Time) *SukipiUpdate {
-	if t != nil {
-		su.SetLikedAt(*t)
+// SetNillableMbti sets the "mbti" field if the given value is not nil.
+func (su *SukipiUpdate) SetNillableMbti(s *string) *SukipiUpdate {
+	if s != nil {
+		su.SetMbti(*s)
 	}
+	return su
+}
+
+// ClearMbti clears the value of the "mbti" field.
+func (su *SukipiUpdate) ClearMbti() *SukipiUpdate {
+	su.mutation.ClearMbti()
 	return su
 }
 
@@ -253,38 +272,23 @@ func (su *SukipiUpdate) SetNillableCreatedAt(t *time.Time) *SukipiUpdate {
 	return su
 }
 
-// SetMbtiID sets the "mbti" edge to the Mbti entity by ID.
-func (su *SukipiUpdate) SetMbtiID(id int) *SukipiUpdate {
-	su.mutation.SetMbtiID(id)
+// SetUserID sets the "user" edge to the User entity by ID.
+func (su *SukipiUpdate) SetUserID(id int) *SukipiUpdate {
+	su.mutation.SetUserID(id)
 	return su
 }
 
-// SetNillableMbtiID sets the "mbti" edge to the Mbti entity by ID if the given value is not nil.
-func (su *SukipiUpdate) SetNillableMbtiID(id *int) *SukipiUpdate {
+// SetNillableUserID sets the "user" edge to the User entity by ID if the given value is not nil.
+func (su *SukipiUpdate) SetNillableUserID(id *int) *SukipiUpdate {
 	if id != nil {
-		su = su.SetMbtiID(*id)
+		su = su.SetUserID(*id)
 	}
 	return su
 }
 
-// SetMbti sets the "mbti" edge to the Mbti entity.
-func (su *SukipiUpdate) SetMbti(m *Mbti) *SukipiUpdate {
-	return su.SetMbtiID(m.ID)
-}
-
-// AddTweetIDs adds the "tweets" edge to the Tweet entity by IDs.
-func (su *SukipiUpdate) AddTweetIDs(ids ...int) *SukipiUpdate {
-	su.mutation.AddTweetIDs(ids...)
-	return su
-}
-
-// AddTweets adds the "tweets" edges to the Tweet entity.
-func (su *SukipiUpdate) AddTweets(t ...*Tweet) *SukipiUpdate {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return su.AddTweetIDs(ids...)
+// SetUser sets the "user" edge to the User entity.
+func (su *SukipiUpdate) SetUser(u *User) *SukipiUpdate {
+	return su.SetUserID(u.ID)
 }
 
 // Mutation returns the SukipiMutation object of the builder.
@@ -292,31 +296,10 @@ func (su *SukipiUpdate) Mutation() *SukipiMutation {
 	return su.mutation
 }
 
-// ClearMbti clears the "mbti" edge to the Mbti entity.
-func (su *SukipiUpdate) ClearMbti() *SukipiUpdate {
-	su.mutation.ClearMbti()
+// ClearUser clears the "user" edge to the User entity.
+func (su *SukipiUpdate) ClearUser() *SukipiUpdate {
+	su.mutation.ClearUser()
 	return su
-}
-
-// ClearTweets clears all "tweets" edges to the Tweet entity.
-func (su *SukipiUpdate) ClearTweets() *SukipiUpdate {
-	su.mutation.ClearTweets()
-	return su
-}
-
-// RemoveTweetIDs removes the "tweets" edge to Tweet entities by IDs.
-func (su *SukipiUpdate) RemoveTweetIDs(ids ...int) *SukipiUpdate {
-	su.mutation.RemoveTweetIDs(ids...)
-	return su
-}
-
-// RemoveTweets removes "tweets" edges to Tweet entities.
-func (su *SukipiUpdate) RemoveTweets(t ...*Tweet) *SukipiUpdate {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return su.RemoveTweetIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -357,6 +340,9 @@ func (su *SukipiUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := su.mutation.Name(); ok {
 		_spec.SetField(sukipi.FieldName, field.TypeString, value)
+	}
+	if value, ok := su.mutation.LikedAt(); ok {
+		_spec.SetField(sukipi.FieldLikedAt, field.TypeTime, value)
 	}
 	if value, ok := su.mutation.Weight(); ok {
 		_spec.SetField(sukipi.FieldWeight, field.TypeFloat64, value)
@@ -415,79 +401,37 @@ func (su *SukipiUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if su.mutation.NearlyStationCleared() {
 		_spec.ClearField(sukipi.FieldNearlyStation, field.TypeString)
 	}
-	if value, ok := su.mutation.LikedAt(); ok {
-		_spec.SetField(sukipi.FieldLikedAt, field.TypeTime, value)
+	if value, ok := su.mutation.Mbti(); ok {
+		_spec.SetField(sukipi.FieldMbti, field.TypeString, value)
+	}
+	if su.mutation.MbtiCleared() {
+		_spec.ClearField(sukipi.FieldMbti, field.TypeString)
 	}
 	if value, ok := su.mutation.CreatedAt(); ok {
 		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)
 	}
-	if su.mutation.MbtiCleared() {
+	if su.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
-			Table:   sukipi.MbtiTable,
-			Columns: []string{sukipi.MbtiColumn},
+			Table:   sukipi.UserTable,
+			Columns: []string{sukipi.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(mbti.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := su.mutation.MbtiIDs(); len(nodes) > 0 {
+	if nodes := su.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
-			Table:   sukipi.MbtiTable,
-			Columns: []string{sukipi.MbtiColumn},
+			Table:   sukipi.UserTable,
+			Columns: []string{sukipi.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(mbti.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if su.mutation.TweetsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   sukipi.TweetsTable,
-			Columns: []string{sukipi.TweetsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(tweet.FieldID, field.TypeInt),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := su.mutation.RemovedTweetsIDs(); len(nodes) > 0 && !su.mutation.TweetsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   sukipi.TweetsTable,
-			Columns: []string{sukipi.TweetsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(tweet.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := su.mutation.TweetsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   sukipi.TweetsTable,
-			Columns: []string{sukipi.TweetsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(tweet.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -525,6 +469,20 @@ func (suo *SukipiUpdateOne) SetName(s string) *SukipiUpdateOne {
 func (suo *SukipiUpdateOne) SetNillableName(s *string) *SukipiUpdateOne {
 	if s != nil {
 		suo.SetName(*s)
+	}
+	return suo
+}
+
+// SetLikedAt sets the "liked_at" field.
+func (suo *SukipiUpdateOne) SetLikedAt(t time.Time) *SukipiUpdateOne {
+	suo.mutation.SetLikedAt(t)
+	return suo
+}
+
+// SetNillableLikedAt sets the "liked_at" field if the given value is not nil.
+func (suo *SukipiUpdateOne) SetNillableLikedAt(t *time.Time) *SukipiUpdateOne {
+	if t != nil {
+		suo.SetLikedAt(*t)
 	}
 	return suo
 }
@@ -710,17 +668,23 @@ func (suo *SukipiUpdateOne) ClearNearlyStation() *SukipiUpdateOne {
 	return suo
 }
 
-// SetLikedAt sets the "liked_at" field.
-func (suo *SukipiUpdateOne) SetLikedAt(t time.Time) *SukipiUpdateOne {
-	suo.mutation.SetLikedAt(t)
+// SetMbti sets the "mbti" field.
+func (suo *SukipiUpdateOne) SetMbti(s string) *SukipiUpdateOne {
+	suo.mutation.SetMbti(s)
 	return suo
 }
 
-// SetNillableLikedAt sets the "liked_at" field if the given value is not nil.
-func (suo *SukipiUpdateOne) SetNillableLikedAt(t *time.Time) *SukipiUpdateOne {
-	if t != nil {
-		suo.SetLikedAt(*t)
+// SetNillableMbti sets the "mbti" field if the given value is not nil.
+func (suo *SukipiUpdateOne) SetNillableMbti(s *string) *SukipiUpdateOne {
+	if s != nil {
+		suo.SetMbti(*s)
 	}
+	return suo
+}
+
+// ClearMbti clears the value of the "mbti" field.
+func (suo *SukipiUpdateOne) ClearMbti() *SukipiUpdateOne {
+	suo.mutation.ClearMbti()
 	return suo
 }
 
@@ -738,38 +702,23 @@ func (suo *SukipiUpdateOne) SetNillableCreatedAt(t *time.Time) *SukipiUpdateOne 
 	return suo
 }
 
-// SetMbtiID sets the "mbti" edge to the Mbti entity by ID.
-func (suo *SukipiUpdateOne) SetMbtiID(id int) *SukipiUpdateOne {
-	suo.mutation.SetMbtiID(id)
+// SetUserID sets the "user" edge to the User entity by ID.
+func (suo *SukipiUpdateOne) SetUserID(id int) *SukipiUpdateOne {
+	suo.mutation.SetUserID(id)
 	return suo
 }
 
-// SetNillableMbtiID sets the "mbti" edge to the Mbti entity by ID if the given value is not nil.
-func (suo *SukipiUpdateOne) SetNillableMbtiID(id *int) *SukipiUpdateOne {
+// SetNillableUserID sets the "user" edge to the User entity by ID if the given value is not nil.
+func (suo *SukipiUpdateOne) SetNillableUserID(id *int) *SukipiUpdateOne {
 	if id != nil {
-		suo = suo.SetMbtiID(*id)
+		suo = suo.SetUserID(*id)
 	}
 	return suo
 }
 
-// SetMbti sets the "mbti" edge to the Mbti entity.
-func (suo *SukipiUpdateOne) SetMbti(m *Mbti) *SukipiUpdateOne {
-	return suo.SetMbtiID(m.ID)
-}
-
-// AddTweetIDs adds the "tweets" edge to the Tweet entity by IDs.
-func (suo *SukipiUpdateOne) AddTweetIDs(ids ...int) *SukipiUpdateOne {
-	suo.mutation.AddTweetIDs(ids...)
-	return suo
-}
-
-// AddTweets adds the "tweets" edges to the Tweet entity.
-func (suo *SukipiUpdateOne) AddTweets(t ...*Tweet) *SukipiUpdateOne {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return suo.AddTweetIDs(ids...)
+// SetUser sets the "user" edge to the User entity.
+func (suo *SukipiUpdateOne) SetUser(u *User) *SukipiUpdateOne {
+	return suo.SetUserID(u.ID)
 }
 
 // Mutation returns the SukipiMutation object of the builder.
@@ -777,31 +726,10 @@ func (suo *SukipiUpdateOne) Mutation() *SukipiMutation {
 	return suo.mutation
 }
 
-// ClearMbti clears the "mbti" edge to the Mbti entity.
-func (suo *SukipiUpdateOne) ClearMbti() *SukipiUpdateOne {
-	suo.mutation.ClearMbti()
+// ClearUser clears the "user" edge to the User entity.
+func (suo *SukipiUpdateOne) ClearUser() *SukipiUpdateOne {
+	suo.mutation.ClearUser()
 	return suo
-}
-
-// ClearTweets clears all "tweets" edges to the Tweet entity.
-func (suo *SukipiUpdateOne) ClearTweets() *SukipiUpdateOne {
-	suo.mutation.ClearTweets()
-	return suo
-}
-
-// RemoveTweetIDs removes the "tweets" edge to Tweet entities by IDs.
-func (suo *SukipiUpdateOne) RemoveTweetIDs(ids ...int) *SukipiUpdateOne {
-	suo.mutation.RemoveTweetIDs(ids...)
-	return suo
-}
-
-// RemoveTweets removes "tweets" edges to Tweet entities.
-func (suo *SukipiUpdateOne) RemoveTweets(t ...*Tweet) *SukipiUpdateOne {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return suo.RemoveTweetIDs(ids...)
 }
 
 // Where appends a list predicates to the SukipiUpdate builder.
@@ -873,6 +801,9 @@ func (suo *SukipiUpdateOne) sqlSave(ctx context.Context) (_node *Sukipi, err err
 	if value, ok := suo.mutation.Name(); ok {
 		_spec.SetField(sukipi.FieldName, field.TypeString, value)
 	}
+	if value, ok := suo.mutation.LikedAt(); ok {
+		_spec.SetField(sukipi.FieldLikedAt, field.TypeTime, value)
+	}
 	if value, ok := suo.mutation.Weight(); ok {
 		_spec.SetField(sukipi.FieldWeight, field.TypeFloat64, value)
 	}
@@ -930,79 +861,37 @@ func (suo *SukipiUpdateOne) sqlSave(ctx context.Context) (_node *Sukipi, err err
 	if suo.mutation.NearlyStationCleared() {
 		_spec.ClearField(sukipi.FieldNearlyStation, field.TypeString)
 	}
-	if value, ok := suo.mutation.LikedAt(); ok {
-		_spec.SetField(sukipi.FieldLikedAt, field.TypeTime, value)
+	if value, ok := suo.mutation.Mbti(); ok {
+		_spec.SetField(sukipi.FieldMbti, field.TypeString, value)
+	}
+	if suo.mutation.MbtiCleared() {
+		_spec.ClearField(sukipi.FieldMbti, field.TypeString)
 	}
 	if value, ok := suo.mutation.CreatedAt(); ok {
 		_spec.SetField(sukipi.FieldCreatedAt, field.TypeTime, value)
 	}
-	if suo.mutation.MbtiCleared() {
+	if suo.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
-			Table:   sukipi.MbtiTable,
-			Columns: []string{sukipi.MbtiColumn},
+			Table:   sukipi.UserTable,
+			Columns: []string{sukipi.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(mbti.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := suo.mutation.MbtiIDs(); len(nodes) > 0 {
+	if nodes := suo.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
-			Table:   sukipi.MbtiTable,
-			Columns: []string{sukipi.MbtiColumn},
+			Table:   sukipi.UserTable,
+			Columns: []string{sukipi.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(mbti.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if suo.mutation.TweetsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   sukipi.TweetsTable,
-			Columns: []string{sukipi.TweetsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(tweet.FieldID, field.TypeInt),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := suo.mutation.RemovedTweetsIDs(); len(nodes) > 0 && !suo.mutation.TweetsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   sukipi.TweetsTable,
-			Columns: []string{sukipi.TweetsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(tweet.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := suo.mutation.TweetsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   sukipi.TweetsTable,
-			Columns: []string{sukipi.TweetsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(tweet.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

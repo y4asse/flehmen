@@ -17,6 +17,7 @@ type Sukipi struct {
 func (Sukipi) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
+		field.Time("liked_at"),
 		field.Float("weight").Nillable().Optional(),
 		field.Float("height").Nillable().Optional(),
 		field.String("x_id").Nillable().Optional(),
@@ -25,7 +26,7 @@ func (Sukipi) Fields() []ent.Field {
 		field.Float("shoesSize").Nillable().Optional(),
 		field.String("family").Nillable().Optional(),
 		field.String("nearly_station").Nillable().Optional(),
-		field.Time("liked_at"),
+		field.String("mbti").Nillable().Optional(),
 		field.Time("created_at").Default(time.Now),
 	}
 }
@@ -33,7 +34,6 @@ func (Sukipi) Fields() []ent.Field {
 // Edges of the Sukipi.
 func (Sukipi) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("mbti", Mbti.Type).Unique(),
-		edge.To("tweets", Tweet.Type),
+		edge.To("user", User.Type).Unique(),
 	}
 }
