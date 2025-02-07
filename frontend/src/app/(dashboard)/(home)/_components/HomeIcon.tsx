@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { Icon } from "../page";
+import Link from "next/link";
 
 type Props = {
   Icon: Icon[];
@@ -8,32 +9,32 @@ type Props = {
 
 export const HomeIcon = (props: Props) => {
   const { Icon } = props;
-  console.log(Icon.map((icon) => icon.image));
   return (
     <div
       style={{
-        position: "absolute",
-        top: "0",
-        left: "0",
-        width: "100vw",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: "20px",
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        width: "100%",
+        height: "100%",
+        position: "relative",
       }}
     >
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-        }}
-      >
-        {Icon.map((icon) => (
-          <a key={icon.name} href={icon.href}>
-            <Image src={icon.image} alt={icon.name} width={180} height={100} />
-          </a>
-        ))}
-      </div>
+      {Icon.map((icon) => (
+        <Link
+          key={icon.name}
+          href={icon.href}
+          className="flex flex-col justify-center items-center gap-2 "
+        >
+          <Image
+            src={icon.image}
+            alt={icon.name}
+            width={150}
+            height={150}
+            className="absolute"
+          />
+          <p className="text-white relative top-16">{icon.name}</p>
+        </Link>
+      ))}
     </div>
   );
 };

@@ -5,12 +5,7 @@ import { WeeklyGraph } from "./_components/WeeklyGraph";
 import { Habit } from "./_components/Habit";
 // import { MobileWindows } from "@/components/common/MobileWindows";
 import { HomeIcon } from "./_components/HomeIcon";
-// import * as $axios from "@/lib/axios";
-
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import { MobileWindows } from "@/components/common/MobileWindows";
 
 export type DateTweetCount = {
   date: string;
@@ -34,13 +29,6 @@ export type Icon = {
 };
 
 const Page = () => {
-  // const result = $axios.request({
-  //   url: "/pet/findByTags",
-  //   method: "get",
-  //   params: {
-  //     tags: ["available"],
-  //   },
-  // });
   const windows = [
     {
       ...habitWindow,
@@ -64,25 +52,10 @@ const Page = () => {
       ),
     },
   ];
-
-  const mobile = [
+  const mobileWindows = [
     {
-      title: "生息時間",
-      children: <Habit busy_color_index_list={busy_color_index_list} />,
-    },
-    {
-      title: "いつひまだったの",
-      children: <MonthlyGraph monthlyTweetCounts={monthlyTweetCounts} />,
-    },
-    {
-      title: "なんようにひまなんだろ",
-      children: (
-        <WeeklyGraph
-          weeklyAllTweetCounts={weeklyAllTweetCounts}
-          nameKey="day"
-          dataKey="count"
-        />
-      ),
+      ...iconWindow,
+      children: <HomeIcon Icon={Icon} />,
     },
   ];
 
@@ -96,43 +69,7 @@ const Page = () => {
       {/* スマホ用 */}
       <div className="block md:hidden ">
         {/* アイコン */}
-        <HomeIcon Icon={Icon} />
-        {/* グラフ */}
-        <Swiper
-          style={{
-            position: "absolute",
-            bottom: "90px",
-            left: "0",
-            width: "100%",
-            height: "280px",
-          }}
-          // modules={[Autoplay, Navigation, Pagination]}
-          // navigation
-          // pagination
-        >
-          {mobile.map((mobile, index) => (
-            <SwiperSlide
-              key={index}
-              style={{
-                width: "100%",
-                height: "280px",
-                padding: "0 50px",
-              }}
-            >
-              {mobile.children}
-            </SwiperSlide>
-          ))}
-        </Swiper>
-        {/* <div
-          className="flex flex-col gap-4"
-          style={{ width: "300px", height: "300px" }}
-        >
-          <WeeklyGraph
-            weeklyAllTweetCounts={weeklyAllTweetCounts}
-            nameKey="day"
-            dataKey="count"
-          />
-        </div> */}
+        <MobileWindows windows={mobileWindows} />
       </div>
     </div>
   );
@@ -245,6 +182,18 @@ const habitWindow = {
     x: 900,
     y: 350,
     z: 3,
+  },
+};
+
+const iconWindow = {
+  initSize: {
+    width: 800,
+    height: 530,
+  },
+  initPosition: {
+    x: 140,
+    y: 80,
+    z: 1,
   },
 };
 

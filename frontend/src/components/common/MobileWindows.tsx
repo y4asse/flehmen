@@ -30,20 +30,6 @@ export const MobileWindows = (props: MobileProps) => {
       }}
     >
       {windows.map((mobile, index) => (
-        // <div
-        //   key={index}
-        //   // className="flex flex-col gap-4"
-        //   style={{
-        //     width: mobile.initSize.width,
-        //     height: mobile.initSize.height,
-        //     // position: "absolute",
-        //     // left: mobile.initPosition.x,
-        //     // top: mobile.initPosition.y,
-        //     // zIndex: mobile.initPosition.z,
-        //   }}
-        // >
-        //   {mobile.children}
-        // </div>
         <MobileWindow
           key={index}
           initSize={mobile.initSize}
