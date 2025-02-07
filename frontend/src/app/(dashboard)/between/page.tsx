@@ -135,8 +135,8 @@ const Page = () => {
 
 const scoreWindow = {
   initSize: {
-    width: 460,
-    height: 330,
+    width: 800,
+    height: 160,
   },
   initPosition: {
     x: 900,
@@ -147,8 +147,8 @@ const scoreWindow = {
 
 const friendlyGraphWindow = {
   initSize: {
-    width: 430,
-    height: 330,
+    width: 800,
+    height: 180,
   },
   initPosition: {
     x: 950,
@@ -160,7 +160,7 @@ const friendlyGraphWindow = {
 const resultWindow = {
   initSize: {
     width: 800,
-    height: 530,
+    height: 155,
   },
   initPosition: {
     x: 140,
@@ -172,7 +172,7 @@ const resultWindow = {
 const fileuploadWindow = {
   initSize: {
     width: 800,
-    height: 800,
+    height: 250,
   },
   initPosition: {
     x: 140,
