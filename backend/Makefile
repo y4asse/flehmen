@@ -21,9 +21,6 @@ batch/cli:
 agent/cli:
 	${DC} exec -it agent bash
 
-agent/gen/reqs:
-	make -C agent gen/reqs
-
 db/migrate:
 	make -C app db/migrate
 
