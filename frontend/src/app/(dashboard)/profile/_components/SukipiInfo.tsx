@@ -65,7 +65,7 @@ export const SukipiInfo = ({ sukipi, onUpdate }: Props) => {
 
   if (isEditing) {
     return (
-      <div className="flex flex-col p-4 pt-10 w-4/5 mx-auto mt-[10rem]">
+      <div className="flex flex-col p-4 pt-10 w-4/5 mx-auto">
         <div className="grid grid-cols-2 gap-4 mb-6">
           {infoItems.map((item) => (
             <div key={item.key} className="flex flex-col">

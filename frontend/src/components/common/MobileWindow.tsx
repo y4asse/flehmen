@@ -23,7 +23,7 @@ export const MobileWindow = (props: WindowProps) => {
         border: "0.7px solid #e4007f",
         borderRadius: "10px",
         margin: "10px",
-        padding: "20px 0",
+        // padding: "20px 0",
       }}
     >
       {/* コンテンツ部分 */}

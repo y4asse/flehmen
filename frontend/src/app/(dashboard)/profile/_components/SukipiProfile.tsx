@@ -41,7 +41,7 @@ const SukipiProfile = ({ sukipi }: { sukipi: SukipiInfoType }) => {
       <div className="hidden md:block">
         <Windows windows={windows} />
       </div>
-      <div className="block md:hidden " style={{ fontSize: "23px" }}>
+      <div className="block md:hidden " style={{ fontSize: "21px" }}>
         <MobileWindows windows={mobile} />
       </div>
     </div>

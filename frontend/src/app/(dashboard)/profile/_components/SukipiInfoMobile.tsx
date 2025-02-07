@@ -65,12 +65,12 @@ export const SukipiInfoMobile = ({ sukipi, onUpdate }: Props) => {
 
   if (isEditing) {
     return (
-      <div className="flex flex-col pt-10 w-4/5 mx-auto">
-        <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="flex flex-col mt-12 w-4/5 mx-auto">
+        <div className="grid grid-cols-2 mt-5 mb-5  gap-4 ">
           {infoItems.map((item) => (
             <div key={item.key} className="flex flex-col">
               <div className="text-white font-bold">{item.title}</div>
-              <div className="text-white text-sm mb-2">
+              <div className="text-white text-sm">
                 元の値:{" "}
                 <span className="opacity-70">
                   {typeof item.content === "string"
@@ -87,7 +87,7 @@ export const SukipiInfoMobile = ({ sukipi, onUpdate }: Props) => {
             </div>
           ))}
         </div>
-        <div className="flex justify-end gap-4">
+        <div className="flex justify-end mb-2 gap-4">
           <Button
             className="text-white border border-white hover:bg-white hover:text-black"
             onClick={() => setIsEditing(false)}
