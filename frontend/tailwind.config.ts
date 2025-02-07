@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import fluid, { extract, screens, fontSize } from "fluid-tailwind";
 
 export default {
   darkMode: ["class"],
@@ -7,6 +8,7 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  extract,
   theme: {
     extend: {
       colors: {
@@ -66,7 +68,9 @@ export default {
         },
       },
     },
+    screens, // Fluidが提供するレスポンシブ対応のスクリーンサイズを追加
+    fontSize,
   },
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), fluid],
 } satisfies Config;

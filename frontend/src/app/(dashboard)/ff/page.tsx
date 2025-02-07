@@ -1,9 +1,14 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { FollowLog } from "./_components/FollowLog";
 import { FollowerLog } from "./_components/FollowerLog";
 import { UniversitySearch } from "./_components/UniversitySearch";
 import { Windows } from "@/components/common/Windows";
 import { MobileWindows } from "@/components/common/MobileWindows";
+
+import { FilterBox } from "./_components/FilterBox";
+import { Flex } from "@/components/ui/flex";
+import UniversityList from "./_components/UniversityList";
+import { Search } from "@/components/ui/search";
 
 export type Follow = {
   id: string;
@@ -24,10 +29,12 @@ export type Follower = {
 const Page = async (props: {
   searchParams?: Promise<{
     query?: string;
+    filter?: string;
   }>;
 }) => {
   const searchParams = await props.searchParams;
   const query = searchParams?.query || "";
+  const filter = searchParams?.filter || "";
 
   const windows = [
     {
@@ -49,11 +56,64 @@ const Page = async (props: {
   return (
     <div>
       <div className="hidden md:block">
-        <Windows windows={windows} />;
+        <Windows windows={windows} />
       </div>
 
-      <div className="block md:hidden ">
-        <MobileWindows windows={windows} />
+      <div className="block md:hidden">
+        <div className="absolute z-50 ml-[3.5vw] pt-2">
+          <FilterBox />
+        </div>
+
+        <MobileWindows
+          windows={filter === "follow" ? [windows[0]] : [windows[1]]}
+        />
+        <div
+          className="absolute top-[29rem]"
+          style={{
+            width: "100%",
+            height: "calc(100vh - 33rem)",
+            maxHeight: "calc(100vh - 33rem)",
+            overflowY: "scroll",
+          }}
+        >
+          <Flex
+            className="h-full w-full p-4 gap-4"
+            align={"start"}
+            justify={"start"}
+            direction={"column"}
+          >
+            <div className="fixed w-[117%]">
+              <Search placeholder="大学 (略称も○)" />
+            </div>
+            <Flex
+              direction={"column"}
+              style={{
+                width: "93vw",
+                maxWidth: "93vw",
+                position: "relative",
+                top: "3.7rem",
+                height: "calc(100vh - 33rem)",
+                backgroundColor: "#000",
+                border: "0.7px solid #e4007f",
+                borderRadius: "10px",
+                paddingTop: "1rem",
+              }}
+            >
+              {/* コンテンツ部分 */}
+              <Flex
+                className="w-full h-full overflow-y-scroll max-h-full overflow-x-hidden"
+                style={{
+                  scrollbarWidth: "none", // Firefox用
+                  msOverflowStyle: "none", // IE用
+                }}
+              >
+                <Suspense fallback={<div>loading...</div>}>
+                  <UniversityList query={query} />
+                </Suspense>
+              </Flex>
+            </Flex>
+          </Flex>
+        </div>
       </div>
     </div>
   );
@@ -141,7 +201,7 @@ const followerWindow = {
 };
 
 const followWindow = {
-  initSize: { width: 700, height: 400 },
+  initSize: { width: 600, height: 400 },
   initPosition: { x: 800, y: 50, z: 2 },
 };
 

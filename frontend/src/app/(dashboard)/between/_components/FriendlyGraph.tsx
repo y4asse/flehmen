@@ -8,7 +8,7 @@ import {
   Radar,
   Tooltip,
 } from "recharts";
-import { Score } from "../page";
+import { Score } from "../../secret/page";
 
 type Props = {
   score?: Score;

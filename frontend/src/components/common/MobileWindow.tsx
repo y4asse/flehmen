@@ -9,7 +9,7 @@ type WindowProps = {
 
 export const MobileWindow = (props: WindowProps) => {
   const { children, initSize } = props;
-  //   const { width, height } = initSize;
+  const { width, height } = initSize;
 
   console.log(initSize);
 
@@ -17,10 +17,9 @@ export const MobileWindow = (props: WindowProps) => {
     <Flex
       direction={"column"}
       style={{
-        // width: `${initSize.width}px`,
-        width: "90%",
-        // height: `${initSize.height}px`,
-        height: "25vh",
+        width: `${width}px`,
+        maxWidth: "93vw",
+        height: `${height}px`,
         backgroundColor: "#000",
         border: "0.7px solid #e4007f",
         borderRadius: "10px",

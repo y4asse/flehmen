@@ -34,9 +34,11 @@ const UniversityList = async (props: Props) => {
         >
           <p className="text-white">{university.name}</p>
           <Flex className="gap-1 pl-8">
-            <p className="text-white">偏差値：0</p>
+            <p className="text-white">
+              偏差値：{university.deviationLowerValue}
+            </p>
             <p className="text-white">〜</p>
-            <p className="text-white">{0}</p>
+            <p className="text-white">{university.deviationUpperValue}</p>
             <p className="text-white ml-4">場所：{university.prefecture}</p>
             <p className="text-white ml-4">略称：{university.abbreviation}</p>
           </Flex>
