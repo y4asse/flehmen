@@ -221,7 +221,7 @@ const Icon: Icon[] = [
   {
     name: "会話",
     image: "/images/icon_friendly.svg",
-    href: "/",
+    href: "/between",
   },
 ];
 

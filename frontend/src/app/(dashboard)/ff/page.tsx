@@ -92,16 +92,16 @@ const Page = async (props: {
                 maxWidth: "93vw",
                 position: "relative",
                 top: "3.7rem",
-                height: "calc(100vh - 33rem)",
+                height: "calc(100vh - 38rem)",
                 backgroundColor: "#000",
                 border: "0.7px solid #e4007f",
                 borderRadius: "10px",
-                paddingTop: "1rem",
               }}
             >
               {/* コンテンツ部分 */}
               <Flex
-                className="w-full h-full overflow-y-scroll max-h-full overflow-x-hidden"
+                className="w-full h-full overflow-y-scroll max-h-full overflow-x-hidden pt-2"
+                align={"start"}
                 style={{
                   scrollbarWidth: "none", // Firefox用
                   msOverflowStyle: "none", // IE用
