@@ -1,0 +1,2 @@
+gen/reqs:
+	pipreqs . --force

@@ -9,6 +9,7 @@ COPY ./agent .
 
 # requirements.txtで指定された必要なパッケージをインストール
 RUN pip install -r requirements.txt
+RUN pip install pipreqs
 
 # ポートの公開
 EXPOSE 5000
