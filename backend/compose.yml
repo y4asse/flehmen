@@ -52,6 +52,18 @@ services:
     networks:
       - flehmen
 
+  agent:
+    volumes:
+      - ./agent:/app
+    build:
+      context: .
+      dockerfile: agent.dev.Dockerfile
+    tty: true
+    ports:
+      - "5000:5000"
+    networks:
+      - flehmen
+
 networks:
   flehmen:
     driver: bridge
