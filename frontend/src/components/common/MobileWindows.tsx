@@ -6,7 +6,7 @@ export type MobileProps = {
 
 type Mobile = {
   title?: string;
-  initSize: { width: number; height: number };
+  initSize: { width: number | string; height: number | string };
   initPosition: { x: number; y: number; z: number };
   children: React.ReactNode;
 };

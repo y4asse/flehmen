@@ -1,6 +1,5 @@
 "use client";
-import React from "react";
-
+import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { WeeklyTweetCount } from "../page";
 
@@ -18,12 +17,36 @@ type Props = {
   weeklyAllTweetCounts: WeeklyTweetCount[];
   dataKey: WeeklyTweetCountKey;
   nameKey: WeeklyTweetCountKey;
+  isMobile?: boolean;
 };
 
 type WeeklyTweetCountKey = keyof WeeklyTweetCount;
 
 export const WeeklyGraph = (props: Props) => {
-  const { weeklyAllTweetCounts, dataKey, nameKey } = props;
+  const { weeklyAllTweetCounts, dataKey, nameKey, isMobile } = props;
+  const [radius, setRadius] = useState({ inner: 0, outer: 120 });
+  const [heartSize, setHeartSize] = useState(50);
+  const [fontSize, setFontSize] = useState(12);
+
+  useEffect(() => {
+    const updateSizes = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const minSize = Math.min(width, height);
+
+      setRadius((prev) => ({
+        ...prev,
+        outer: minSize * 0.17,
+      }));
+
+      setHeartSize(minSize * 0.08); // ハートのサイズを調整
+      setFontSize(Math.max(10, minSize * 0.015)); // 文字サイズを調整（最小10px）
+    };
+
+    updateSizes();
+    window.addEventListener("resize", updateSizes);
+    return () => window.removeEventListener("resize", updateSizes);
+  }, []);
 
   const renderCustomLabel = ({
     cx,
@@ -52,16 +75,15 @@ export const WeeklyGraph = (props: Props) => {
       <text
         x={x}
         y={y}
-        fill="#fff"
+        fill="#000"
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
-        fontSize={12}
+        fontSize={fontSize}
       >
-        {/* 改行する部分 */}
-        <tspan x={x} dy="0" fill="#000">
+        <tspan x={x} dy="0">
           {weeklyAllTweetCounts[index].day}
         </tspan>
-        <tspan fill="#000" x={x} dy="15">{`${(percent * 100).toFixed(
+        <tspan x={x} dy={fontSize * 1.5}>{`${(percent * 100).toFixed(
           0
         )}%`}</tspan>
       </text>
@@ -78,8 +100,8 @@ export const WeeklyGraph = (props: Props) => {
           nameKey={nameKey} // 名前キー
           cx="50%" // 円のX位置
           cy="50%" // 円のY位置
-          innerRadius={20} // 内側半径
-          outerRadius={120} // 外側半径
+          innerRadius={radius.inner}
+          outerRadius={radius.outer}
           labelLine={false} // ラベルラインを非表示
           label={renderCustomLabel} // カスタムラベルを指定
         >
@@ -96,18 +118,18 @@ export const WeeklyGraph = (props: Props) => {
         <foreignObject
           x="50%" // 円の中心
           y="50%"
-          width={75}
-          height={75}
+          width={heartSize}
+          height={heartSize}
           style={{
-            transform: "translate(-35px, -34px)",
+            transform: `translate(-${heartSize / 2}px, -${heartSize / 2}px)`,
           }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="black"
-            width="75"
-            height="75"
+            width={heartSize}
+            height={heartSize}
           >
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
           </svg>
