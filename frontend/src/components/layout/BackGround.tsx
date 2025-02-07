@@ -7,7 +7,7 @@ const homeItems = [
   { name: "プロフィール", href: "/profile" },
   { name: "FF", href: "/ff" },
   { name: "リプ", href: "/reply" },
-  { name: "ひみつ", href: "/secret" },
+  { name: "会話", href: "/between" },
 ];
 
 // BackGroundコンポーネント
