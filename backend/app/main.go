@@ -19,12 +19,12 @@ import (
 	"context"
 
 	"entgo.io/ent/dialect"
-	"github.com/go-sql-driver/mysql"
 	"github.com/google/generative-ai-go/genai"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
 	// "github.com/openai/openai-go/option"
+	_ "github.com/go-sql-driver/mysql"
 	"google.golang.org/api/option"
 )
 
@@ -39,6 +39,7 @@ func (controller *Controller) Ok(c echo.Context) error {
 func (controller *Controller) GetUniversities(c echo.Context) error {
 	universities, err := controller.entClient.University.Query().All(c.Request().Context())
 	if err != nil {
+		fmt.Println(err)
 		return c.JSON(http.StatusInternalServerError, err) // TODO: errを返すのはセキュリティ的に問題がありそう
 	}
 	return c.JSON(http.StatusOK, universities)
@@ -497,17 +498,10 @@ func main() {
 		AllowMethods: []string{"*"}, // 全HTTPメソッドを許可
 	}))
 	e.Use(middleware.Logger())
-	c := mysql.Config{
-		DBName:    os.Getenv("DB_NAME"),
-		User:      os.Getenv("DB_USER"),
-		Passwd:    os.Getenv("DB_PASSWORD"),
-		Addr:      os.Getenv("DB_HOST"),
-		Net:       "tcp",
-		ParseTime: true,
-		Collation: "utf8mb4_unicode_ci",
-	}
 
-	entClient, err := ent.Open(dialect.MySQL, c.FormatDSN())
+	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?tls=true", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME"))
+
+	entClient, err := ent.Open(dialect.MySQL, dns)
 	if err != nil {
 		log.Fatalf("failed opening connection to sqlite: %v", err)
 	}
