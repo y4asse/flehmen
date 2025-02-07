@@ -10,6 +10,8 @@ COPY ./agent .
 # requirements.txtで指定された必要なパッケージをインストール
 RUN pip install -r requirements.txt
 RUN pip install pipreqs
+RUN playwright install
+RUN playwright install-deps
 
 # ポートの公開
 EXPOSE 5000
