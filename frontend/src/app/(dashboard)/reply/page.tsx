@@ -88,17 +88,16 @@ const Page = () => {
       <div className="hidden md:block">
         <Windows windows={windows} />
       </div>
-
       <div className="block md:hidden ">
-        <Suspense fallback={<div>loading...</div>}>
-          <MobileWindows windows={mobileWindows} />
-        </Suspense>
+        <MobileWindows windows={mobileWindows} />
         <div className="absolute z-50 ml-[3.5vw] pt-2 top-[35vh]">
           <FilterBox />
         </div>
-        <MobileWindows
-          windows={filter === "recent" ? [windows[2]] : [windows[1]]}
-        />
+        <Suspense fallback={<div>loading...</div>}>
+          <MobileWindows
+            windows={filter === "recent" ? [windows[2]] : [windows[1]]}
+          />
+        </Suspense>
       </div>
     </div>
   );
