@@ -12,7 +12,7 @@ const ReplyList = ({ replyInfo = [], handleSetUserIndex }: rep) => {
   return (
     <Flex
       direction={"column"}
-      className="gap-8 h-full py-8 mb-2"
+      className="gap-8 h-full py-8 mb-2 w-full ~pl-8/20"
       justify={"start"}
       align={"start"}
     >
@@ -24,7 +24,6 @@ const ReplyList = ({ replyInfo = [], handleSetUserIndex }: rep) => {
           onClick={() => handleSetUserIndex(index)}
         >
           <Flex className="gap-2">
-            <p className="text-white">□ </p>
             <Image
               src={reply.icon}
               alt={reply.name}

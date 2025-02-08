@@ -90,15 +90,17 @@ const ReplyPage = () => {
         <Windows windows={windows} />
       </div>
       <div className="block md:hidden ">
-        <MobileWindows windows={mobileWindows} />
+        <MobileWindows windows={[mobileWindows[0]]} />
         <div className="absolute z-50 ml-[3.5vw] pt-2 top-[35vh]">
           <FilterBox />
         </div>
-        <MobileWindows
-          windows={
-            filter === "recent" ? [mobileWindows[2]] : [mobileWindows[1]]
-          }
-        />
+        <div className="absolute  top-[36.5vh] w-full">
+          <MobileWindows
+            windows={
+              filter === "rival" ? [mobileWindows[1]] : [mobileWindows[2]]
+            }
+          />
+        </div>
       </div>
     </div>
   );
@@ -262,7 +264,7 @@ const mobileMonthRep = {
 
 const mobileFilterBox = {
   initSize: {
-    width: 300,
+    width: 800,
     height: 200,
   },
   initPosition: {
