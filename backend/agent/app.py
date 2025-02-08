@@ -1,8 +1,22 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
-from browser_use import Agent, Browser, BrowserConfig
+from browser_use import Agent, Browser, BrowserConfig, SystemPrompt
 from langchain_openai import ChatOpenAI
+
+class MySystemPrompt(SystemPrompt):
+    def important_rules(self) -> str:
+        # Get existing rules from parent class
+        existing_rules = super().important_rules()
+
+        # Add your custom rules
+        new_rules = """
+        答えは日本語で出力してください．
+"""
+
+        # Make sure to use this pattern otherwise the exiting rules will be lost
+        return f'{existing_rules}\n{new_rules}'
+
 
 load_dotenv()
 
@@ -27,12 +41,15 @@ async def flask_app():
         )),
         sensitive_data=sensitive_data,
         planner_llm=planner_llm,
-        initial_actions=initial_actions
-	)
+        initial_actions=initial_actions,
+        system_prompt_class=MySystemPrompt
+    )
     result = await agent.run()
     final_result = result.final_result()
     print(final_result)
     # resultをjson形式で返す
+    return jsonify({"result": final_result})
+
     return final_result
 
 if __name__ == '__main__':
