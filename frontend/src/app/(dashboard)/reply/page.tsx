@@ -5,6 +5,8 @@ import ReplyList from "./_components/ReplyList";
 import Contents from "./_components/Contents";
 import { MonthlyRep } from "./_components/MonthlyRep";
 import { MobileWindows } from "@/components/common/MobileWindows";
+import { FilterBox } from "./_components/FilterBox";
+import { useSearchParams } from "next/navigation";
 
 export type reply = {
   id: number;
@@ -29,6 +31,8 @@ export type monthly = {
 };
 
 const Page = () => {
+  const searchParams = useSearchParams();
+  const filter = searchParams.get("filter");
   const [userIndex, setUserIndex] = React.useState(1);
   const handleSetUserIndex = (index: number) => {
     setUserIndex(index);
@@ -56,6 +60,29 @@ const Page = () => {
     },
   ];
 
+  const mobileWindows = [
+    {
+      ...mobileMonthRep,
+      title: `過去１ヶ月の${sukipi.name}くんのリプの絡み`,
+      children: <MonthlyRep GraphInfo={GraphInfo} isMobile />,
+    },
+    {
+      ...mobileFilterBox,
+      title: "ライバル",
+      children: (
+        <ReplyList
+          replyInfo={replyInfo}
+          handleSetUserIndex={handleSetUserIndex}
+        />
+      ),
+    },
+    {
+      ...mobileFilterBox,
+      title: "最近のからみ",
+      children: <Contents repContents={replyContent} userIndex={userIndex} />,
+    },
+  ];
+
   return (
     <div>
       <div className="hidden md:block">
@@ -63,7 +90,13 @@ const Page = () => {
       </div>
 
       <div className="block md:hidden ">
-        <MobileWindows windows={windows} />
+        <MobileWindows windows={mobileWindows} />
+        <div className="absolute z-50 ml-[3.5vw] pt-2 top-[35vh]">
+          <FilterBox />
+        </div>
+        <MobileWindows
+          windows={filter === "recent" ? [windows[2]] : [windows[1]]}
+        />
       </div>
     </div>
   );
@@ -212,6 +245,31 @@ const monthlRep = {
     z: 1,
   },
 };
+
+const mobileMonthRep = {
+  initSize: {
+    width: 800,
+    height: "calc( (100vh - 170px ) / 3 )",
+  },
+  initPosition: {
+    x: 140,
+    y: 80,
+    z: 1,
+  },
+};
+
+const mobileFilterBox = {
+  initSize: {
+    width: 300,
+    height: 200,
+  },
+  initPosition: {
+    x: 20,
+    y: 80,
+    z: 1,
+  },
+};
+
 const sukipi = {
   name: "早瀬",
 };
