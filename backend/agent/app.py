@@ -1,9 +1,9 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from dotenv import load_dotenv
 from browser_use import Agent, Browser, BrowserConfig, SystemPrompt
 from langchain_openai import ChatOpenAI
-
+import json
 class MySystemPrompt(SystemPrompt):
     def important_rules(self) -> str:
         # Get existing rules from parent class
@@ -24,30 +24,35 @@ app = Flask(__name__)
 CORS(app)
 
 sensitive_data = {'x_user_name': 'test_ai_aya', 'x_password': 'Yama0207'}
-planner_llm = ChatOpenAI(model='gpt-4o')
+# planner_llm = ChatOpenAI(model='gpt-4o')
 
-@app.route('/')
+@app.route('/', methods=['POST'])
 async def flask_app():
+    body = request.get_data()
+    body = json.loads(body)
+    x_username = body['x_username']
+    print(x_username)
+    
+    print(body)
     initial_actions = [
-        {'open_tab': {'url': 'https://twitter.com/nyantarou_030'}},
+        {'open_tab': {'url': 'https://twitter.com'}},
         {'scroll_down': {'amount': 0}},
     ]
 
     agent = Agent(
-		task="""https://twitter.com/nyantarou_030 にアクセスして，そのアカウントの新年最初のツイートを取得してください．""",
+		task=f"""{x_username} のidのアカウントページにアクセスして，そのアカウントの最新のツイートを取得してください．""",
 		llm=ChatOpenAI(model='gpt-4o'),
         browser=Browser(config=BrowserConfig(
             headless=True
         )),
         sensitive_data=sensitive_data,
-        planner_llm=planner_llm,
         initial_actions=initial_actions,
-        system_prompt_class=MySystemPrompt
+        system_prompt_class=MySystemPrompt,
+        max_failures=1,
     )
     result = await agent.run()
     final_result = result.final_result()
     print(final_result)
-    # resultをjson形式で返す
     return jsonify({"result": final_result})
 
 @app.route('/ok')
