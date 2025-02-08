@@ -12,6 +12,7 @@ export const MobileWindow = (props: WindowProps) => {
   const { children, initSize } = props;
   const { width, height } = initSize;
 
+
   const handleJudgeType = (value: number | string) => {
     if (typeof value === "number") {
       return `${value}px`;
@@ -30,6 +31,7 @@ export const MobileWindow = (props: WindowProps) => {
         width: judgeWidth,
         maxWidth: "93vw",
         height: judgeHeight,
+        maxHeight: "80vh",
         backgroundColor: "#000",
         border: "0.7px solid #e4007f",
         borderRadius: "10px",
