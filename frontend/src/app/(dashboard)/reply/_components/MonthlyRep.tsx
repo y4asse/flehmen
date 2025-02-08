@@ -9,7 +9,7 @@ import {
   Bar,
   ComposedChart,
 } from "recharts";
-import { monthly } from "../page";
+import { monthly } from "./ReplyPage";
 
 type Props = {
   GraphInfo: monthly[];

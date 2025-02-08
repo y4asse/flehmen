@@ -1,7 +1,7 @@
 import React from "react";
-import { content } from "../page";
 import { Flex } from "@/components/ui/flex";
 import Image from "next/image";
+import { content } from "./ReplyPage";
 
 type Props = {
   repContents: content[][];

@@ -1,5 +1,5 @@
 import React from "react";
-import { reply } from "../page";
+import { reply } from "../_components/ReplyPage";
 import { Flex } from "@/components/ui/flex";
 import Image from "next/image";
 
