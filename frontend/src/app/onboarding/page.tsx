@@ -116,7 +116,7 @@ const Page = () => {
   const [topIndex, setTopIndex] = useState(0);
   const [checkMessage, setCheckMessage] = useState("Press Enter");
   const router = useRouter();
-  const { user } = useUser()
+  const { user } = useUser();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newResponses = [...responses]; // 配列をコピー
@@ -130,7 +130,9 @@ const Page = () => {
 
       if (currentIndex === sukipiInput.length - 1) {
         // 最後の質問なら送信処理を実行
-        handleSubmit(new Event("submit") as unknown as React.FormEvent<HTMLFormElement>);
+        handleSubmit(
+          new Event("submit") as unknown as React.FormEvent<HTMLFormElement>
+        );
       } else {
         // それ以外は次の質問に進む
         const nextIndex = currentIndex + 1;
@@ -185,7 +187,6 @@ const Page = () => {
       },
       {} as RequestBody
     );
-
     const { error } = await completeOnboarding(data as SukipiInfo);
     if (error) {
       console.error(error);
@@ -194,9 +195,8 @@ const Page = () => {
     }
 
     await user?.reload();
-    router.push('/loading');
+    router.push("/loading");
   };
-
 
   return (
     <Flex
@@ -222,10 +222,15 @@ const Page = () => {
           borderRadius: "10px",
           boxShadow: "0 0 20px rgba(228, 0, 127, 0.7)",
           overflowY: "auto", // 縦スクロールを有効に
+          overflowX: "hidden", // 横スクロールを無効に
         }}
       >
         <Flex direction={"column"} align={"start"}>
-          <form className="input-section" method="post" onSubmit={handleSubmit}>
+          <form
+            className="input-section max-w-[100%]"
+            method="post"
+            onSubmit={handleSubmit}
+          >
             {sukipiInput.map((input, index) => (
               <div
                 key={input.name}
@@ -252,7 +257,7 @@ const Page = () => {
                     onKeyDown={handleKeyDown}
                     autoFocus
                     placeholder={input.placeholder}
-                    className="bg-transparent text-[#E4007F] border-none outline-none flex-[0_0_60%] max-w-[300px] placeholder-[#E4007F] placeholder-opacity-50"
+                    className="bg-transparent text-[#E4007F] border-none outline-none flex-[0_0_60%] max-w-[100px] placeholder-[#E4007F] placeholder-opacity-50"
                     onFocus={handleFocus}
                   />
                 ) : (
