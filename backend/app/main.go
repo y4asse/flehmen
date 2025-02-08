@@ -40,7 +40,7 @@ func (controller *Controller) GetUniversities(c echo.Context) error {
 	universities, err := controller.entClient.University.Query().All(c.Request().Context())
 	if err != nil {
 		fmt.Println(err)
-		return c.JSON(http.StatusInternalServerError, err) // TODO: errを返すのはセキュリティ的に問題がありそう
+		return c.JSON(http.StatusInternalServerError, "DBからデータを取得できませんでした") // TODO: errを返すのはセキュリティ的に問題がありそう
 	}
 	return c.JSON(http.StatusOK, universities)
 }
