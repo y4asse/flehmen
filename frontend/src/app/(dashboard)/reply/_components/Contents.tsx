@@ -13,7 +13,7 @@ const Contents = ({ repContents, userIndex }: Props) => {
   return (
     <Flex
       direction={"column"}
-      className="gap-8 h-full py-8 mb-2"
+      className="gap-8 h-full py-8 mb-2 w-full ~pl-8/20"
       justify={"start"}
       align={"start"}
     >
