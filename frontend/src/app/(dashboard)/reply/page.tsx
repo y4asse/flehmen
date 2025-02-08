@@ -1,6 +1,6 @@
 "use client";
 import { Windows } from "@/components/common/Windows";
-import React from "react";
+import React, { Suspense } from "react";
 import ReplyList from "./_components/ReplyList";
 import Contents from "./_components/Contents";
 import { MonthlyRep } from "./_components/MonthlyRep";
