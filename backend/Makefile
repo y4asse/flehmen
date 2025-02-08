@@ -35,3 +35,6 @@ deploy:
 
 logs/api:
 	${DC} logs --follow api
+
+logs/agent:
+	${DC} logs --follow agent
