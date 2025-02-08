@@ -11,20 +11,19 @@ export const MobileWindow = (props: WindowProps) => {
   const { children, initSize } = props;
   const { width, height } = initSize;
 
-  console.log(initSize);
-
   return (
     <Flex
       direction={"column"}
       style={{
         width: `${width}px`,
         maxWidth: "93vw",
+        maxHeight: "80vh",
         height: `${height}px`,
         backgroundColor: "#000",
         border: "0.7px solid #e4007f",
         borderRadius: "10px",
         margin: "10px",
-        padding: "20px 0",
+        // padding: "20px 0",
       }}
     >
       {/* コンテンツ部分 */}

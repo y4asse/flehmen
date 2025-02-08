@@ -11,7 +11,7 @@ services:
     depends_on:
       - db
     environment:
-      - DB_NAME=flehmen
+      - DB_NAME=flehmen?parseTime=true&collation=utf8mb4_unicode_ci
       - DB_USER=root
       - DB_PASSWORD=password
       - DB_HOST=db

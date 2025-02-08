@@ -32,3 +32,6 @@ db/seed:
 
 deploy:
 	gcloud builds submit --region=asia-east1
+
+logs/api:
+	${DC} logs --follow api
