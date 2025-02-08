@@ -90,7 +90,9 @@ const Page = () => {
       </div>
 
       <div className="block md:hidden ">
-        <MobileWindows windows={mobileWindows} />
+        <Suspense fallback={<div>loading...</div>}>
+          <MobileWindows windows={mobileWindows} />
+        </Suspense>
         <div className="absolute z-50 ml-[3.5vw] pt-2 top-[35vh]">
           <FilterBox />
         </div>
