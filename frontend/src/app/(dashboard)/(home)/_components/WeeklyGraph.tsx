@@ -23,7 +23,7 @@ type Props = {
 type WeeklyTweetCountKey = keyof WeeklyTweetCount;
 
 export const WeeklyGraph = (props: Props) => {
-  const { weeklyAllTweetCounts, dataKey, nameKey, isMobile } = props;
+  const { weeklyAllTweetCounts, dataKey, nameKey } = props;
   const [radius, setRadius] = useState({ inner: 0, outer: 120 });
   const [heartSize, setHeartSize] = useState(50);
   const [fontSize, setFontSize] = useState(12);

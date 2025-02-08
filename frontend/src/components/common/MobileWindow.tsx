@@ -1,6 +1,5 @@
 "use client";
 import { Flex } from "@/components/ui/flex";
-import Image from "next/image";
 
 type WindowProps = {
   title?: string;
