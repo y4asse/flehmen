@@ -95,7 +95,9 @@ const ReplyPage = () => {
           <FilterBox />
         </div>
         <MobileWindows
-          windows={filter === "recent" ? [windows[2]] : [windows[1]]}
+          windows={
+            filter === "recent" ? [mobileWindows[2]] : [mobileWindows[1]]
+          }
         />
       </div>
     </div>
