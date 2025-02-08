@@ -499,7 +499,7 @@ func main() {
 	}))
 	e.Use(middleware.Logger())
 
-	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?tls=true", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME"))
+	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME"))
 
 	entClient, err := ent.Open(dialect.MySQL, dns)
 	if err != nil {
