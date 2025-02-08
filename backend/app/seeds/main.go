@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect"
-	"github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type University struct {
@@ -63,16 +63,9 @@ type UserData struct {
 }
 
 func main() {
-	c := mysql.Config{
-		DBName:    os.Getenv("DB_NAME"),
-		User:      os.Getenv("DB_USER"),
-		Passwd:    os.Getenv("DB_PASSWORD"),
-		Addr:      os.Getenv("DB_HOST"),
-		Net:       "tcp",
-		ParseTime: true,
-		Collation: "utf8mb4_unicode_ci",
-	}
-	client, err := ent.Open(dialect.MySQL, c.FormatDSN())
+	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME"))
+
+	client, err := ent.Open(dialect.MySQL, dns)
 	if err != nil {
 		log.Fatalf("failed opening connection to sqlite: %v", err)
 	}
