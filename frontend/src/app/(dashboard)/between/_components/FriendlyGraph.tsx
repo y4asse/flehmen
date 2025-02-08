@@ -12,6 +12,7 @@ import { Score } from "../page";
 
 type Props = {
   score?: Score;
+  isMobile?: boolean;
 };
 
 const FriendlyGraph = (props: Props) => {
@@ -26,6 +27,7 @@ const FriendlyGraph = (props: Props) => {
   if (!props.score) {
     return null;
   }
+  const { isMobile } = props;
   const { balance, rhythm, time, type, words } = props.score;
   const data = [
     { subject: "時間帯", value: time },
@@ -38,10 +40,10 @@ const FriendlyGraph = (props: Props) => {
   return (
     <div className="flex justify-center items-center">
       <RadarChart
-        width={465}
-        height={140}
+        width={isMobile ? 465 : 600}
+        height={isMobile ? 140 : 300}
         data={data}
-        outerRadius={50} // 五角形のサイズ
+        outerRadius={isMobile ? 50 : 100} // 五角形のサイズ
         margin={{ top: 40 }}
       >
         {/* 背景のグリッド */}

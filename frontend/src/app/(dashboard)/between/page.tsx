@@ -7,6 +7,7 @@ import NextAction from "./_components/NextAction";
 import { FileUploader } from "./_components/FileUploader";
 import { Flex } from "@/components/ui/flex";
 import { Button } from "@/components/ui/button";
+import { Windows } from "@/components/common/Windows";
 
 type UploadResult = {
   next_action: string;
@@ -83,7 +84,7 @@ const Page = () => {
     },
     {
       ...friendlyGraphWindow,
-      children: <FriendlyGraph score={uploadResult?.score} />,
+      children: <FriendlyGraph score={uploadResult?.score} isMobile />,
     },
     {
       ...resultWindow,
@@ -103,10 +104,56 @@ const Page = () => {
     },
   ];
 
+  const pcResultWindows = [
+    {
+      ...pcScoreWindow,
+      children: <Score total={uploadResult?.score.total} />,
+      title: "スコア",
+    },
+    {
+      ...pcFriendlyGraphWindow,
+      children: <FriendlyGraph score={uploadResult?.score} />,
+      title: "分析結果",
+    },
+    {
+      ...pcResultWindow,
+      title: "次のアクション",
+      children: (
+        <NextAction
+          text={uploadResult?.next_action}
+          onClickBack={handleInitResult}
+        />
+      ),
+    },
+  ];
+
+  const pcFileuploadWindows = [
+    {
+      ...pcFileuploadWindow,
+      children: (
+        <Flex direction={"column"} className="gap-4">
+          <FileUploader handleFileChange={handleFileChange} />
+          <Button
+            onClick={handleUpload}
+            disabled={uploading}
+            className="text-white"
+          >
+            {uploading ? "アップロード中..." : "アップロード"}
+          </Button>
+          {message && <p className="mt-4 text-white">{message}</p>}
+        </Flex>
+      ),
+    },
+  ];
+
   return (
     <div>
       <div className="hidden md:block">
-        {/* <Windows windows={windows} /> */}
+        {uploadResult ? (
+          <Windows windows={pcResultWindows} />
+        ) : (
+          <Windows windows={pcFileuploadWindows} />
+        )}
       </div>
       <div className="block md:hidden ">
         {uploadResult ? (
@@ -177,6 +224,54 @@ const fileuploadWindow = {
   initPosition: {
     x: 140,
     y: 80,
+    z: 1,
+  },
+};
+
+const pcFileuploadWindow = {
+  initSize: {
+    width: 800,
+    height: 500,
+  },
+  initPosition: {
+    x: 350,
+    y: 150,
+    z: 1,
+  },
+};
+
+const pcScoreWindow = {
+  initSize: {
+    width: 640,
+    height: 350,
+  },
+  initPosition: {
+    x: 750,
+    y: 50,
+    z: 3,
+  },
+};
+
+const pcFriendlyGraphWindow = {
+  initSize: {
+    width: 600,
+    height: 400,
+  },
+  initPosition: {
+    x: 180,
+    y: 140,
+    z: 2,
+  },
+};
+
+const pcResultWindow = {
+  initSize: {
+    width: 540,
+    height: 280,
+  },
+  initPosition: {
+    x: 750,
+    y: 400,
     z: 1,
   },
 };

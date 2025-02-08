@@ -7,6 +7,7 @@ const homeItems = [
   { name: "プロフィール", href: "/profile" },
   { name: "FF", href: "/ff" },
   { name: "リプ", href: "/reply" },
+  { name: "会話", href: "/between" },
   { name: "ひみつ", href: "/secret" },
 ];
 

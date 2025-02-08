@@ -9,16 +9,21 @@ import {
   Bar,
   ComposedChart,
 } from "recharts";
-import { monthly } from "../page";
+import { monthly } from "./ReplyPage";
 
 type Props = {
   GraphInfo: monthly[];
+  isMobile?: boolean;
 };
 
 export const MonthlyRep = (props: Props) => {
-  const { GraphInfo } = props;
+  const { GraphInfo, isMobile } = props;
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer
+      width="100%"
+      height={isMobile ? 130 : 300}
+      className={"relative right-7"}
+    >
       <ComposedChart data={GraphInfo}>
         <CartesianGrid strokeDasharray="5 5" stroke="#E4007F" />
         <XAxis dataKey="date" stroke="#E4007F" />

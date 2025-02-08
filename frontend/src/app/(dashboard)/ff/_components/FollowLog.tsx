@@ -15,7 +15,7 @@ export const FollowLog = (props: Props) => {
       direction={"column"}
       justify={"start"}
       align={"start"}
-      className="gap-4 ~mt-3/12 mb-3 w-full ~px-2/20"
+      className="gap-4 ~mt-3/12 mb-3 w-full ~px-4/20"
     >
       {followList.map((follow) => (
         <a
@@ -37,7 +37,7 @@ export const FollowLog = (props: Props) => {
                 <p className="text-[#ccc] text-sm">
                   {formatDateString(follow.followed_at)}
                 </p>
-                <Flex className="gap-4">
+                <Flex className="~gap-2/4">
                   <p className="text-white truncate ~max-w-28/96">
                     {follow.name}
                   </p>

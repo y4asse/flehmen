@@ -13,9 +13,9 @@ export const Score = (props: ScoreProps) => {
   const { total } = props;
   const brainCount = total / 16;
   return (
-    <Flex direction={"column"} className="gap-2">
-      <p className="text-white">今の親密度は...</p>
-      <p className="text-white text-4xl">{total}</p>
+    <Flex direction={"column"} className="~gap-2/6">
+      <p className="text-white ~text-base/2xl">今の親密度は...</p>
+      <p className="text-white ~text-4xl/7xl">{total}</p>
       <Flex className="gap-6">
         <ScoreHeart isLeft={brainCount >= 0} isRight={brainCount >= 2} />
         <ScoreHeart isLeft={brainCount >= 3} isRight={brainCount >= 4} />
@@ -40,9 +40,9 @@ const ScoreHeart = (props: ScoreHeartProps) => {
             ? "/images/score_brain_left_active.svg"
             : "/images/score_brain_left.svg"
         }
-        width={30}
+        width={40}
         height={40}
-        className="object-contain"
+        className="object-contain ~w-8/16 ~h-10/20"
         alt="brain"
       />
       <Image
@@ -51,9 +51,9 @@ const ScoreHeart = (props: ScoreHeartProps) => {
             ? "/images/score_brain_right_active.svg"
             : "/images/score_brain_right.svg"
         }
-        width={30}
+        width={40}
         height={40}
-        className="object-contain"
+        className="object-contain ~w-8/16 ~h-10/20"
         alt="brain"
       />
     </Flex>

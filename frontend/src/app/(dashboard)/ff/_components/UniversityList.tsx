@@ -23,7 +23,7 @@ const UniversityList = async (props: Props) => {
       university.name.toLowerCase().includes(query.toLowerCase())
   );
   return (
-    <Flex className="gap-4 mb-4" direction={"column"}>
+    <Flex className="gap-4 mb-4 px-4 " direction={"column"}>
       {searchResult.map((university) => (
         <Flex
           key={university.id}
@@ -33,14 +33,16 @@ const UniversityList = async (props: Props) => {
           align={"start"}
         >
           <p className="text-white">{university.name}</p>
-          <Flex className="gap-1 pl-8">
+          <Flex className="gap-1 ~pl-0/8">
             <p className="text-white">
               偏差値：{university.deviationLowerValue}
             </p>
             <p className="text-white">〜</p>
             <p className="text-white">{university.deviationUpperValue}</p>
-            <p className="text-white ml-4">場所：{university.prefecture}</p>
-            <p className="text-white ml-4">略称：{university.abbreviation}</p>
+            <p className="text-white ~ml-2/4">場所：{university.prefecture}</p>
+            <p className="text-white ~ml-2/4">
+              略称：{university.abbreviation}
+            </p>
           </Flex>
         </Flex>
       ))}

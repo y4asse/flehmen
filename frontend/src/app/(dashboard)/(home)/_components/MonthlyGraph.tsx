@@ -19,6 +19,7 @@ interface CustomDotProps {
 
 type Props = {
   monthlyTweetCounts: DateTweetCount[];
+  isMobile?: boolean;
 };
 
 const HeartDot: React.FC<CustomDotProps> = ({ cx, cy, stroke }) => {
@@ -41,9 +42,13 @@ const HeartDot: React.FC<CustomDotProps> = ({ cx, cy, stroke }) => {
 };
 
 export const MonthlyGraph = (props: Props) => {
-  const { monthlyTweetCounts } = props;
+  const { monthlyTweetCounts, isMobile } = props;
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer
+      width="100%"
+      height={isMobile ? 130 : 300}
+      className={"relative right-7"}
+    >
       <LineChart data={monthlyTweetCounts}>
         <CartesianGrid strokeDasharray="5 5" stroke="#E4007F" />
         <XAxis dataKey="date" stroke="#E4007F" />
