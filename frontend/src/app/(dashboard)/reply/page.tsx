@@ -32,8 +32,12 @@ export type monthly = {
 
 const Page = () => {
   const searchParams = useSearchParams();
-  const filter = searchParams.get("filter");
   const [userIndex, setUserIndex] = React.useState(1);
+  const [filter, setFilter] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    setFilter(searchParams.get("filter"));
+  }, [searchParams]);
   const handleSetUserIndex = (index: number) => {
     setUserIndex(index);
   };
@@ -85,20 +89,18 @@ const Page = () => {
 
   return (
     <div>
-      <Suspense fallback={<div>loading...</div>}>
-        <div className="hidden md:block">
-          <Windows windows={windows} />
+      <div className="hidden md:block">
+        <Windows windows={windows} />
+      </div>
+      <div className="block md:hidden ">
+        <MobileWindows windows={mobileWindows} />
+        <div className="absolute z-50 ml-[3.5vw] pt-2 top-[35vh]">
+          <FilterBox />
         </div>
-        <div className="block md:hidden ">
-          <MobileWindows windows={mobileWindows} />
-          <div className="absolute z-50 ml-[3.5vw] pt-2 top-[35vh]">
-            <FilterBox />
-          </div>
-          <MobileWindows
-            windows={filter === "recent" ? [windows[2]] : [windows[1]]}
-          />
-        </div>
-      </Suspense>
+        <MobileWindows
+          windows={filter === "recent" ? [windows[2]] : [windows[1]]}
+        />
+      </div>
     </div>
   );
 };
