@@ -126,12 +126,19 @@ const Page = () => {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      const nextIndex = currentIndex + 1;
-      if (nextIndex < sukipiInput.length) {
+      e.preventDefault(); // ← form の自動送信を防ぐ
+
+      if (currentIndex === sukipiInput.length - 1) {
+        // 最後の質問なら送信処理を実行
+        handleSubmit(new Event("submit") as unknown as React.FormEvent<HTMLFormElement>);
+      } else {
+        // それ以外は次の質問に進む
+        const nextIndex = currentIndex + 1;
         setCurrentIndex(nextIndex);
         if (nextIndex > topIndex) setTopIndex(nextIndex);
       }
     }
+
     if (e.key === "ArrowUp" && currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
     }
@@ -155,43 +162,41 @@ const Page = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (currentIndex != sukipiInput.length - 1) {
-      return;
-    }
+
     if (responses[0] === "" || responses[1] === "" || responses[2] === "") {
       return;
     }
+
     const data = sukipiInput.reduce(
       (acc: { [key: string]: string | number | Date | null }, input, index) => {
         const value = responses[index];
 
         if (value === "") {
-          // 空文字列は null に変換
           acc[input.name] = null;
         } else if (input.placeholder === "YYYY-MM-DD" && value) {
-          // "birthday" は Date 型に変換
           acc[input.name] = new Date(value);
         } else if (!isNaN(Number(value)) && value.trim() !== "") {
-          // 数値として変換可能な場合は Number 型に変換
           acc[input.name] = Number(value);
         } else {
-          // それ以外はそのまま文字列として保存
           acc[input.name] = value;
         }
 
         return acc;
       },
-      {} as RequestBody // 型定義を更新
+      {} as RequestBody
     );
-    const { error } = await completeOnboarding(data as SukipiInfo)
+
+    const { error } = await completeOnboarding(data as SukipiInfo);
     if (error) {
-      console.error(error)
-      alert("エラーが発生しました")
-      return
+      console.error(error);
+      alert("エラーが発生しました");
+      return;
     }
-    await user?.reload()
-    router.push('/loading')
+
+    await user?.reload();
+    router.push('/loading');
   };
+
 
   return (
     <Flex
