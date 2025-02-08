@@ -50,7 +50,10 @@ async def flask_app():
     # resultをjson形式で返す
     return jsonify({"result": final_result})
 
-    return final_result
+@app.route('/ok')
+async def ok():
+    return jsonify({'message': 'ok'})
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
